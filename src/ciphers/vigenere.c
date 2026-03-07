@@ -31,7 +31,7 @@ void encrypt_vigenere(unsigned char *src, unsigned char *dest)
 
     for (c = new_src; *c != '\0'; c++)
     {
-        *d = (*c - 'A' + vigenere_key[i]) % 26 + 'A';
+        *d = (*c - 'A' + vigenere_key[i] - 'A') % 26 + 'A';
         d++;
         i++;
     }
