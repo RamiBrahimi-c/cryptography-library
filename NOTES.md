@@ -6,9 +6,9 @@
 - [ ] Vigenère 
 
 ## Phase 2 - Substitution Ciphers
-- [ ] Simple Substitution 
+- [x] Simple Substitution 
 - [x] Affine 
-- [ ] Hill 
+- [x] Hill 
 
 ## Phase 3 - Modern Ciphers
 - [ ] RSA (Pair Programming)
