@@ -1,0 +1,7 @@
+*.o
+obj/
+run_tests
+*.out
+*.gch
+.vscode/
+.DS_Store

@@ -7,7 +7,7 @@
 
 ## Phase 2 - Substitution Ciphers
 - [ ] Simple Substitution 
-- [ ] Affine 
+- [x] Affine 
 - [ ] Hill 
 
 ## Phase 3 - Modern Ciphers
