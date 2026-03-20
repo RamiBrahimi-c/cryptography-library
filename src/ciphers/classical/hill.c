@@ -2,8 +2,8 @@
 #define HILL_C
 
 
-#include "../../include/ciphers/hill.h"
-#include "../../include/common/utils.h"
+#include "../../../include/ciphers/classical/hill.h"
+#include "../../../include/common/utils.h"
 #include <assert.h>
 #include <stdio.h>
 #include <string.h>
@@ -11,7 +11,7 @@
 
 
 
-void hill_encrypt(const uchar_t* input, uchar_t* output, const void* key) {
+void hill_encrypt(const uchar_t* input, uchar_t* output , int length, const void* key) {
     assert(key != NULL && "key is null");
     HillKey *hill_key = (HillKey *) (key) ;
     
@@ -27,13 +27,14 @@ void hill_encrypt(const uchar_t* input, uchar_t* output, const void* key) {
     uchar_t result[MATRIX_MAX_DEGREE][MATRIX_MAX_DEGREE] ;
     int l3 = l1 , c3 = c2 ;
     
-    int length = strlen((char *) input) ; 
+    // int length = strlen((char *) input) ; 
     
     printf("alpha num : %d \n" , ALPHABET_LENGTH) ; 
     printf("length : %d\n" , length ) ; 
     
 
-    int loop_times = strlen((char *) input)/step ;
+    int loop_times = length/step ;
+    // int loop_times = strlen((char *) input)/step ;
     if (strlen((char *) input) %  step != 0 )
     {
         loop_times++ ; 
@@ -147,10 +148,10 @@ void hill_set_key(void* key_struct, const char* key_str) {
     hill_key->n = matrix_degree ; 
 
     setRandomInversibleMatrix(hill_key->matrix , hill_key->n , hill_key->n);
-    hill_key->matrix[0][0] = 9 ; 
-    hill_key->matrix[0][1] = 4 ; 
-    hill_key->matrix[1][0] = 5 ; 
-    hill_key->matrix[1][1] = 7 ; 
+    // hill_key->matrix[0][0] = 9 ; 
+    // hill_key->matrix[0][1] = 4 ; 
+    // hill_key->matrix[1][0] = 5 ; 
+    // hill_key->matrix[1][1] = 7 ; 
 
 
     // for (size_t i = 0; i < hill_key->n; i++)

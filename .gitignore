@@ -1,7 +1,39 @@
+# Object files
 *.o
+*.obj
 obj/
+obj/*
+
+# Executables
+crypto
 run_tests
+*.exe
 *.out
-*.gch
+
+# Test images 
+tests/img/
+tests/results/
+*.jpg
+*.jpeg
+*.png
+*.bmp
+*.gif
+
+# IDE files
 .vscode/
+.idea/
+*.swp
+*.swo
+*~
 .DS_Store
+
+# Compiled files
+*.gch
+*.d
+
+# Makefile backup
+*~
+*.bak
+
+# Logs
+*.log

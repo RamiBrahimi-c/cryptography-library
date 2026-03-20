@@ -3,7 +3,7 @@
 
 #include "../../include/common/constants.h"
 // default : the total ASCII characters 128
-int ALPHABET_LENGTH = 128   ; 
+int ALPHABET_LENGTH = 256   ; 
 
 int ALPHABET_LENGTH_SUBSTITUTION  = 26 ; 
 

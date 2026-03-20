@@ -1,9 +1,9 @@
 #ifndef AFFINE_C
 #define AFFINE_C
 
-#include "../../include/ciphers/affine.h"
-#include "../../include/common/utils.h"
-#include "../../include/common/constants.h"
+#include "../../../include/ciphers/classical/affine.h"
+#include "../../../include/common/utils.h"
+#include "../../../include/common/constants.h"
 #include <assert.h>
 #include <stdio.h>
 #include <string.h>
@@ -12,12 +12,12 @@
 
 
 
-void affine_encrypt(const uchar_t* input,uchar_t* output, const void* key) {
+void affine_encrypt(const uchar_t* input,uchar_t* output , int length, const void* key) {
     assert(key != NULL && "key is null");
     AffineKey *affine_key = (AffineKey *) (key) ;
     
     
-    int length = strlen((char *) input) ; 
+    // int length = strlen((char *) input) ; 
     printf("alpha num : %d \n" , ALPHABET_LENGTH) ; 
     printf("length : %d\n" , length ) ; 
     

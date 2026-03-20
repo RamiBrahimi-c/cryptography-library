@@ -1,7 +1,7 @@
 #ifndef CIPHER_INTERFACE_H
 #define CIPHER_INTERFACE_H
 
-#include "../common/constants.h"
+#include "./common/constants.h"
 
 typedef struct {
     void (*encrypt)(const uchar_t* input, uchar_t* output, const void* key);

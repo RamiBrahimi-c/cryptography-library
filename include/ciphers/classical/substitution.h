@@ -3,9 +3,9 @@
 
 
 
-#include "cipher_interface.h"
+#include "../../cipher_interface.h"
 #include <stdint.h>
-#include "../common/constants.h"
+#include "../../common/constants.h"
 
 
 typedef struct {
