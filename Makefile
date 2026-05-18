@@ -1,6 +1,6 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -Iinclude -Iinclude/ciphers/classical -Iinclude/ciphers/symmetric
-LDFLAGS = -lm
+CFLAGS = -Wall -Wextra -Iinclude -Iinclude/ciphers/classical -Iinclude/ciphers/symmetric -Iinclude/ciphers/asymmetric -Iinclude/ciphers/hashing
+LDFLAGS = -lm -lgmp -lssl -lcrypto
 SRCDIR = src
 OBJDIR = obj
 
@@ -30,3 +30,14 @@ test-%:
 	$(CC) $(CFLAGS) tests/test_$*.c $(shell find src/ciphers -type f -name '*.c') src/common/*.c $(LDFLAGS) -o run_tests && ./run_tests
 
 .PHONY: clean test
+
+
+# Chat application
+server:
+	$(CC) $(CFLAGS) src/server.c $(shell find src/ciphers -type f -name '*.c') src/common/*.c $(LDFLAGS) -o server
+
+client:
+	$(CC) $(CFLAGS) src/client.c $(shell find src/ciphers -type f -name '*.c') src/common/*.c $(LDFLAGS) -o client
+
+chat: server client
+	@echo "Run ./server in one terminal, ./client in another"

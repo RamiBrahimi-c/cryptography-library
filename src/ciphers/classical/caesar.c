@@ -5,7 +5,7 @@
 
 static unsigned char caesar_key = 5;
 
-void encrypt_caesar(unsigned char *src, unsigned char *dest)
+void encrypt_caesar(unsigned char *src , int, unsigned char *dest)
 {
     unsigned char *c;
     unsigned char *new_src = malloc(sizeof(unsigned char) * strlen(src));

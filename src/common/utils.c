@@ -451,4 +451,14 @@ int findIndexMap(const uchar_t *array , uchar_t value ) {
     return -1 ; 
 }
 
+
+
+void swapUnsignedChar(uchar_t *a ,uchar_t *b ) {
+    uchar_t temp = *a ; 
+    *a = *b ; 
+    *b = temp ;
+}
+
+
+
 #endif

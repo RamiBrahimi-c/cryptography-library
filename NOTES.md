@@ -12,5 +12,16 @@
 
 ## Phase 3 - Modern Ciphers
 - [ ] RSA (Pair Programming)
-- [ ] RC4 (Pair Programming)
-...
+- [X] RC4 (Pair Programming)
+- [X] DES (Pair Programming)
+- [ ] MARS, RC6, Rijndael, Serpent, Twofish
+- [ ] RC6, 
+- [ ] Rijndael
+- [ ] Serpent
+- [ ] Twofish
+
+
+
+
+resources : 
+- https://github.com/kokke/tiny-AES-C/pull/3

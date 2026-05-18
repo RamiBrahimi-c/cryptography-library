@@ -89,6 +89,7 @@ _Bool areElementsUniqueSorted(__u_char arr[], int n) ;
 
 int findIndexMap(const uchar_t *array , uchar_t value ) ;
 
+void swapUnsignedChar(uchar_t *a ,uchar_t *b ) ;
 
 
 #endif
