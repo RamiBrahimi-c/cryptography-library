@@ -1,6 +1,7 @@
 # Cryptography Project Library
 
 This project is a comprehensive C implementation of various cryptographic algorithms, ranging from classical ciphers to modern symmetric and asymmetric systems. It also includes hashing utilities and a secure chat application demonstrating a hybrid cryptographic protocol.
+The current version has many dependecies and Ai help which will be removed eventually . 
 
 ## Features
 
