@@ -12,7 +12,9 @@ run_tests
 
 # Test images 
 tests/img/
-tests/results/
+tests/results_img/
+tests/results_sound/
+tests/sound/
 *.jpg
 *.jpeg
 *.png
