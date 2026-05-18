@@ -1,0 +1,11 @@
+[package]
+name = "advanced-cryptography"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+md-5 = "0.10"
+sha2 = "0.10"
+num-bigint = { version = "0.4", features = ["rand"] }
+num-traits = "0.2"
+rand = "0.8"
