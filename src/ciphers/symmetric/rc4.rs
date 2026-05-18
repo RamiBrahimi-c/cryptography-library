@@ -17,6 +17,9 @@ pub struct Rc4Cipher {
 }
 
 fn rc4_stream(input: &[u8], key: &[u8]) -> Vec<u8> {
+    if key.is_empty() {
+        return input.to_vec();
+    }
     let mut s = [0u8; 256];
     for (i, slot) in s.iter_mut().enumerate() {
         *slot = i as u8;

@@ -17,6 +17,32 @@ impl Default for SubstitutionKey {
     }
 }
 
+impl SubstitutionKey {
+    pub fn from_key(key: &str) -> Option<Self> {
+        let clean = key.as_bytes();
+        if clean.len() != 26 {
+            return None;
+        }
+        let mut seen = [false; 26];
+        let mut forward = [0u8; 26];
+        let mut backward = [0u8; 26];
+        for (idx, byte) in clean.iter().copied().enumerate() {
+            let upper = byte.to_ascii_uppercase();
+            if !upper.is_ascii_uppercase() {
+                return None;
+            }
+            let slot = (upper - b'A') as usize;
+            if seen[slot] {
+                return None;
+            }
+            seen[slot] = true;
+            forward[idx] = upper;
+            backward[slot] = b'A' + idx as u8;
+        }
+        Some(Self { forward, backward })
+    }
+}
+
 #[derive(Clone, Debug, Default)]
 pub struct SubstitutionCipher {
     pub key: SubstitutionKey,

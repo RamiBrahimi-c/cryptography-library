@@ -1,5 +1,8 @@
 use crate::cipher_interface::Uchar;
 use crate::common::constants::{ALPHABET_LENGTH, MATRIX_MAX_DEGREE};
+use num_bigint::{BigInt, BigUint, RandBigInt, ToBigInt};
+use num_traits::{One, Zero};
+use rand::thread_rng;
 
 pub type Matrix = Vec<Vec<Uchar>>;
 
@@ -30,6 +33,86 @@ pub fn mod_inverse(a: i64, m: i64) -> Option<i64> {
     Some(t.rem_euclid(m))
 }
 
+pub fn biguint_gcd(mut a: BigUint, mut b: BigUint) -> BigUint {
+    while !b.is_zero() {
+        let t = a % &b;
+        a = b;
+        b = t;
+    }
+    a
+}
+
+pub fn biguint_mod_inverse(a: &BigUint, m: &BigUint) -> Option<BigUint> {
+    fn egcd(a: BigInt, b: BigInt) -> (BigInt, BigInt, BigInt) {
+        if b.is_zero() {
+            (a, BigInt::one(), BigInt::zero())
+        } else {
+            let (g, x, y) = egcd(b.clone(), a.clone() % b.clone());
+            (g, y.clone(), x - (a / b) * y)
+        }
+    }
+
+    let (g, x, _) = egcd(a.to_bigint()?, m.to_bigint()?);
+    if g != BigInt::one() {
+        return None;
+    }
+    let modulus = m.to_bigint()?;
+    ((x % &modulus + &modulus) % &modulus).try_into().ok()
+}
+
+pub fn is_probable_prime(n: &BigUint, rounds: u32) -> bool {
+    let two = BigUint::from(2u32);
+    let three = BigUint::from(3u32);
+    if *n < two {
+        return false;
+    }
+    if *n == two || *n == three {
+        return true;
+    }
+    if n % &two == BigUint::zero() {
+        return false;
+    }
+
+    let one = BigUint::one();
+    let n_minus_one = n - &one;
+    let mut d = n_minus_one.clone();
+    let mut s = 0u32;
+    while &d % &two == BigUint::zero() {
+        d >>= 1;
+        s += 1;
+    }
+
+    let mut rng = thread_rng();
+    'outer: for _ in 0..rounds {
+        let a = rng.gen_biguint_range(&two, &(n - &two));
+        let mut x = a.modpow(&d, n);
+        if x == one || x == n_minus_one {
+            continue;
+        }
+        for _ in 1..s {
+            x = x.modpow(&two, n);
+            if x == n_minus_one {
+                continue 'outer;
+            }
+        }
+        return false;
+    }
+    true
+}
+
+pub fn generate_probable_prime(bits: usize) -> BigUint {
+    let mut rng = thread_rng();
+    let top_bit = BigUint::one() << bits.saturating_sub(1);
+    loop {
+        let mut candidate = rng.gen_biguint(bits as u64);
+        candidate |= &top_bit;
+        candidate |= BigUint::one();
+        if is_probable_prime(&candidate, 8) {
+            return candidate;
+        }
+    }
+}
+
 pub fn multiply_matrix(left: &Matrix, right: &Matrix, modulo: usize) -> Matrix {
     if left.is_empty() || right.is_empty() {
         return Vec::new();
@@ -58,16 +141,94 @@ pub fn identity_matrix(n: usize) -> Matrix {
     out
 }
 
-pub fn matrix_inverse_mod(matrix: &Matrix, modulo: usize) -> Matrix {
-    if matrix.is_empty() {
-        return Vec::new();
+fn minor_matrix(matrix: &[Vec<i64>], skip_row: usize, skip_col: usize) -> Vec<Vec<i64>> {
+    let mut out = Vec::with_capacity(matrix.len().saturating_sub(1));
+    for (r, row) in matrix.iter().enumerate() {
+        if r == skip_row {
+            continue;
+        }
+        let mut out_row = Vec::with_capacity(row.len().saturating_sub(1));
+        for (c, value) in row.iter().enumerate() {
+            if c != skip_col {
+                out_row.push(*value);
+            }
+        }
+        out.push(out_row);
     }
-    if matrix.len() == 1 {
-        let value = matrix[0][0] as i64;
-        let inv = mod_inverse(value, modulo as i64).unwrap_or(1) as Uchar;
-        return vec![vec![inv]];
+    out
+}
+
+fn determinant_recursive(matrix: &[Vec<i64>], modulo: i64) -> i64 {
+    match matrix.len() {
+        0 => 0,
+        1 => matrix[0][0].rem_euclid(modulo),
+        2 => (matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0]).rem_euclid(modulo),
+        _ => {
+            let mut det = 0i64;
+            for (col, value) in matrix[0].iter().enumerate() {
+                let sign = if col % 2 == 0 { 1 } else { -1 };
+                let sub = determinant_recursive(&minor_matrix(matrix, 0, col), modulo);
+                det = (det + sign * value * sub).rem_euclid(modulo);
+            }
+            det.rem_euclid(modulo)
+        }
     }
-    identity_matrix(matrix.len())
+}
+
+pub fn determinant_mod(matrix: &Matrix, modulo: usize) -> i64 {
+    let as_i64: Vec<Vec<i64>> = matrix
+        .iter()
+        .map(|row| row.iter().map(|&v| v as i64).collect())
+        .collect();
+    determinant_recursive(&as_i64, modulo as i64)
+}
+
+pub fn matrix_inverse_mod(matrix: &Matrix, modulo: usize) -> Option<Matrix> {
+    if matrix.is_empty() || matrix.len() != matrix[0].len() {
+        return None;
+    }
+    let modulo = modulo as i64;
+    let size = matrix.len();
+    let as_i64: Vec<Vec<i64>> = matrix
+        .iter()
+        .map(|row| row.iter().map(|&v| v as i64).collect())
+        .collect();
+    let det = determinant_recursive(&as_i64, modulo);
+    let det_inv = mod_inverse(det, modulo)?;
+    let mut cofactors = vec![vec![0i64; size]; size];
+    for row in 0..size {
+        for col in 0..size {
+            let sign = if (row + col) % 2 == 0 { 1 } else { -1 };
+            let minor = determinant_recursive(&minor_matrix(&as_i64, row, col), modulo);
+            cofactors[row][col] = (sign * minor).rem_euclid(modulo);
+        }
+    }
+
+    let mut out = vec![vec![0u8; size]; size];
+    for row in 0..size {
+        for col in 0..size {
+            let adj = cofactors[col][row];
+            out[row][col] = (adj * det_inv).rem_euclid(modulo) as u8;
+        }
+    }
+    Some(out)
+}
+
+pub fn random_invertible_matrix(size: usize, modulo: usize) -> Matrix {
+    use rand::Rng;
+
+    let mut rng = thread_rng();
+    loop {
+        let mut matrix = vec![vec![0u8; size]; size];
+        for row in &mut matrix {
+            for value in row {
+                *value = rng.gen_range(0..modulo) as u8;
+            }
+        }
+        if matrix_inverse_mod(&matrix, modulo).is_some() {
+            return matrix;
+        }
+    }
 }
 
 pub fn copy_data(input: &[Uchar], start_index: usize, n: usize) -> Matrix {
@@ -125,8 +286,8 @@ pub fn xor_repeating(input: &[u8], key: &[u8]) -> Vec<u8> {
 
 pub fn chunk_pad(input: &[u8], block_size: usize) -> Vec<u8> {
     let mut out = input.to_vec();
-    let pad = block_size - (out.len() % block_size).max(1);
-    let pad = if out.len() % block_size == 0 { block_size } else { pad };
+    let rem = out.len() % block_size;
+    let pad = if rem == 0 { block_size } else { block_size - rem };
     out.extend(std::iter::repeat(pad as u8).take(pad));
     out
 }

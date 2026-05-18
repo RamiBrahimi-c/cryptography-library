@@ -1,23 +1,28 @@
 use crate::cipher_interface::Cipher;
-use crate::common::utils::{chunk_pad, strip_pkcs7, xor_repeating};
-use super::aes_lib::{aes_cbc_decrypt_buffer, aes_cbc_encrypt_buffer, aes_init_ctx_iv, AesCtx};
+use aes::{Aes128, Aes192, Aes256};
+use cbc::{Decryptor, Encryptor};
+use cipher::{block_padding::Pkcs7, BlockDecryptMut, BlockEncryptMut, KeyIvInit};
+use super::aes_lib::{aes_init_ctx_iv, AesCtx};
 
 #[derive(Clone, Debug)]
 pub struct AesKey {
     pub key_len: usize,
     pub key_bytes: Vec<u8>,
     pub ctx: AesCtx,
+    pub iv: [u8; 16],
 }
 
 impl AesKey {
     pub fn new(key: impl AsRef<[u8]>) -> Self {
-        let key_bytes = key.as_ref().to_vec();
+        let key_bytes = normalize_key(key.as_ref());
+        let iv = [0u8; 16];
         let mut ctx = AesCtx::default();
-        aes_init_ctx_iv(&mut ctx, &key_bytes, &[0u8; 16]);
+        aes_init_ctx_iv(&mut ctx, &key_bytes, &iv);
         Self {
             key_len: key_bytes.len(),
             key_bytes,
             ctx,
+            iv,
         }
     }
 }
@@ -33,23 +38,58 @@ pub struct AesCipher {
     pub key: AesKey,
 }
 
+fn normalize_key(key: &[u8]) -> Vec<u8> {
+    let target = match key.len() {
+        0..=16 => 16,
+        17..=24 => 24,
+        _ => 32,
+    };
+    let mut out = vec![0u8; target];
+    let take = key.len().min(target);
+    out[..take].copy_from_slice(&key[..take]);
+    out
+}
+
+fn encrypt_with_len<C>(key: &[u8], iv: &[u8], input: &[u8]) -> Vec<u8>
+where
+    C: cipher::BlockCipher + cipher::KeyInit,
+    Encryptor<C>: KeyIvInit + BlockEncryptMut,
+{
+    Encryptor::<C>::new_from_slices(key, iv)
+        .expect("valid AES params")
+        .encrypt_padded_vec_mut::<Pkcs7>(input)
+}
+
+fn decrypt_with_len<C>(key: &[u8], iv: &[u8], input: &[u8]) -> Vec<u8>
+where
+    C: cipher::BlockCipher + cipher::KeyInit,
+    Decryptor<C>: KeyIvInit + BlockDecryptMut,
+{
+    Decryptor::<C>::new_from_slices(key, iv)
+        .expect("valid AES params")
+        .decrypt_padded_vec_mut::<Pkcs7>(input)
+        .unwrap_or_default()
+}
+
 impl Cipher for AesCipher {
     fn name(&self) -> &'static str {
         "aes"
     }
 
     fn encrypt(&self, input: &[u8]) -> Vec<u8> {
-        let mut out = xor_repeating(&chunk_pad(input, 16), &self.key.key_bytes);
-        let mut ctx = self.key.ctx.clone();
-        aes_cbc_encrypt_buffer(&mut ctx, &mut out);
-        out
+        match self.key.key_len {
+            16 => encrypt_with_len::<Aes128>(&self.key.key_bytes, &self.key.iv, input),
+            24 => encrypt_with_len::<Aes192>(&self.key.key_bytes, &self.key.iv, input),
+            _ => encrypt_with_len::<Aes256>(&self.key.key_bytes, &self.key.iv, input),
+        }
     }
 
     fn decrypt(&self, input: &[u8]) -> Vec<u8> {
-        let mut out = input.to_vec();
-        let mut ctx = self.key.ctx.clone();
-        aes_cbc_decrypt_buffer(&mut ctx, &mut out);
-        strip_pkcs7(xor_repeating(&out, &self.key.key_bytes))
+        match self.key.key_len {
+            16 => decrypt_with_len::<Aes128>(&self.key.key_bytes, &self.key.iv, input),
+            24 => decrypt_with_len::<Aes192>(&self.key.key_bytes, &self.key.iv, input),
+            _ => decrypt_with_len::<Aes256>(&self.key.key_bytes, &self.key.iv, input),
+        }
     }
 }
 

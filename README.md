@@ -1,114 +1,39 @@
-# Cryptography Project Library
+# Advanced Cryptography
 
-This project is a comprehensive C implementation of various cryptographic algorithms, ranging from classical ciphers to modern symmetric and asymmetric systems. It also includes hashing utilities and a secure chat application demonstrating a hybrid cryptographic protocol.
+This repository is now a Rust rewrite of the original coursework project. It keeps the same broad scope:
 
-## Features
+- Classical ciphers: Affine, Caesar, Hill, Playfair, Substitution, Vigenere
+- Symmetric ciphers: AES-CBC, DES-CBC, RC4, generic Feistel helper
+- Asymmetric primitives: RSA, ElGamal, Diffie-Hellman
+- Hashing: MD5, SHA-256, SHA-512, avalanche and benchmark helpers
+- Demo chat binaries: a minimal DH + SHA-256 + AES exchange
 
-### Classical Ciphers
-*   Affine Cipher
-*   Caesar Cipher
-*   Hill Cipher (Matrix-based)
-*   Playfair Cipher
-*   Substitution Cipher
-*   Vigenere Cipher
+## Layout
 
-### Symmetric Ciphers
-*   AES (Advanced Encryption Standard) - Supporting 128-bit keys in CBC mode.
-*   DES (Data Encryption Standard) - 16-round implementation.
-*   RC4 (Rivest Cipher 4) - Stream cipher.
+- `src/lib.rs`: library root
+- `src/ciphers/`: cipher implementations by family
+- `src/common/`: shared math and utility code
+- `src/bin/server.rs`: chat server demo
+- `src/bin/client.rs`: chat client demo
+- `tests/rust_crypto.rs`: broad round-trip smoke tests
 
-### Asymmetric Ciphers
-*   RSA - Supporting key generation, encryption, and decryption with GMP.
-*   ElGamal - Asymmetric encryption based on Diffie-Hellman.
-*   Diffie-Hellman - Key exchange protocol for establishing shared secrets.
+## Commands
 
-### Hashing and Integrity
-*   MD5
-*   SHA-256
-*   SHA-512
-*   Avalanche effect testing and benchmarking tools.
-
-### Multimedia Support
-The project includes external headers (stb) to demonstrate encryption on:
-*   Images (PNG, JPG, BMP)
-*   Audio (Ogg Vorbis)
-
----
-
-## Dependencies
-
-To compile and run this project, you must have the following libraries installed:
-
-1.  **GMP (GNU Multiple Precision Arithmetic Library):** Used for large prime number calculations in asymmetric ciphers.
-2.  **OpenSSL (libcrypto):** Used for modern hashing algorithms (MD5, SHA).
-
-On Ubuntu/Debian, install them via:
 ```bash
-sudo apt-get install libgmp-dev libssl-dev
-```
-
----
-
-## Building the Project
-
-The provided Makefile manages the compilation of the library, tests, and the chat application.
-
-### Main Library
-To compile the core project implementation:
-```bash
-make
-```
-
-### Running Tests
-To run the full test suite (which includes verification of all ciphers):
-```bash
+make build
 make test
+make server
+make client
 ```
 
-To run a specific test (e.g., for RSA):
+You can also run Cargo directly:
+
 ```bash
-make test-rsa
+cargo build
+cargo test
+cargo run
 ```
 
-### Cleaning Build Files
-To remove object files and compiled binaries:
-```bash
-make clean
-```
+## Notes
 
----
-
-## Secure Chat Application
-
-The project includes a server-client chat application. It establishes a secure connection using:
-1.  **Diffie-Hellman** to exchange a shared secret.
-2.  **SHA-256** to derive an AES key from that secret.
-3.  **AES-CBC** to encrypt messages.
-4.  **HMAC-style SHA-256** signatures to verify message integrity.
-
-### How to run:
-1.  Open two terminals.
-2.  In terminal 1, start the server:
-    ```bash
-    make server
-    ./server
-    ```
-3.  In terminal 2, start the client:
-    ```bash
-    make client
-    ./client
-    ```
-
----
-
-## Project Structure
-
-*   `include/`: Header files organized by cipher category.
-*   `src/`: Source code implementations.
-    *   `ciphers/`: Implementation of the cryptographic logic.
-    *   `common/`: Shared utilities and mathematical constants.
-*   `tests/`: Test files and test runners using the `test_utils.h` framework.
-*   `Makefile`: Build configuration.
-
-## Legal Disclaimer
-This library is for educational and academic purposes only. Do not use this implementation for securing sensitive production data, as it may lack protection against advanced side-channel attacks.
+This code is for educational use. Several algorithms are intentionally straightforward implementations without production hardening or modern padding/authentication schemes.

@@ -5,11 +5,16 @@ use crate::common::utils::mod_inverse;
 pub struct AffineKey {
     pub a: i16,
     pub b: i16,
+    pub modulus: i16,
 }
 
 impl Default for AffineKey {
     fn default() -> Self {
-        Self { a: 5, b: 8 }
+        Self {
+            a: 5,
+            b: 8,
+            modulus: 256,
+        }
     }
 }
 
@@ -19,18 +24,21 @@ pub struct AffineCipher {
 }
 
 fn encode(byte: u8, key: &AffineKey, decrypt: bool) -> u8 {
-    if !byte.is_ascii_alphabetic() {
-        return byte;
-    }
-    let base = if byte.is_ascii_lowercase() { b'a' } else { b'A' };
-    let value = (byte - base) as i16;
+    let value = byte as i16;
     let mapped = if decrypt {
-        let inv = mod_inverse(key.a as i64, 26).unwrap_or(1) as i16;
+        let inv = mod_inverse(key.a as i64, key.modulus as i64).unwrap_or(1) as i16;
         inv * (value - key.b)
     } else {
         key.a * value + key.b
     };
-    mapped.rem_euclid(26) as u8 + base
+    mapped.rem_euclid(key.modulus) as u8
+}
+
+impl AffineKey {
+    pub fn new(a: i16, b: i16, modulus: i16) -> Option<Self> {
+        mod_inverse(a as i64, modulus as i64)?;
+        Some(Self { a, b, modulus })
+    }
 }
 
 impl Cipher for AffineCipher {

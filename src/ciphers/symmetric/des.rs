@@ -1,14 +1,20 @@
 use crate::cipher_interface::Cipher;
-use super::reseau_fistel::encrypt_fistel;
+use cbc::{Decryptor, Encryptor};
+use cipher::{block_padding::Pkcs7, BlockDecryptMut, BlockEncryptMut, KeyIvInit};
+use des::Des;
 
 #[derive(Clone, Debug)]
 pub struct DesKey {
     pub raw: [u8; 8],
+    pub iv: [u8; 8],
 }
 
 impl Default for DesKey {
     fn default() -> Self {
-        Self { raw: *b"DESdemo!" }
+        Self {
+            raw: *b"DESdemo!",
+            iv: [0u8; 8],
+        }
     }
 }
 
@@ -17,28 +23,21 @@ pub struct DesCipher {
     pub key: DesKey,
 }
 
-fn round_function(block: &[u8], key: &[u8; 8], round: usize) -> Vec<u8> {
-    block
-        .iter()
-        .enumerate()
-        .map(|(i, byte)| byte.rotate_left(((key[(i + round) % key.len()] % 7) + 1) as u32))
-        .collect()
-}
-
 impl Cipher for DesCipher {
     fn name(&self) -> &'static str {
         "des"
     }
 
     fn encrypt(&self, input: &[u8]) -> Vec<u8> {
-        let mut block = input.to_vec();
-        if block.len() % 2 == 1 {
-            block.push(0);
-        }
-        encrypt_fistel(&block, 16, |half| round_function(half, &self.key.raw, 0))
+        Encryptor::<Des>::new_from_slices(&self.key.raw, &self.key.iv)
+            .expect("valid DES params")
+            .encrypt_padded_vec_mut::<Pkcs7>(input)
     }
 
     fn decrypt(&self, input: &[u8]) -> Vec<u8> {
-        encrypt_fistel(input, 16, |half| round_function(half, &self.key.raw, 0))
+        Decryptor::<Des>::new_from_slices(&self.key.raw, &self.key.iv)
+            .expect("valid DES params")
+            .decrypt_padded_vec_mut::<Pkcs7>(input)
+            .unwrap_or_default()
     }
 }

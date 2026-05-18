@@ -1,8 +1,8 @@
 #![allow(dead_code)]
 
 pub mod cipher_interface;
-pub mod common;
 pub mod ciphers;
+pub mod common;
 
 use cipher_interface::CipherDescriptor;
 
