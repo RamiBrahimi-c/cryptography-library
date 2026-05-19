@@ -6,6 +6,8 @@
 #include "aes.h"
 #include "aes_lib.h"
 #include "rsa.h"
+#include "elgamal.h"
+#include "dh.h"
 
 #include "test_utils.h"
 
@@ -54,31 +56,32 @@ void setupFullResultFilePath(char *directory_name , char *type_algo  , char *fil
 
 }
 
-// int main() {
+int main() {
+    char *_filename = "coast.jpg";
+    
+    // --- Symmetric ---
+    uchar_t key[] = {0x2b, 0x7e, 0x15, 0x16, 0x28, 0xae, 0xd2, 0xa6,
+                     0xab, 0xf7, 0x15, 0x88, 0x09, 0xcf, 0x4f, 0x3c};
 
-//     // TEST_ON_TEXT_ENCRYPTION(affine , "hello world" , "3" , AffineKey) ;
-//     char *_filename = "algiers.jpg" ;
-//     uchar_t input[16] = "Hello AES!";
-//     uchar_t key[]   = {0x2b, 0x7e, 0x15, 0x16, 0x28, 0xae, 0xd2, 0xa6,
-//                            0xab, 0xf7, 0x15, 0x88, 0x09, 0xcf, 0x4f, 0x3c};
-//         printf("hi\n") ;
-//         // sayhi() ;  
-//     // test_rsa_32bytes(1024) ;
-        
-//     hybrid_test() ; 
+    TEST_ON_IMAGE_ENCRYPTION(aes, _filename, key, AesKey);
+    TEST_ON_IMAGE_ENCRYPTION(des, _filename, key, DesKey);
+    TEST_ON_IMAGE_ENCRYPTION(affine, _filename, "19", AffineKey);
+    TEST_ON_IMAGE_ENCRYPTION(hill, _filename, "2", HillKey);
+    TEST_ON_IMAGE_ENCRYPTION(rc4, _filename, "keykey", Rc4Key);
 
-//     // TEST_ON_TEXT_ENCRYPTION(aes ,input ,  16, key  , AesKey ) ; 
-//     // TEST_ON_TEXT_ENCRYPTION(des ,input ,  8, key  , DesKey) ; 
-//     // TEST_ON_IMAGE_ENCRYPTION(aes , _filename , key , AesKey) ;  
-//     // TEST_ON_IMAGE_ENCRYPTION(des , _filename , key , DesKey) ;  
-//     // TEST_ON_IMAGE_ENCRYPTION(affine , _filename ,"19" , AffineKey ) ; 
-//     // TEST_ON_IMAGE_ENCRYPTION(hill , _filename ,"2" , HillKey ) ; 
-//     // TEST_ON_IMAGE_ENCRYPTION(rc4 , _filename ,"keykey" , Rc4Key ) ; 
+    // --- Asymmetric ---
+    TEST_RSA_ENCRYPT_IMAGE(rsa, _filename, 512);
+    TEST_RSA_ENCRYPT_IMAGE(rsa, _filename, 1024);
+    TEST_RSA_ENCRYPT_IMAGE(rsa, _filename, 2048);
 
-//     return 0 ;
-// }
+    // --- ElGamal non-determinism ---
+    TEST_ELGAMAL_NONDETERMINISM();
 
+    // --- DH + MITM ---
+    TEST_DH_MITM();
 
+    return 0;
+}
 
 
 // TEST(affine_encrypt_basic) {
