@@ -12,23 +12,23 @@
 
 
 // Basic matrix print macro
-#define PRINT_MATRIX(matrix, rows, cols) \
+#define PRINT_MATRIX(matrix, rows, cols , format) \
     do { \
         printf("Matrix (%d x %d):\n", rows, cols); \
         for (int _i = 0; _i < (rows); _i++) { \
             for (int _j = 0; _j < (cols); _j++) { \
-                printf("%4d ", (matrix)[_i][_j]); \
+                printf(format " ", (matrix)[_i][_j]); \
             } \
             printf("\n"); \
         } \
         printf("\n"); \
     } while (0)
 
-#define PRINT_ARRAY(array , length) \
+#define PRINT_ARRAY(array , length , format) \
     do { \
         printf("Array (%d):\n", length); \
         for (int _i = 0; _i < (length); _i++) { \
-                printf("%1d ", (array)[_i]); \
+                printf(format " ", (array)[_i]); \
         } \
         printf("\n"); \
     } while (0)

@@ -4,10 +4,10 @@
 #include "rc4.h"
 #include "des.h"
 #include "aes.h"
-#include "aes_lib.h"
 #include "rsa.h"
 #include "elgamal.h"
 #include "dh.h"
+#include "../include/common/utils.h"
 
 #include "test_utils.h"
 
@@ -56,7 +56,84 @@ void setupFullResultFilePath(char *directory_name , char *type_algo  , char *fil
 
 }
 
+
+#include "aes.h"
+
+
+
+
 int main() {
+
+    // uchar_t sbox[64][64] ; 
+    set_sbox( sbox) ; 
+
+    PRINT_MATRIX(sbox , 16 , 16 , "%x") ; 
+
+
+
+    // number of 32 bits comprimising the key
+    int Nk ;
+    // rounds number  
+    int Nr ; 
+
+    AES_TYPE type = AES192 ; 
+
+    setup_parameteres_aes(type , &Nr , &Nk);
+
+    uchar_t original_cipher[64]  = {0x6b,0xc1,0xbe,0xe2,0x2e,0x40,0x9f,0x96
+        ,0xe9,0x3d,0x7e,0x11,0x73,0x93,0x17,0x2a
+        ,0xae,0x2d,0x8a,0x57,0x1e,0x03,0xac,0x9c
+        ,0x9e,0xb7,0x6f,0xac,0x45,0xaf,0x8e,0x51
+        ,0x30,0xc8,0x1c,0x46,0xa3,0x5c,0xe4,0x11
+        ,0xe5,0xfb,0xc1,0x19,0x1a,0x0a,0x52,0xef
+        ,0xf6,0x9f,0x24,0x45,0xdf,0x4f,0x9b,0x17
+        ,0xad,0x2b,0x41,0x7b,0xe6,0x6c,0x37,0x10}; 
+    
+    
+    uchar_t encrypted_cipher[64] ; 
+
+    uchar_t original_key[24] =  {
+        0x8e, 0x73, 0xb0, 0xf7, 0xda, 0x0e, 0x64, 0x52, 0xc8, 0x10, 0xf3, 0x2b, 0x80, 0x90, 0x79, 0xe5,
+                0x62, 0xf8, 0xea, 0xd2, 0x52, 0x2c, 0x6b, 0x7b };
+
+    int original_key_length = 24 ; 
+    // for aes128
+    uchar_t expanded_key[4*4*(Nr+1)] ; 
+    // word is 32bits so 4 * sizeof(uchar_t) 
+
+    int expanded_key_length = 4 * (Nr+1) * 4; 
+
+    uchar_t rci[10] ; 
+
+    build_rci(rci) ;
+
+    PRINT_ARRAY(rci , 10 , "%x" ) ; 
+    
+
+    printf("\t\tthe original key : \n") ;
+    PRINT_ARRAY(original_key , original_key_length , "%x" ) ; 
+    
+    key_expan(original_key , expanded_key , Nk , Nr , rci) ; 
+
+
+    // aes_cipher_block(original_cipher  ,   encrypted_cipher , expanded_key  , Nr) ; 
+    aes_cipher(original_cipher ,  encrypted_cipher , expanded_key  , 64 , Nr) ; 
+
+
+
+    
+
+    printf("\t\tthe output : \n") ;
+        PRINT_ARRAY(encrypted_cipher , 64 , "%x") ; 
+
+    return 0 ; 
+}
+
+
+
+
+
+/* int main() {
     char *_filename = "coast.jpg";
     
     // --- Symmetric ---
@@ -82,7 +159,7 @@ int main() {
 
     return 0;
 }
-
+ */
 
 // TEST(affine_encrypt_basic) {
 //     char output[100];

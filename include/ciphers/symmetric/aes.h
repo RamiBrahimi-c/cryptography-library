@@ -4,16 +4,59 @@
 #include "../../cipher_interface.h"
 #include "../../common/constants.h"
 #include <stdint.h>
-#include "aes_lib.h"
+
+
+
+#include <stdio.h>
+#include "../../common/keyexpan.h"
+//  extern uchar_t sbox[64][64] ; 
+
+
+typedef enum AES_TYPE {
+    AES128 , 
+    AES192 , 
+    AES256 
+}AES_TYPE;
+
+void fill_state(uchar_t *input  , int index, uchar_t state[4][4]);
+
+void add_round_key(uchar_t *key , int k , uchar_t state[4][4]) ;
+/*
+    the function that is used in AES rounds !!!!
+*/
+void sub_bytes(uchar_t state[4][4] ) ;
+
+// C Code to left rotate an array using Reversal Algorithm
+
+#include <stdio.h>
+
+// Function to reverse a portion of the array
+void reverse(uchar_t* arr, int start, int end);
+
+// Function to rotate an array by d elements to the left
+void rotateArr(uchar_t* arr, int n, int d) ;
+
+
+void shift_rows(uchar_t state[4][4]) ;
+
+
+void mix_culumns(uchar_t state[4][4]) ;
+
+void fill_state_inv(uchar_t *key  , int k, uchar_t state[4][4]) ;
+
+
+void aes_cipher_block(uchar_t *input   , uchar_t *output , uchar_t *key , int Nr) ;
+void aes_cipher(uchar_t *input   , uchar_t *output, uchar_t *key  , int length, int Nr) ;
+
+
+
+
 
 // Opaque type – actual definition in aes.c
 typedef struct AesKey AesKey;
 
 typedef struct AesKey {
-    size_t   key_len;        // 16, 24, or 32
-    uint8_t *key_bytes;      // raw key material
-    // optionally, store an expanded AES_ctx to avoid re‑keying each time
-    struct AES_ctx ctx;
+
 };
 
 

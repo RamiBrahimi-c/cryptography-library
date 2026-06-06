@@ -76,14 +76,7 @@ typedef struct {
 
 typedef unsigned char uchar_t ; 
 
-#define PRINT_ARRAY(array , length) \
-    do { \
-        printf("Array (%d):\n", length); \
-        for (int _i = 0; _i < (length); _i++) { \
-                printf("%2x ", (array)[_i]); \
-        } \
-        printf("\n"); \
-    } while (0)
+
 
 
 #define TEST_ON_TEXT_ENCRYPTION(name , _original_text  , _length, _key , _key_type ) do { \

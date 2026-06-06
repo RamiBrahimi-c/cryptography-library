@@ -77,7 +77,7 @@ void hill_decrypt(const uchar_t* input, uchar_t* output, const void* key) {
     int l1 = hill_key->n , c1 = hill_key->n ;
 
     matrixInverseMod(hill_key->matrix , matrix1 , hill_key->n , ALPHABET_LENGTH) ;
-    PRINT_MATRIX(matrix1 , hill_key->n , hill_key->n) ;
+    PRINT_MATRIX(matrix1 , hill_key->n , hill_key->n , "%d") ;
 
     
 
