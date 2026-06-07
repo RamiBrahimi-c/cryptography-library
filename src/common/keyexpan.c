@@ -20,7 +20,15 @@ uchar_t subByte(uchar_t byte) {
 
     return sbox[i_index][j_index] ;
 }
+uchar_t rev_subByte(uchar_t byte) {
+    uchar_t i_index = (byte & 0xf0) >> 4 ;
+    uchar_t j_index = byte & 0x0f ;
+    // printf("byte = %x \n" , byte) ; 
+    // printf("i = %x \n" , i_index) ; 
+    // printf("j = %x \n" , j_index) ; 
 
+    return rev_sbox[i_index][j_index] ;
+}
 void subWord(uchar_t array[4]) {
     for (size_t i = 0; i < 4; i++)
     {

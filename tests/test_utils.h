@@ -94,6 +94,21 @@ typedef unsigned char uchar_t ;
     \
 } while(0)
 
+#define TEST_ON_TEXT_DECRYPTION(name , _original_text , _decrypted_text , _length, _key , _key_type ) do { \
+    printf( "INFO :%sTesting %s... %s\n" , COLOR_GREEN , #name , COLOR_RESET); \
+    int length = _length;\
+    void *key_##name = calloc(1 , sizeof(_key_type)) ;\
+    ASSERT_NOT_NULL(key_##name);\
+    printf("INFO: setting key... \n");\
+    name##_set_key(key_##name , _key);\
+    printf("INFO: key set with success\n");\
+    name##_decrypt(_original_text ,_decrypted_text  ,length , key_##name );\
+    \
+    printf("INFO: encrypted with success\n");\
+    \
+    free(key_##name);\
+} while(0)
+
 
 
 

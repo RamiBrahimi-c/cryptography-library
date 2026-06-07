@@ -3,7 +3,6 @@
 
 
 #include "aes.h"
-// #include "aes_lib.h"   // the tiny-AES library
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>     
@@ -65,6 +64,18 @@ void sub_bytes(uchar_t state[4][4] ) {
     
 }
 
+void rev_sub_bytes(uchar_t state[4][4] ) {
+    for (int i = 0; i < 4; i++)
+    {
+        for (int j = 0; j < 4; j++)
+        {
+            state[j][i] = rev_subByte(state[j][i]) ; 
+        }
+        
+    }
+    
+}
+
 
 
 
@@ -95,6 +106,21 @@ void rotateArr(uchar_t* arr, int n, int d) {
     reverse(arr, 0, n - 1);
 }
 
+// Function to rotate an array by d elements to the right
+void rotateArrR(uchar_t* arr, int n, int d) {
+    
+    // Handle the case where d > size of array
+    d %= n;
+
+    // Reverse the last d elements
+    reverse(arr, n -d, n - 1 );
+
+    // Reverse the remaining n-d elements
+    reverse(arr, 0, n-d-1 );
+
+    // Reverse the entire array
+    reverse(arr, 0, n - 1);
+}
 
 
 void shift_rows(uchar_t state[4][4]) {
@@ -106,6 +132,18 @@ void shift_rows(uchar_t state[4][4]) {
     }
     
 }
+
+
+void inv_shift_rows(uchar_t state[4][4]) {
+    int rotation_num = 0 ; 
+    for (int i = 0; i < 4; i++)
+    {
+        rotateArrR(state[i] ,4 , rotation_num ) ;         
+        rotation_num++ ; 
+    }
+    
+}
+
 
 
 
@@ -130,12 +168,35 @@ void mix_culumns(uchar_t state[4][4]) {
 }
 
 
+
+void rev_mix_culumns(uchar_t state[4][4]) {
+    uchar_t temp0 , temp1 , temp2 , temp3 ; 
+    for (int i = 0; i < 4; i++)
+    {
+        temp0 = state[0][i] ; 
+        temp1 = state[1][i] ; 
+        temp2 = state[2][i] ; 
+        temp3 = state[3][i] ; 
+
+        state[0][i] =(uchar_t) mod_GF(mul_GF_16bit(0x0e , temp0 )) ^ mod_GF(mul_GF_16bit(0x0b , temp1 )) ^  mod_GF(mul_GF_16bit(0x0d ,temp2)) ^ mod_GF(mul_GF_16bit(0x09 ,temp3 )) ;   
+        
+        state[1][i] = mod_GF(mul_GF_16bit(0x09 , temp0 )) ^ mod_GF(mul_GF_16bit(0x0e , temp1 )) ^ mod_GF(mul_GF_16bit(0x0b , temp2 )) ^ mod_GF(mul_GF_16bit(0x0d , temp3 )) ;   
+        
+        state[2][i] = mod_GF(mul_GF_16bit(0x0d , temp0 )) ^ mod_GF(mul_GF_16bit(0x09 , temp1)) ^  mod_GF(mul_GF_16bit(0x0e , temp2 )) ^ mod_GF(mul_GF_16bit(0x0b , temp3 )) ;   
+        
+        state[3][i] = mod_GF(mul_GF_16bit(0x0b , temp0 )) ^ mod_GF(mul_GF_16bit(0x0d , temp1 )) ^ mod_GF(mul_GF_16bit(0x09 , temp2 )) ^ mod_GF(mul_GF_16bit(0x0e , temp3 )) ;   
+    }
+    
+}
+
+
+
+
 void fill_state_inv(uchar_t *key  , int k, uchar_t state[4][4]) {
     for (int i = 0; i < 4; i++)
     {
         for (int j = 0; j < 4; j++)
         {
-            // printf("")
             key[k] = state[j][i] ; 
             k++ ; 
         }
@@ -147,7 +208,6 @@ void fill_state_inv(uchar_t *key  , int k, uchar_t state[4][4]) {
 
 
 void aes_cipher_block(uchar_t *input   , uchar_t *output , uchar_t *key , int Nr) {
-    // printf("\t\t *************************** AES ***************************\n") ; 
     
     uchar_t state[4][4] ; 
     fill_state(input , 0 , state) ;
@@ -180,6 +240,48 @@ void aes_cipher_block(uchar_t *input   , uchar_t *output , uchar_t *key , int Nr
 }
 
 
+
+void aes_cipher_inverse_block(uchar_t *input   , uchar_t *output , uchar_t *key , int Nr) {
+    
+    uchar_t state[4][4] ; 
+    fill_state(input , 0 , state) ;
+
+
+    add_round_key(key , 4 * Nr * 4 , state) ; 
+
+
+    for (int i = Nr - 1; i >= 1 ; i--)
+    {
+        inv_shift_rows(state) ; 
+        
+        rev_sub_bytes(state) ; 
+
+
+        add_round_key(key , 4 * i * 4  , state) ; 
+        
+
+        
+        rev_mix_culumns(state) ; 
+
+
+
+    }
+
+    inv_shift_rows(state) ; 
+
+
+    rev_sub_bytes(state) ; 
+
+
+
+    add_round_key(key , 0  , state) ; 
+    
+    fill_state_inv(output , 0 , state) ; 
+
+}
+
+
+
 /* 
     for now it only works with perfect buffer of size k * 16 (k > 0)
 */
@@ -194,6 +296,20 @@ void aes_cipher(uchar_t *input   , uchar_t *output, uchar_t *key  , int length, 
     }
     
 }
+
+
+void aes_cipher_decrypt(uchar_t *input   , uchar_t *output, uchar_t *key  , int length, int Nr) {
+    
+
+    for (int i = 0; i < length / 16; i++)
+    {
+        int margin = i * 16 ; 
+        aes_cipher_inverse_block(input  + margin , output + margin  ,key , Nr ) ;
+
+    }
+    
+}
+
 
 
 void setup_parameteres_aes(AES_TYPE type , int *Nr , int *Nk) {
@@ -238,6 +354,11 @@ void aes_encrypt(const uchar_t* input, uchar_t* output, int length, const void* 
 
 void aes_decrypt(const uchar_t* input, uchar_t* output, int length, const void* key)
 {
+    assert(key != NULL && "key is null");
+    AesKey *aes_key = (AesKey *) (key) ;
+
+    aes_cipher_decrypt(input , output , aes_key->expanded_key , length , aes_key->Nr ) ; 
+
 }
 
 

@@ -25,7 +25,7 @@ void add_round_key(uchar_t *key , int k , uchar_t state[4][4]) ;
     the function that is used in AES rounds !!!!
 */
 void sub_bytes(uchar_t state[4][4] ) ;
-
+void rev_sub_bytes(uchar_t state[4][4] ) ;
 // C Code to left rotate an array using Reversal Algorithm
 
 #include <stdio.h>
@@ -35,18 +35,23 @@ void reverse(uchar_t* arr, int start, int end);
 
 // Function to rotate an array by d elements to the left
 void rotateArr(uchar_t* arr, int n, int d) ;
+void rotateArrR(uchar_t* arr, int n, int d) ;
 
 
 void shift_rows(uchar_t state[4][4]) ;
+void inv_shift_rows(uchar_t state[4][4]) ;
 
 
 void mix_culumns(uchar_t state[4][4]) ;
+void rev_mix_culumns(uchar_t state[4][4]) ;
 
 void fill_state_inv(uchar_t *key  , int k, uchar_t state[4][4]) ;
 
 
 void aes_cipher_block(uchar_t *input   , uchar_t *output , uchar_t *key , int Nr) ;
+void aes_cipher_inverse_block(uchar_t *input   , uchar_t *output , uchar_t *key , int Nr) ;
 void aes_cipher(uchar_t *input   , uchar_t *output, uchar_t *key  , int length, int Nr) ;
+void aes_cipher_decrypt(uchar_t *input   , uchar_t *output, uchar_t *key  , int length, int Nr) ;
 
 
 

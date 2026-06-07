@@ -8,6 +8,7 @@ extern uchar_t sbox [16][16] ;
 extern uchar_t rev_sbox [16][16] ; 
 
 uchar_t subByte(uchar_t byte) ;
+uchar_t rev_subByte(uchar_t byte) ;
 
 void subWord(uchar_t array[4]) ;
 

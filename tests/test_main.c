@@ -75,23 +75,35 @@ int main() {
     
     
     uchar_t encrypted_cipher[64] ; 
+    uchar_t decrypted_cipher[64] ; 
 
     uchar_t original_key[24] =  {
         0x8e, 0x73, 0xb0, 0xf7, 0xda, 0x0e, 0x64, 0x52, 0xc8, 0x10, 0xf3, 0x2b, 0x80, 0x90, 0x79, 0xe5,
                 0x62, 0xf8, 0xea, 0xd2, 0x52, 0x2c, 0x6b, 0x7b };
 
+    printf("\t\tthe input : \n") ;
 
-    // TEST_ON_TEXT_ENCRYPTION(aes , original_cipher  , encrypted_cipher, 64 , original_key,AesKey ) ;
-    TEST_ON_IMAGE_ENCRYPTION(aes , "flowers.jpg" , original_key ,AesKey);
+    PRINT_ARRAY(original_cipher , 64 , "%x") ; 
+    
+    TEST_ON_TEXT_ENCRYPTION(aes , original_cipher  , encrypted_cipher, 64 , original_key,AesKey ) ;
+    
+    printf("\t\tthe encryption : \n") ;
+    PRINT_ARRAY(encrypted_cipher , 64 , "%x") ; 
+    
+    TEST_ON_TEXT_DECRYPTION(aes , encrypted_cipher  , decrypted_cipher,  64 , original_key,AesKey ) ;
+    printf("\t\tthe decryption : \n") ;
+    PRINT_ARRAY(decrypted_cipher , 64 , "%x") ; 
+    
+    // aes_decrypt(encrypted_cipher , decrypted_cipher , 64 ,   ) ;
+
+    // TEST_ON_IMAGE_ENCRYPTION(aes , "flowers.jpg" , original_key ,AesKey);
+    
     // void *my_key = malloc(sizeof(AesKey)) ;  
     
     // aes_set_key(my_key , original_key) ; 
     // AesKey *my_aes_key = (void *) my_key ; 
 
     // aes_encrypt(original_cipher ,encrypted_cipher , 64 ,my_key );
-
-    // printf("\t\tthe output : \n") ;
-    // PRINT_ARRAY(encrypted_cipher , 64 , "%x") ; 
 
 
     return 0 ; 
