@@ -56,7 +56,13 @@ void aes_cipher(uchar_t *input   , uchar_t *output, uchar_t *key  , int length, 
 typedef struct AesKey AesKey;
 
 typedef struct AesKey {
-
+    AES_TYPE mode ; // aes126 , aes192 or aes256
+    uchar_t key[32] ; // max is 32 ...
+    size_t key_length ;
+    uchar_t *expanded_key ;
+    size_t expanded_key_length ;
+    int Nr ; // rounds number 
+    int Nk ; // number of 32 bit words compromising the key
 };
 
 

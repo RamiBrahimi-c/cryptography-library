@@ -186,9 +186,9 @@ void aes_cipher_block(uchar_t *input   , uchar_t *output , uchar_t *key , int Nr
 void aes_cipher(uchar_t *input   , uchar_t *output, uchar_t *key  , int length, int Nr) {
     
 
-    for (int i = 0; i < length / 16; i++)
+    for (int i = 0; i <  (length / 16); i++)
     {
-        int margin = i * 16 ; 
+        int margin = i * 16 ;
         aes_cipher_block(input  + margin , output + margin  ,key , Nr ) ;
 
     }
@@ -220,9 +220,16 @@ void setup_parameteres_aes(AES_TYPE type , int *Nr , int *Nk) {
 
 
 
-
+/*
+    for now only input with length of 16*k bytes is supported
+*/
 void aes_encrypt(const uchar_t* input, uchar_t* output, int length, const void* key)
 {
+    assert(key != NULL && "key is null");
+    AesKey *aes_key = (AesKey *) (key) ;
+
+    aes_cipher(input , output , aes_key->expanded_key , length , aes_key->Nr ) ; 
+
 
 
 }
@@ -238,6 +245,75 @@ void aes_decrypt(const uchar_t* input, uchar_t* output, int length, const void* 
 
 void aes_set_key(void* key_struct, const char* key_str)
 {
+    AesKey *aes_key = (AesKey *) key_struct ;
+
+    if (!key_str)
+    {
+        printf("WARNING : Assigning random key ...\n ") ; 
+        exit(0) ; 
+        // then generate some random ...
+    } else {
+        int temp_len = strlen(key_str) ; 
+        if (temp_len == 16)
+        {
+            printf("INFO: AES128 chosen !\n");
+            aes_key->mode = AES128 ; 
+            strcpy(aes_key->key , key_str) ; 
+            aes_key->key_length = 16 ;  
+        }
+        else if (temp_len == 24)
+        {
+            printf("INFO: AES196 chosen !\n");
+            
+            aes_key->mode = AES192 ; 
+            strcpy(aes_key->key , key_str) ; 
+            aes_key->key_length = 24 ;  
+            
+        }
+        else if (temp_len == 32)
+        {
+            printf("INFO: AES256 chosen !\n");
+            aes_key->mode = AES256 ; 
+            strcpy(aes_key->key , key_str) ; 
+            aes_key->key_length = 32 ;  
+            
+        } else {
+            printf("INFO: AES128 is assigned with custom standard key  !\n");
+            aes_key->mode = AES128 ;
+            uchar_t temp_standard_key[16] = {0x2b  ,0x7e, 0x15, 0x16, 0x28, 0xae, 0xd2, 0xa6, 0xab, 0xf7, 0x15, 0x88, 0x09, 0xcf, 0x4f, 0x3c } ; 
+            printf("hi\n");
+            strcpy(aes_key->key , temp_standard_key) ; 
+            printf("hi\n");
+            aes_key->key_length = 16 ;  
+
+        }
+        
+    }
+    set_sbox(sbox) ; 
+    
+    set_rev_sbox(rev_sbox);
+
+
+    uchar_t rci[10] ; 
+
+    build_rci(rci) ;
+
+    // PRINT_ARRAY(rci , 10 , "%x" ) ; 
+        
+    
+    setup_parameteres_aes(aes_key->mode , &aes_key->Nr , &aes_key->Nk ) ;
+    printf("mode : %d %d %d\n" , aes_key->mode , aes_key->Nr , aes_key->Nk);
+    aes_key->expanded_key_length = 4 * (aes_key->Nr+1) * 4 ; 
+    printf("len : %d \n" , aes_key->expanded_key_length);
+    
+    aes_key->expanded_key = malloc(sizeof(uchar_t)*aes_key->expanded_key_length) ; 
+    
+    assert(aes_key->expanded_key != NULL && "aes key expanded is null");
+    
+
+    key_expan(aes_key->key , aes_key->expanded_key ,aes_key->Nk ,aes_key->Nr , rci   ) ; 
+    
+    
 }
 
 

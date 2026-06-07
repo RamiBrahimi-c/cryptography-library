@@ -78,55 +78,49 @@ uint16_t div_GF_16bit(uint16_t a , uint16_t b) {
 uchar_t mod_GF(uint16_t result) {
 
     uchar_t final_result = result & 0x00ff ;
-    // x^8 = 1 + x + x³ + x⁴
-    // final_result ^= (result & 0x0100 == 0) ? 0 : 0x1b ; 
+    // x^8 = 1 + x + x³ + x⁴ = 0001 1011 = 0x1b
     if ((result & 0x0100) != 0)
     {
         final_result ^= 0x1b ; 
     }
     
     
-    // x^9 = x + x² + x⁴ + x⁵
-    // final_result ^= (result & 0x0200 == 0) ? 0 : 0x1a ; 
+    // x^9 = x + x² + x⁴ + x⁵ = 0011 0110 = 0x36
     if ((result & 0x0200) != 0)
     {
-        final_result ^= 0x1a ; 
+        final_result ^= 0x36 ; 
     }
 
     
 
 
-    // x^10 = x² + x³ + x⁵ + x⁶ 
-    // final_result ^= (result & 0x0400 == 0) ? 0 : 0x6c ;  
+    // x^10 = x² + x³ + x⁵ + x⁶ = 0110 1100 = 0x6c 
     if ((result & 0x0400) != 0)
     {
         final_result ^= 0x6c ; 
     }
 
     
-    // x^11 =  
-    // final_result ^= (result & 0x0800 == 0) ? 0 : 0xd8 ;  
+    // x^11 = x³ + x⁴ + x⁶ + x⁷ = 1101 1000 = 0xd8
     if ((result & 0x0800) != 0)
     {
         final_result ^= 0xd8 ; 
     }
     
-    // x^12 = x + x² + x⁴ + x⁵
+    // x^12 = 1 + x + x³ + x⁵ + x⁷
     // final_result ^= (result & 0x1000 == 0) ? 0 : 0xab ;  
     if ((result & 0x1000) != 0)
     {
         final_result ^= 0xab ; 
     }
     
-    // x^13 = x + x² + x⁴ + x⁵
-    // final_result ^= (result & 0x2000 == 0) ? 0 : 0x4d ;  
+    // x^13 = 1 + x² + x³ + x⁶   = 0100 1101 = 0x4d
     if ((result & 0x2000) != 0)
     {
         final_result ^= 0x4d ; 
     }
     
-    // x^14 = x + x² + x⁴ + x⁵
-    // final_result ^= (result & 0x4000 == 0) ? 0 : 0x9a ;  
+    // x^14 = x + x³ + x⁴ + x⁷ = 1001 1010 = 0x9a
     if ((result & 0x4000) != 0)
     {
         final_result ^= 0x9a ; 

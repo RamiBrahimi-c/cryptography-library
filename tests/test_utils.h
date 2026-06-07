@@ -79,20 +79,17 @@ typedef unsigned char uchar_t ;
 
 
 
-#define TEST_ON_TEXT_ENCRYPTION(name , _original_text  , _length, _key , _key_type ) do { \
+#define TEST_ON_TEXT_ENCRYPTION(name , _original_text , _encrypted_text , _length, _key , _key_type ) do { \
     printf( "INFO :%sTesting %s... %s\n" , COLOR_GREEN , #name , COLOR_RESET); \
     int length = _length;\
-    uchar_t encrypted_text[MAX_LENGTH_TEXT_TEST];\
     void *key_##name = calloc(1 , sizeof(_key_type)) ;\
     ASSERT_NOT_NULL(key_##name);\
     printf("INFO: setting key... \n");\
     name##_set_key(key_##name , _key);\
     printf("INFO: key set with success\n");\
-    name##_encrypt(_original_text ,encrypted_text  ,length , key_##name );\
+    name##_encrypt(_original_text ,_encrypted_text  ,length , key_##name );\
     \
     printf("INFO: encrypted with success\n");\
-    printf("INFO: encrypted text : %s \n" ,encrypted_text );\
-    PRINT_ARRAY(encrypted_text , length);\
     \
     \
 } while(0)

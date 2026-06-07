@@ -64,22 +64,6 @@ void setupFullResultFilePath(char *directory_name , char *type_algo  , char *fil
 
 int main() {
 
-    // uchar_t sbox[64][64] ; 
-    set_sbox( sbox) ; 
-
-    PRINT_MATRIX(sbox , 16 , 16 , "%x") ; 
-
-
-
-    // number of 32 bits comprimising the key
-    int Nk ;
-    // rounds number  
-    int Nr ; 
-
-    AES_TYPE type = AES192 ; 
-
-    setup_parameteres_aes(type , &Nr , &Nk);
-
     uchar_t original_cipher[64]  = {0x6b,0xc1,0xbe,0xe2,0x2e,0x40,0x9f,0x96
         ,0xe9,0x3d,0x7e,0x11,0x73,0x93,0x17,0x2a
         ,0xae,0x2d,0x8a,0x57,0x1e,0x03,0xac,0x9c
@@ -96,35 +80,19 @@ int main() {
         0x8e, 0x73, 0xb0, 0xf7, 0xda, 0x0e, 0x64, 0x52, 0xc8, 0x10, 0xf3, 0x2b, 0x80, 0x90, 0x79, 0xe5,
                 0x62, 0xf8, 0xea, 0xd2, 0x52, 0x2c, 0x6b, 0x7b };
 
-    int original_key_length = 24 ; 
-    // for aes128
-    uchar_t expanded_key[4*4*(Nr+1)] ; 
-    // word is 32bits so 4 * sizeof(uchar_t) 
 
-    int expanded_key_length = 4 * (Nr+1) * 4; 
-
-    uchar_t rci[10] ; 
-
-    build_rci(rci) ;
-
-    PRINT_ARRAY(rci , 10 , "%x" ) ; 
+    // TEST_ON_TEXT_ENCRYPTION(aes , original_cipher  , encrypted_cipher, 64 , original_key,AesKey ) ;
+    TEST_ON_IMAGE_ENCRYPTION(aes , "flowers.jpg" , original_key ,AesKey);
+    // void *my_key = malloc(sizeof(AesKey)) ;  
     
+    // aes_set_key(my_key , original_key) ; 
+    // AesKey *my_aes_key = (void *) my_key ; 
 
-    printf("\t\tthe original key : \n") ;
-    PRINT_ARRAY(original_key , original_key_length , "%x" ) ; 
-    
-    key_expan(original_key , expanded_key , Nk , Nr , rci) ; 
+    // aes_encrypt(original_cipher ,encrypted_cipher , 64 ,my_key );
 
+    // printf("\t\tthe output : \n") ;
+    // PRINT_ARRAY(encrypted_cipher , 64 , "%x") ; 
 
-    // aes_cipher_block(original_cipher  ,   encrypted_cipher , expanded_key  , Nr) ; 
-    aes_cipher(original_cipher ,  encrypted_cipher , expanded_key  , 64 , Nr) ; 
-
-
-
-    
-
-    printf("\t\tthe output : \n") ;
-        PRINT_ARRAY(encrypted_cipher , 64 , "%x") ; 
 
     return 0 ; 
 }
