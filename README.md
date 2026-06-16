@@ -24,6 +24,7 @@ The current version has many dependecies and Ai help which will be removed event
 *   Diffie-Hellman - Key exchange protocol for establishing shared secrets.
 
 ### Hashing and Integrity
+*   MD4
 *   MD5
 *   SHA-256
 *   SHA-512
