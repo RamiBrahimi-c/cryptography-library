@@ -18,6 +18,33 @@ void print_digest(const char* label, const uint8_t* d, int len)
 
 int main()
 {
+    uchar_t input[] = "a" ;
+    uint64_t length = strlen(input) ;
+
+    printf("input : \n" );
+    PRINT_ARRAY(input , length , "%c");
+    PRINT_ARRAY(input , length , "%x");
+
+    uint64_t new_length ;
+    uchar_t *output = md4_padding(input , 8*length , &new_length  ) ;
+
+
+    printf("output after padding : \n" );
+    PRINT_ARRAY(output , new_length /8 , "%x");
+    
+
+    uchar_t *hash = malloc(sizeof(uchar_t)*16) ; 
+    
+    md4_hash(output , new_length/8 , hash) ;
+    printf("final result  : \n" );
+    PRINT_ARRAY_NOSPC(hash , 16 , "%02x") ; 
+
+
+
+
+
+
+
     // ============ EXERCISE 4.1 — MD5 ============
     printf("=== MD5 Tests ===\n\n");
 

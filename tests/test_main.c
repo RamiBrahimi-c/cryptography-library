@@ -11,6 +11,7 @@
 #include "../include/common/utils.h"
 
 #include "test_utils.h"
+#include "redpike.h"
 
 
 #define STB_IMAGE_IMPLEMENTATION
@@ -61,8 +62,6 @@ void setupFullResultFilePath(char *directory_name , char *type_algo  , char *fil
 #include "aes.h"
 
 
-
-
 int main() {
 
     uchar_t original_cipher[64]  = {0x6b,0xc1,0xbe,0xe2,0x2e,0x40,0x9f,0x96
@@ -78,34 +77,9 @@ int main() {
     uchar_t encrypted_cipher[64] ; 
     uchar_t decrypted_cipher[64] ; 
 
-    uchar_t original_key[24] =  {
-        0x8e, 0x73, 0xb0, 0xf7, 0xda, 0x0e, 0x64, 0x52, 0xc8, 0x10, 0xf3, 0x2b, 0x80, 0x90, 0x79, 0xe5,
-                0x62, 0xf8, 0xea, 0xd2, 0x52, 0x2c, 0x6b, 0x7b };
+    uchar_t original_key[8] =  {  0x8e, 0x73, 0xb0, 0xf7, 0xda, 0x0e, 0x64, 0x52 };
 
-
-        printf("hello there !!!!\n") ; 
-
-
-    uchar_t input[] = "a" ;
-    uint64_t length = strlen(input) ;
-
-    printf("input : \n" );
-    PRINT_ARRAY(input , length , "%c");
-    PRINT_ARRAY(input , length , "%x");
-
-    uint64_t new_length ;
-    uchar_t *output = md4_padding(input , 8*length , &new_length  ) ;
-
-
-    printf("output after padding : \n" );
-    PRINT_ARRAY(output , new_length /8 , "%x");
-    
-
-    uchar_t *hash = malloc(sizeof(uchar_t)*16) ; 
-    
-    md4_hash(output , new_length/8 , hash) ;
-    printf("final result  : \n" );
-    PRINT_ARRAY_NOSPC(hash , 16 , "%02x") ; 
+    TEST_ON_IMAGE_ENCRYPTION(redpike , "algiers.jpg" , original_key , RedpikeKey) ; 
 
 
 
