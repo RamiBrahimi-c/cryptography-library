@@ -1,6 +1,8 @@
 #include "../../../include/ciphers/hashing/hash.h"
 
-
+/*
+    the manuel : https://datatracker.ietf.org/doc/html/rfc1186#autoid-4
+*/
 
 
 static uint32_t bytes_to_be(uchar_t input[4]) {
