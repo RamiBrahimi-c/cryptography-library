@@ -7,7 +7,7 @@
 #include <stdint.h>
 
 #define REDPIKE_KEY_MAX_SIZE 8
-#define CONST 0x9E3779B9
+#define CONST 0x9E3779B9 // golden ratio huh
 
 
 
@@ -27,13 +27,6 @@ void redpike_set_key(void* key_struct, const char* key_str);
 void redpike_free_key(void* key_struct);
 
 Cipher* get_redpike_cipher(void);
-
-
-
-
-
-
-
 
 
 
