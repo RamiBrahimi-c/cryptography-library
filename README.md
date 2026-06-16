@@ -14,9 +14,10 @@ The current version has many dependecies and Ai help which will be removed event
 *   Vigenere Cipher
 
 ### Symmetric Ciphers
-*   AES (Advanced Encryption Standard) - Supporting 128-bit keys in CBC mode.
+*   AES (Advanced Encryption Standard) - Supporting 128 , 192 , 256 -bit keys in ECB mode.
 *   DES (Data Encryption Standard) - 16-round implementation.
 *   RC4 (Rivest Cipher 4) - Stream cipher.
+*   Red Pike - UK's GCHQ Block cipher .
 
 ### Asymmetric Ciphers
 *   RSA - Supporting key generation, encryption, and decryption with GMP.
