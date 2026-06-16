@@ -7,6 +7,7 @@
 #include "rsa.h"
 #include "elgamal.h"
 #include "dh.h"
+#include "hash.h"
 #include "../include/common/utils.h"
 
 #include "test_utils.h"
@@ -81,7 +82,35 @@ int main() {
         0x8e, 0x73, 0xb0, 0xf7, 0xda, 0x0e, 0x64, 0x52, 0xc8, 0x10, 0xf3, 0x2b, 0x80, 0x90, 0x79, 0xe5,
                 0x62, 0xf8, 0xea, 0xd2, 0x52, 0x2c, 0x6b, 0x7b };
 
-    printf("\t\tthe input : \n") ;
+
+        printf("hello there !!!!\n") ; 
+
+
+    uchar_t input[] = "a" ;
+    uint64_t length = strlen(input) ;
+
+    printf("input : \n" );
+    PRINT_ARRAY(input , length , "%c");
+    PRINT_ARRAY(input , length , "%x");
+
+    uint64_t new_length ;
+    uchar_t *output = md4_padding(input , 8*length , &new_length  ) ;
+
+
+    printf("output after padding : \n" );
+    PRINT_ARRAY(output , new_length /8 , "%x");
+    
+
+    uchar_t *hash = malloc(sizeof(uchar_t)*16) ; 
+    
+    md4_hash(output , new_length/8 , hash) ;
+    printf("final result  : \n" );
+    PRINT_ARRAY_NOSPC(hash , 16 , "%02x") ; 
+
+
+
+
+    /* printf("\t\tthe input : \n") ;
 
     PRINT_ARRAY(original_cipher , 64 , "%x") ; 
     
@@ -93,8 +122,13 @@ int main() {
     TEST_ON_TEXT_DECRYPTION(aes , encrypted_cipher  , decrypted_cipher,  64 , original_key,AesKey ) ;
     printf("\t\tthe decryption : \n") ;
     PRINT_ARRAY(decrypted_cipher , 64 , "%x") ; 
-    
-    // aes_decrypt(encrypted_cipher , decrypted_cipher , 64 ,   ) ;
+     */
+
+
+
+
+
+     // aes_decrypt(encrypted_cipher , decrypted_cipher , 64 ,   ) ;
 
     // TEST_ON_IMAGE_ENCRYPTION(aes , "flowers.jpg" , original_key ,AesKey);
     

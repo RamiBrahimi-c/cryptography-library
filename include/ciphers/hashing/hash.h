@@ -1,6 +1,8 @@
 #ifndef HASH_H
 #define HASH_H
 
+#include "../../common/utils.h"
+
 #include <stdint.h>
 #include <stddef.h>
 
@@ -10,6 +12,15 @@
 
 #define SHA256_BLOCK_SIZE 64
 #define SHA512_BLOCK_SIZE 128
+
+
+
+// cute md4 ...
+void md4_hash(uchar_t M[] , int N , uchar_t *output) ;
+uchar_t* md4_padding(uchar_t M[] , uint64_t b , uint64_t *output_length ) ;
+
+
+// about to replace all the below :(
 
 void md5_hash(const uint8_t* data, size_t len, uint8_t digest[16]);
 void sha256_hash(const uint8_t* data, size_t len, uint8_t digest[32]);
