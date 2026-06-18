@@ -18,6 +18,7 @@ The current version has many dependecies and Ai help which will be removed event
 *   DES (Data Encryption Standard) - 16-round implementation.
 *   RC4 (Rivest Cipher 4) - Stream cipher.
 *   Red Pike - UK's GCHQ Block cipher .
+*   TEA (Tiny Encryption Algorithm) - Block Cipher  .
 
 ### Asymmetric Ciphers
 *   RSA - Supporting key generation, encryption, and decryption with GMP.
