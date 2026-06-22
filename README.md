@@ -117,3 +117,13 @@ The project includes a server-client chat application. It establishes a secure c
 
 ## Legal Disclaimer
 This library is for educational and academic purposes only. Do not use this implementation for securing sensitive production data, as it may lack protection against advanced side-channel attacks.
+
+## References
+
+*   *XTEA* : 
+    *   https://commons.wikimedia.org/wiki/File:XTEADataFlow.jpg
+    *   https://www.cix.co.uk/~klockstone/xtea.pdf
+    *   https://www.iacr.org/archive/fse2004/30170298/30170298.pdf
+    *   https://web.archive.org/web/20071228053741/http://143.53.36.235:8080/tea.htm
+    *   https://www.cix.co.uk/~klockstone/teavect.htm
+    *   (the wiki) https://en.wikipedia.org/wiki/XTEA
