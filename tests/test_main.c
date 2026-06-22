@@ -61,6 +61,7 @@ void setupFullResultFilePath(char *directory_name , char *type_algo  , char *fil
 
 #include "aes.h"
 #include "tea.h"
+#include "xtea.h"
 
 
 int main() {
@@ -81,7 +82,7 @@ int main() {
     uchar_t original_key[16] =  {  0x8e, 0x73, 0xb0, 0xf7, 0xda, 0x0e, 0x64, 0x52 , 
                     0x12 , 0x65 , 0x76 , 0x54 , 0xaf , 0x0f , 0xf0 , 0xcc};
 
-    TEST_ON_IMAGE_ENCRYPTION(tea , "algiers.jpg" , original_key , TeaKey) ; 
+    TEST_ON_IMAGE_ENCRYPTION(xtea , "algiers.jpg" , original_key , TeaKey) ; 
 
 
 
