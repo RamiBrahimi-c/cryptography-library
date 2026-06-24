@@ -88,12 +88,53 @@ void blowfish_encrypt_block(const uchar_t* input, uchar_t* output , int length ,
 
 
 }
+// @input must be 64bit block aka 8 bytes
+void blowfish_decrypt_block(const uchar_t* input, uchar_t* output , int length , const BlowfishKey* blowfish_key) {
+    uint32_t left ;
+    uint32_t right ;
+
+
+
+    left = bytes_to_uint32_t(input) ; 
+    right = bytes_to_uint32_t(input + 4) ; 
+
+
+    // swap with XOR
+    left = right ^ left ;
+    right = left ^ right ;
+    left = right ^ left ;
+
+    left ^= blowfish_key->p[16] ; 
+    right ^= blowfish_key->p[17] ; 
+
+
+    
+    for (size_t i = 0; i < ROUNDS_NUM_BLOWFISH; i++)
+    {        
+            
+        // swap with XOR
+        left = right ^ left ;
+        right = left ^ right ;
+        left = right ^ left ;
+
+
+        right  ^= blowfish_ffunc(left , *blowfish_key) ;
+        left  ^= blowfish_key->p[ROUNDS_NUM_BLOWFISH - 1- i] ; 
+        
+    }
+    
+    // well since output has uchar_t we gotta do the ugly work ...
+    uint32_t_to_bytes(left , output) ; 
+    uint32_t_to_bytes(right , output+4) ; 
+
+
+}
 
 
 void blowfish_encrypt(const uchar_t* input, uchar_t* output , int length , const void* key) {
     BlowfishKey *blowfish_key = (BlowfishKey*) key ; 
     assert(blowfish_key != NULL && "blow fish key should not be null") ;
-    printf("blowfish_key pointer : %p \n" , blowfish_key) ; 
+    // printf("blowfish_key pointer : %p \n" , blowfish_key) ; 
     
     
     for (size_t i = 0; i < length/8; i++)
@@ -109,7 +150,19 @@ void blowfish_encrypt(const uchar_t* input, uchar_t* output , int length , const
 
 
 
-void blowfish_decrypt(const uchar_t* input, uchar_t* output , int length , const void* key);
+void blowfish_decrypt(const uchar_t* input, uchar_t* output , int length , const void* key) {
+    BlowfishKey *blowfish_key = (BlowfishKey*) key ; 
+    assert(blowfish_key != NULL && "blow fish key should not be null") ;
+    // printf("blowfish_key pointer : %p \n" , blowfish_key) ; 
+    
+    
+    for (size_t i = 0; i < length/8; i++)
+    {
+        blowfish_decrypt_block(input + i*8 , output + i*8 , 8 , blowfish_key) ; 
+        
+    }
+
+}
 
 
 #include "../include/common/utils.h"

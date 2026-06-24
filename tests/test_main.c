@@ -73,7 +73,7 @@ uchar_t* initilize_8bytes_block(uint64_t number) {
 int main() {
 
 
-    uchar_t input[] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF} ; 
+    uchar_t input[] = {0xFF, 0xFF, 0xFF, 0x45, 0xFF, 0xFF, 0xFF, 0xFF} ; 
     uchar_t key[] = {0xFE, 0xDC, 0xBA, 0x98, 0x76, 0x54, 0x32, 0x10 , 0x0} ; 
 
         
@@ -98,11 +98,14 @@ int main() {
     
     blowfish_encrypt(input , input , 8 , blowfish_key) ; 
     printf("encryption done !!! \n") ; 
-
+    
     PRINT_ARRAY(input , 8 , "%02x") ; 
     PRINT_ARRAY_NOSPC(input , 8 , "%02x") ; 
-
-
+    
+    blowfish_decrypt(input , input , 8 , blowfish_key) ; 
+    
+    printf("decryption done !!! \n") ; 
+    PRINT_ARRAY(input , 8 , "%02x") ; 
    
 
     return 0 ; 
