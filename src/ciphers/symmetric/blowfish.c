@@ -89,6 +89,8 @@ void blowfish_encrypt_block(const uchar_t* input, uchar_t* output , int length ,
 
 }
 // @input must be 64bit block aka 8 bytes
+// NOTES : apparently i could have kept the same encryption routine but only reversed indexes order ...
+// i tried to be smart here you see :(
 void blowfish_decrypt_block(const uchar_t* input, uchar_t* output , int length , const BlowfishKey* blowfish_key) {
     uint32_t left ;
     uint32_t right ;

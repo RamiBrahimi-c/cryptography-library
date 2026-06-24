@@ -20,6 +20,7 @@ The current version has many dependecies and Ai help which will be removed event
 *   Red Pike - UK's GCHQ Block cipher .
 *   TEA (Tiny Encryption Algorithm) - Block Cipher  .
 *   XTEA (eXtended TEA) - Block Cipher  .
+*   Blowfish 🐡 - Block Cipher  .
 
 ### Asymmetric Ciphers
 *   RSA - Supporting key generation, encryption, and decryption with GMP.
@@ -127,3 +128,14 @@ This library is for educational and academic purposes only. Do not use this impl
     *   https://web.archive.org/web/20071228053741/http://143.53.36.235:8080/tea.htm
     *   https://www.cix.co.uk/~klockstone/teavect.htm
     *   (the wiki) https://en.wikipedia.org/wiki/XTEA
+
+*   *Blowfish* : 
+    *   (the wiki) https://en.wikipedia.org/wiki/Blowfish_(cipher)
+    *   https://opencourses.emu.edu.tr/pluginfile.php/47497/mod_resource/content/2/Block%20ciphers%20(Blowfish).pdf
+    *   https://lsisreviving.weebly.com/uploads/2/3/6/8/23689241/blowfish_algorithm_1.pdf
+    *   https://www.schneier.com/academic/blowfish/ (contains a lot of useful stuff)
+    *   https://www.schneier.com/wp-content/uploads/2015/12/vectors-2.txt (test vectors)
+    *   https://www.schneier.com/wp-content/uploads/2015/12/vectors2-1.txt
+    *   https://www.schneier.com/wp-content/uploads/2015/12/constants-2.txt (first (1024 + 18)*32 bit of PI)
+    *   http://www.geom.uiuc.edu/~huberty/math5337/groupe/digits.html (100,000 Digits of Pi)
+    *   https://raw.githubusercontent.com/glycerine/sshego/v4.0.3/_vendor/golang.org/x/crypto/blowfish/blowfish_test.go (test vectors program in GO lang)
