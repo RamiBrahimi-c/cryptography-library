@@ -36,7 +36,7 @@
     do { \
         printf("Array (%d):\n", length); \
         for (int _i = 0; _i < (length); _i++) { \
-                printf(format " ", (array)[_i]); \
+                printf(format , (array)[_i]); \
         } \
         printf("\n"); \
     } while (0)

@@ -62,114 +62,49 @@ void setupFullResultFilePath(char *directory_name , char *type_algo  , char *fil
 #include "aes.h"
 #include "tea.h"
 #include "xtea.h"
+#include "blowfish.h"
 
+
+
+uchar_t* initilize_8bytes_block(uint64_t number) {
+    return (uchar_t []) {number << 56 , number << 48 , number <<40 , number << 32 , number << 24 , number << 16 , number << 8 , number} ; 
+}
 
 int main() {
 
-    uchar_t original_cipher[64]  = {0x6b,0xc1,0xbe,0xe2,0x2e,0x40,0x9f,0x96
-        ,0xe9,0x3d,0x7e,0x11,0x73,0x93,0x17,0x2a
-        ,0xae,0x2d,0x8a,0x57,0x1e,0x03,0xac,0x9c
-        ,0x9e,0xb7,0x6f,0xac,0x45,0xaf,0x8e,0x51
-        ,0x30,0xc8,0x1c,0x46,0xa3,0x5c,0xe4,0x11
-        ,0xe5,0xfb,0xc1,0x19,0x1a,0x0a,0x52,0xef
-        ,0xf6,0x9f,0x24,0x45,0xdf,0x4f,0x9b,0x17
-        ,0xad,0x2b,0x41,0x7b,0xe6,0x6c,0x37,0x10}; 
+
+    uchar_t input[] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF} ; 
+    uchar_t key[] = {0xFE, 0xDC, 0xBA, 0x98, 0x76, 0x54, 0x32, 0x10 , 0x0} ; 
+
+        
+    printf("input : \n") ; 
+    PRINT_ARRAY(input , 8 , "%x") ; 
+    printf("key : \n") ; 
+    PRINT_ARRAY(key , 8 , "%x") ; 
     
     
-    uchar_t encrypted_cipher[64] ; 
-    uchar_t decrypted_cipher[64] ; 
+    void *blow_key = calloc(1 , sizeof(BlowfishKey)) ; 
+    ASSERT_NOT_NULL(blow_key) ; 
 
-    uchar_t original_key[16] =  {  0x8e, 0x73, 0xb0, 0xf7, 0xda, 0x0e, 0x64, 0x52 , 
-                    0x12 , 0x65 , 0x76 , 0x54 , 0xaf , 0x0f , 0xf0 , 0xcc};
-
-    TEST_ON_IMAGE_ENCRYPTION(xtea , "algiers.jpg" , original_key , TeaKey) ; 
-
-
-
-
-    /* printf("\t\tthe input : \n") ;
-
-    PRINT_ARRAY(original_cipher , 64 , "%x") ; 
+    BlowfishKey *blowfish_key = (BlowfishKey *) blow_key ; 
     
-    TEST_ON_TEXT_ENCRYPTION(aes , original_cipher  , encrypted_cipher, 64 , original_key,AesKey ) ;
+    ASSERT_NOT_NULL(blowfish_key) ; 
     
-    printf("\t\tthe encryption : \n") ;
-    PRINT_ARRAY(encrypted_cipher , 64 , "%x") ; 
+    printf("blow_key pointer : %p \n" , blow_key) ; 
+    printf("blowfish_key pointer : %p \n" , blowfish_key) ; 
+    blowfish_set_key(   blowfish_key , key) ; 
     
-    TEST_ON_TEXT_DECRYPTION(aes , encrypted_cipher  , decrypted_cipher,  64 , original_key,AesKey ) ;
-    printf("\t\tthe decryption : \n") ;
-    PRINT_ARRAY(decrypted_cipher , 64 , "%x") ; 
-     */
-
-
-
-
-
-     // aes_decrypt(encrypted_cipher , decrypted_cipher , 64 ,   ) ;
-
-    // TEST_ON_IMAGE_ENCRYPTION(aes , "flowers.jpg" , original_key ,AesKey);
+    printf("key set up \n") ; 
     
-    // void *my_key = malloc(sizeof(AesKey)) ;  
-    
-    // aes_set_key(my_key , original_key) ; 
-    // AesKey *my_aes_key = (void *) my_key ; 
+    blowfish_encrypt(input , input , 8 , blowfish_key) ; 
+    printf("encryption done !!! \n") ; 
 
-    // aes_encrypt(original_cipher ,encrypted_cipher , 64 ,my_key );
+    PRINT_ARRAY(input , 8 , "%02x") ; 
+    PRINT_ARRAY_NOSPC(input , 8 , "%02x") ; 
 
+
+   
 
     return 0 ; 
 }
 
-
-
-
-
-/* int main() {
-    char *_filename = "coast.jpg";
-    
-    // --- Symmetric ---
-    uchar_t key[] = {0x2b, 0x7e, 0x15, 0x16, 0x28, 0xae, 0xd2, 0xa6,
-                     0xab, 0xf7, 0x15, 0x88, 0x09, 0xcf, 0x4f, 0x3c};
-
-    TEST_ON_IMAGE_ENCRYPTION(aes, _filename, key, AesKey);
-    TEST_ON_IMAGE_ENCRYPTION(des, _filename, key, DesKey);
-    TEST_ON_IMAGE_ENCRYPTION(affine, _filename, "19", AffineKey);
-    TEST_ON_IMAGE_ENCRYPTION(hill, _filename, "2", HillKey);
-    TEST_ON_IMAGE_ENCRYPTION(rc4, _filename, "keykey", Rc4Key);
-
-    // --- Asymmetric ---
-    TEST_RSA_ENCRYPT_IMAGE(rsa, _filename, 512);
-    TEST_RSA_ENCRYPT_IMAGE(rsa, _filename, 1024);
-    TEST_RSA_ENCRYPT_IMAGE(rsa, _filename, 2048);
-
-    // --- ElGamal non-determinism ---
-    TEST_ELGAMAL_NONDETERMINISM();
-
-    // --- DH + MITM ---
-    TEST_DH_MITM();
-
-    return 0;
-}
- */
-
-// TEST(affine_encrypt_basic) {
-//     char output[100];
-//     AffineKey key = {5, 8};  // a=5, b=8
-    
-//     affine_encrypt("HELLO", output , 5, &key);
-//     ASSERT_STR_EQ(output, "RCLLA");
-//     return 0;
-// }
-
-// TEST(affine_invalid_key) {
-//     AffineKey key = {2, 3};  // a=2 (invalid - not coprime to 26)
-//     // Should handle error case
-//     ASSERT_TRUE(is_valid_affine_key(&key) == 0);
-//     return 0;
-// }
-
-// int main() {
-//     RUN_TEST(affine_encrypt);
-//     // RUN_TEST(affine_invalid_key);
-//     return 0;
-// }
