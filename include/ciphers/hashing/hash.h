@@ -19,10 +19,14 @@
 void md4_hash(uchar_t M[] , int N , uchar_t *output) ;
 uchar_t* md4_padding(uchar_t M[] , uint64_t b , uint64_t *output_length ) ;
 
+// md5 ... (pls be easy to implement)  . after : well the effort was done in MD4 , im glad .
+void md5_hash(uchar_t M[] , int N , uchar_t *output) ;
+uchar_t* md5_padding(uchar_t M[] , uint64_t b , uint64_t *output_length ) ;
+
 
 // about to replace all the below :(
 
-void md5_hash(const uint8_t* data, size_t len, uint8_t digest[16]);
+// void md5_hash(const uint8_t* data, size_t len, uint8_t digest[16]);
 void sha256_hash(const uint8_t* data, size_t len, uint8_t digest[32]);
 void sha512_hash(const uint8_t* data, size_t len, uint8_t digest[64]);
 

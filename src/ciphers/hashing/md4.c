@@ -277,7 +277,7 @@ static uint32_t round3_operation(uchar_t* A , uchar_t* B , uchar_t* C , uchar_t*
 }
 
 
-
+// WARNING: we are returning a pointer to dynamically allocated memory that needs to be freed !!! (unless you dont care ofc :) ...)
 uchar_t* md4_padding(uchar_t M[] , uint64_t b , uint64_t *output_length ) {
     // b number of bits ?
     // the specification says that it needs not be to be mulytiply of 8 ??? (pretty much weird)
@@ -355,7 +355,7 @@ uchar_t* md4_padding(uchar_t M[] , uint64_t b , uint64_t *output_length ) {
 
 
 
-void md4_hash(uchar_t M[] , int N , uchar_t *output) {
+void md4_hashi(uchar_t M[] , int N , uchar_t *output) {
 
 
 

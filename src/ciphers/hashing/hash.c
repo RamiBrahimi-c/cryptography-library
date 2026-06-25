@@ -8,10 +8,6 @@
 #include <stdio.h>
 #include <time.h>
 
-void md5_hash(const uint8_t* data, size_t len, uint8_t digest[16])
-{
-    MD5(data, len, digest);
-}
 
 void sha256_hash(const uint8_t* data, size_t len, uint8_t digest[32])
 {

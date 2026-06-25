@@ -64,6 +64,7 @@ void setupFullResultFilePath(char *directory_name , char *type_algo  , char *fil
 #include "xtea.h"
 #include "blowfish.h"
 
+#include "hash.h"
 
 
 uchar_t* initilize_8bytes_block(uint64_t number) {
@@ -73,40 +74,35 @@ uchar_t* initilize_8bytes_block(uint64_t number) {
 int main() {
 
 
-    uchar_t input[] = {0xFF, 0xFF, 0xFF, 0x45, 0xFF, 0xFF, 0xFF, 0xFF} ; 
-    uchar_t key[] = {0xFE, 0xDC, 0xBA, 0x98, 0x76, 0x54, 0x32, 0x10 , 0x0} ; 
+    // uchar_t input[] = {0xFF, 0xFF, 0xFF, 0x45, 0xFF, 0xFF, 0xFF, 0xFF} ; 
+    // uchar_t key[] = {0xFE, 0xDC, 0xBA, 0x98, 0x76, 0x54, 0x32, 0x10 , 0x0} ; 
 
-        
-    printf("input : \n") ; 
-    PRINT_ARRAY(input , 8 , "%x") ; 
-    printf("key : \n") ; 
-    PRINT_ARRAY(key , 8 , "%x") ; 
-    
-    
-    void *blow_key = calloc(1 , sizeof(BlowfishKey)) ; 
-    ASSERT_NOT_NULL(blow_key) ; 
+    // TEST_ON_IMAGE_ENCRYPTION(blowfish , "flowers.jpg" , key , BlowfishKey) ; 
+    // :catwiggle:
 
-    BlowfishKey *blowfish_key = (BlowfishKey *) blow_key ; 
+
+    uchar_t input[] = "12345678901234567890123456789012345678901234567890123456789012345678901234567890" ;
+    uint64_t length = 80 ;
+
+    printf("input : \n" );
+    PRINT_ARRAY(input , length , "%c");
+    PRINT_ARRAY(input , length , "%x");
+
+    uint64_t new_length ;
+    uchar_t *output = md5_padding(input , 8*length , &new_length  ) ;
+
+
+    printf("output after padding : \n" );
+    PRINT_ARRAY(output , new_length /8 , "%x");
     
-    ASSERT_NOT_NULL(blowfish_key) ; 
+
+    uchar_t *hash = malloc(sizeof(uchar_t)*16) ; 
     
-    printf("blow_key pointer : %p \n" , blow_key) ; 
-    printf("blowfish_key pointer : %p \n" , blowfish_key) ; 
-    blowfish_set_key(   blowfish_key , key) ; 
-    
-    printf("key set up \n") ; 
-    
-    blowfish_encrypt(input , input , 8 , blowfish_key) ; 
-    printf("encryption done !!! \n") ; 
-    
-    PRINT_ARRAY(input , 8 , "%02x") ; 
-    PRINT_ARRAY_NOSPC(input , 8 , "%02x") ; 
-    
-    blowfish_decrypt(input , input , 8 , blowfish_key) ; 
-    
-    printf("decryption done !!! \n") ; 
-    PRINT_ARRAY(input , 8 , "%02x") ; 
-   
+    md5_hash(output , new_length/8 , hash) ;
+    printf("final result  : \n" );
+    PRINT_ARRAY_NOSPC(hash , 16 , "%02x") ; 
+
+
 
     return 0 ; 
 }

@@ -121,6 +121,13 @@ This library is for educational and academic purposes only. Do not use this impl
 
 ## References
 
+*   *MD4* :
+    *   https://datatracker.ietf.org/doc/html/rfc1186#autoid-4
+
+*   *MD5* :
+    *   https://www.rfc-editor.org/info/rfc1321/
+
+
 *   *XTEA* : 
     *   https://commons.wikimedia.org/wiki/File:XTEADataFlow.jpg
     *   https://www.cix.co.uk/~klockstone/xtea.pdf
@@ -139,3 +146,4 @@ This library is for educational and academic purposes only. Do not use this impl
     *   https://www.schneier.com/wp-content/uploads/2015/12/constants-2.txt (first (1024 + 18)*32 bit of PI)
     *   http://www.geom.uiuc.edu/~huberty/math5337/groupe/digits.html (100,000 Digits of Pi)
     *   https://raw.githubusercontent.com/glycerine/sshego/v4.0.3/_vendor/golang.org/x/crypto/blowfish/blowfish_test.go (test vectors program in GO lang)
+
