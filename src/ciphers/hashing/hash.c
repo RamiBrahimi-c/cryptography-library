@@ -19,36 +19,6 @@ void sha512_hash(const uint8_t* data, size_t len, uint8_t digest[64])
 }
 
 
-/*void md5_file(const char* filename, uint8_t digest[16])
-{
-    FILE* f = fopen(filename, "rb");
-    if (!f) return;
-    MD5_CTX ctx;
-    MD5_Init(&ctx);
-    uint8_t buf[4096];
-    size_t n;
-    while ((n = fread(buf, 1, 4096, f)) > 0)
-        MD5_Update(&ctx, buf, n);
-    MD5_Final(digest, &ctx);
-    fclose(f);
-}
-*/
-
-
-void sha256_file(const char* filename, uint8_t digest[32])
-{
-    FILE* f = fopen(filename, "rb");
-    if (!f) return;
-    SHA256_CTX ctx;
-    SHA256_Init(&ctx);
-    uint8_t buf[4096];
-    size_t n;
-    while ((n = fread(buf, 1, 4096, f)) > 0)
-        SHA256_Update(&ctx, buf, n);
-    SHA256_Final(digest, &ctx);
-    fclose(f);
-}
-
 // Count differing bits between two digests
 static int count_diff_bits(const uint8_t* d1, const uint8_t* d2, int len)
 {
