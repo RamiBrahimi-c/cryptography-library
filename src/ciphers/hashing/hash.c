@@ -1,7 +1,6 @@
 // #include "hash.h"
 #include "../../../include/ciphers/hashing/hash.h"
 
-#include <openssl/md5.h>
 #include <openssl/sha.h>
 #include <string.h>
 #include <stdlib.h>
@@ -19,7 +18,8 @@ void sha512_hash(const uint8_t* data, size_t len, uint8_t digest[64])
     SHA512(data, len, digest);
 }
 
-void md5_file(const char* filename, uint8_t digest[16])
+
+/*void md5_file(const char* filename, uint8_t digest[16])
 {
     FILE* f = fopen(filename, "rb");
     if (!f) return;
@@ -32,6 +32,8 @@ void md5_file(const char* filename, uint8_t digest[16])
     MD5_Final(digest, &ctx);
     fclose(f);
 }
+*/
+
 
 void sha256_file(const char* filename, uint8_t digest[32])
 {
