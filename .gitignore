@@ -9,6 +9,8 @@ crypto
 run_tests
 *.exe
 *.out
+*.a
+*.so
 
 # Test images 
 tests/img/
