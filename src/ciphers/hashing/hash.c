@@ -1,5 +1,4 @@
-// #include "hash.h"
-#include "../../../include/ciphers/hashing/hash.h"
+#include "hash.h"
 
 #include <openssl/sha.h>
 #include <string.h>
@@ -8,10 +7,6 @@
 #include <time.h>
 
 
-void sha256_hash(const uint8_t* data, size_t len, uint8_t digest[32])
-{
-    SHA256(data, len, digest);
-}
 
 void sha512_hash(const uint8_t* data, size_t len, uint8_t digest[64])
 {

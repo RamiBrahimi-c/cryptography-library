@@ -355,7 +355,7 @@ uchar_t* md4_padding(uchar_t M[] , uint64_t b , uint64_t *output_length ) {
 
 
 
-void md4_hashi(uchar_t M[] , int N , uchar_t *output) {
+void md4_hash(uchar_t M[] , int N , uchar_t *output) {
 
 
 

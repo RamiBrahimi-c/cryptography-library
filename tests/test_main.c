@@ -79,28 +79,35 @@ int main() {
 
     // TEST_ON_IMAGE_ENCRYPTION(blowfish , "flowers.jpg" , key , BlowfishKey) ; 
     // :catwiggle:
+    // The first 64 prime numbers
 
-
-    uchar_t input[] = "12345678901234567890123456789012345678901234567890123456789012345678901234567890" ;
-    uint64_t length = 80 ;
+    uchar_t digest[32] ;
+    uchar_t input[] = "0" ;
+    uint64_t length = 1 ;
 
     printf("input : \n" );
     PRINT_ARRAY(input , length , "%c");
     PRINT_ARRAY(input , length , "%x");
+    
+    sha256_hash(input , length , digest) ; 
+    
+    printf("digest : \n" );
+    PRINT_ARRAY(digest , 32 , "%0.2x") ;
+    PRINT_ARRAY_NOSPC(digest , 32 , "%0.2x") ;
 
-    uint64_t new_length ;
-    uchar_t *output = md5_padding(input , 8*length , &new_length  ) ;
+    // uint64_t new_length ;
+    // uchar_t *output = md5_padding(input , 8*length , &new_length  ) ;
 
 
-    printf("output after padding : \n" );
-    PRINT_ARRAY(output , new_length /8 , "%x");
+    // printf("output after padding : \n" );
+    // PRINT_ARRAY(output , new_length /8 , "%x");
     
 
-    uchar_t *hash = malloc(sizeof(uchar_t)*16) ; 
+    // uchar_t *hash = malloc(sizeof(uchar_t)*16) ; 
     
-    md5_hash(output , new_length/8 , hash) ;
-    printf("final result  : \n" );
-    PRINT_ARRAY_NOSPC(hash , 16 , "%02x") ; 
+    // md5_hash(output , new_length/8 , hash) ;
+    // printf("final result  : \n" );
+    // PRINT_ARRAY_NOSPC(hash , 16 , "%02x") ; 
 
 
 
