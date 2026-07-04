@@ -120,7 +120,9 @@ The project includes a server-client chat application. It establishes a secure c
 This library is for educational and academic purposes only. Do not use this implementation for securing sensitive production data, as it may lack protection against advanced side-channel attacks.
 
 ## References
-
+*   *SHA*  :
+    *   (the manual SHS for SHA family ) https://nvlpubs.nist.gov/nistpubs/fips/nist.fips.180-4.pdf
+    *   (intermediate values for debugging ) https://csrc.nist.gov/projects/cryptographic-standards-and-guidelines/example-values
 *   *MD4* :
     *   https://datatracker.ietf.org/doc/html/rfc1186#autoid-4
 
