@@ -86,11 +86,12 @@ int main() {
     uchar_t temp2[8] = {0x67 , 0x89 , 0xab , 0xcd  , 0x01 , 0x23 , 0x45 ,  0xef} ;
 
     
-    sha512_hash(input , length , digest) ; 
+    // sha512_hash(input , length , digest) ; 
+    sha256_hash(input , length , digest) ; 
 
     printf("digest : \n" );
-    PRINT_ARRAY(digest , 64 , "%0.2x") ;
-    PRINT_ARRAY_NOSPC(digest , 64 , "%0.2x") ;
+    PRINT_ARRAY(digest , 32 , "%0.2x") ;
+    PRINT_ARRAY_NOSPC(digest , 32 , "%0.2x") ;
 
 
 

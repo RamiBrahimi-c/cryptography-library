@@ -287,42 +287,27 @@ uchar_t* sha256_padding(uchar_t M[] , uint64_t b , uint64_t *output_length ) {
         // append length now ... .???????????????????????
         
         
-        #if 0
-        output[index]   =   (b & 0x00000000000000ff ) ; 
-        output[index+1] =   (b & 0x000000000000ff00 ) >> 8 ; 
-        output[index+2] =   (b & 0x0000000000ff0000 ) >> 16; 
-        output[index+3] =   (b & 0x00000000ff000000 ) >> 24; 
-        index += 4 ; 
-        
-        output[index]   =   (b & 0x000000ff00000000 ) >> 32; 
-        output[index+1] =   (b & 0x0000ff0000000000 ) >> 40; 
-        output[index+2] =   (b & 0x00ff000000000000 ) >> 48; 
-        output[index+3] =   (b & 0xff00000000000000 ) >> 56; 
-        index += 4 ; 
-        #else
-
-            output[index] =   (b & 0xff00000000000000 ) >> 56 ; 
-            output[index+1] = (b & 0x00ff000000000000 ) >> 48 ; 
-            output[index+2] = (b & 0x0000ff0000000000 ) >> 40; 
-            output[index+3] = (b & 0x000000ff00000000 ) >> 32; 
+        output[index] =   (b & 0xff00000000000000 ) >> 56 ; 
+        output[index+1] = (b & 0x00ff000000000000 ) >> 48 ; 
+        output[index+2] = (b & 0x0000ff0000000000 ) >> 40; 
+        output[index+3] = (b & 0x000000ff00000000 ) >> 32; 
             
-            index += 4 ; 
+        index += 4 ; 
             
-            output[index] =   (b & 0x00000000ff000000 ) >> 24 ; 
-            output[index+1] = (b & 0x0000000000ff0000 ) >> 16 ; 
-            output[index+2] = (b & 0x000000000000ff00 ) >> 8; 
-            output[index+3] = (b & 0x00000000000000ff ); 
+        output[index] =   (b & 0x00000000ff000000 ) >> 24 ; 
+        output[index+1] = (b & 0x0000000000ff0000 ) >> 16 ; 
+        output[index+2] = (b & 0x000000000000ff00 ) >> 8; 
+        output[index+3] = (b & 0x00000000000000ff ); 
         
         
-            index += 4 ; 
-        #endif
+        index += 4 ; 
 
 
-         printf("calculated output length : %ld \n" , *output_length ) ;
-         printf("calculated output length/8 : %ld \n" , *output_length / 8) ;
-         printf("index : %u \n" , index) ;
-         *output_length = index *8; 
-         printf("calculated output length after: %ld in bytes : %ld \n" , *output_length , *output_length) ; 
+        printf("calculated output length : %ld \n" , *output_length ) ;
+        printf("calculated output length/8 : %ld \n" , *output_length / 8) ;
+        printf("index : %u \n" , index) ;
+        *output_length = index *8; 
+        printf("calculated output length after: %ld in bytes : %ld \n" , *output_length , *output_length) ; 
         assert(index == *output_length / 8 && "these 2 should be equal ???") ;
     } else {
         // ????????????????????????
@@ -363,7 +348,9 @@ void sha256_hash(const uchar_t* data, size_t len, uchar_t digest[32]) {
 
         for (size_t t = 0; t < 16; t++)
         {
-            memcpy(W + (t*4) , input_padded + (t*4 ) , sizeof(uchar_t ) * 4 * 1) ; 
+            // FIX : man i wouldnt messed it up if i did it in go or sum the first time ..
+            // the input_padded bloc must get updated aka in this case multiplied by (i* 16 * 4)
+            memcpy(W + (t*4)  , input_padded + (t*4 ) + (i * 16*4)  , sizeof(uchar_t ) * 4 * 1) ; 
         }
         for (size_t t = 16; t < 64; t++)
         {
