@@ -7,13 +7,6 @@
 #include <time.h>
 
 
-
-void sha512_hash(const uint8_t* data, size_t len, uint8_t digest[64])
-{
-    SHA512(data, len, digest);
-}
-
-
 // Count differing bits between two digests
 static int count_diff_bits(const uint8_t* d1, const uint8_t* d2, int len)
 {

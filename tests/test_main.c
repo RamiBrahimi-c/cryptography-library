@@ -63,51 +63,35 @@ void setupFullResultFilePath(char *directory_name , char *type_algo  , char *fil
 #include "tea.h"
 #include "xtea.h"
 #include "blowfish.h"
-
 #include "hash.h"
 
 
-uchar_t* initilize_8bytes_block(uint64_t number) {
-    return (uchar_t []) {number << 56 , number << 48 , number <<40 , number << 32 , number << 24 , number << 16 , number << 8 , number} ; 
-}
 
 int main() {
 
-
-    // uchar_t input[] = {0xFF, 0xFF, 0xFF, 0x45, 0xFF, 0xFF, 0xFF, 0xFF} ; 
-    // uchar_t key[] = {0xFE, 0xDC, 0xBA, 0x98, 0x76, 0x54, 0x32, 0x10 , 0x0} ; 
-
-    // TEST_ON_IMAGE_ENCRYPTION(blowfish , "flowers.jpg" , key , BlowfishKey) ; 
     // :catwiggle:
-    // The first 64 prime numbers
 
-    uchar_t digest[32] ;
-    uchar_t input[] = "0" ;
-    uint64_t length = 1 ;
+
+    uchar_t digest[64] ;
+    uint64_t length = 690 ;
+    uchar_t input[] = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" ; 
 
     printf("input : \n" );
     PRINT_ARRAY(input , length , "%c");
     PRINT_ARRAY(input , length , "%x");
     
-    sha256_hash(input , length , digest) ; 
+    uint64_t a = 0x0123456789abcdef ; 
+    uint64_t b ; 
+    uchar_t temp[8] ;
+    uchar_t temp2[8] = {0x67 , 0x89 , 0xab , 0xcd  , 0x01 , 0x23 , 0x45 ,  0xef} ;
+
     
+    sha512_hash(input , length , digest) ; 
+
     printf("digest : \n" );
-    PRINT_ARRAY(digest , 32 , "%0.2x") ;
-    PRINT_ARRAY_NOSPC(digest , 32 , "%0.2x") ;
+    PRINT_ARRAY(digest , 64 , "%0.2x") ;
+    PRINT_ARRAY_NOSPC(digest , 64 , "%0.2x") ;
 
-    // uint64_t new_length ;
-    // uchar_t *output = md5_padding(input , 8*length , &new_length  ) ;
-
-
-    // printf("output after padding : \n" );
-    // PRINT_ARRAY(output , new_length /8 , "%x");
-    
-
-    // uchar_t *hash = malloc(sizeof(uchar_t)*16) ; 
-    
-    // md5_hash(output , new_length/8 , hash) ;
-    // printf("final result  : \n" );
-    // PRINT_ARRAY_NOSPC(hash , 16 , "%02x") ; 
 
 
 

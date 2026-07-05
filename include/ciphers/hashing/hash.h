@@ -23,6 +23,7 @@ uchar_t* md4_padding(uchar_t M[] , uint64_t b , uint64_t *output_length ) ;
 void md5_hash(uchar_t M[] , int N , uchar_t *output) ;
 uchar_t* md5_padding(uchar_t M[] , uint64_t b , uint64_t *output_length ) ;
 
+uchar_t* sha512_padding(uchar_t M[] , uint64_t b , uint64_t *output_length ) ;
 
 // about to replace all the below :(
 
