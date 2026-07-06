@@ -424,7 +424,7 @@ void sha256_hash(const uchar_t* data, size_t len, uchar_t digest[32]) {
     }
     memcpy(digest , H , sizeof(uchar_t)*8*4) ; 
 
-
+    free(input_padded) ; 
 }
 
 
@@ -675,5 +675,7 @@ void sha512_hash(const uint8_t* data, size_t len, uint8_t digest[64]) {
     be64_to_bytes( H[6] , digest + 6 * 8 ) ; 
     be64_to_bytes( H[7] , digest + 7 * 8 ) ; 
 
+
+    free(input_padded) ; 
 }
 
