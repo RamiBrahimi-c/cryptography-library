@@ -67,31 +67,53 @@ void setupFullResultFilePath(char *directory_name , char *type_algo  , char *fil
 
 
 
+#define TEST_HASH_FUNCTION(name , data , length , digest)\
+    printf("data : \n")\
+    PRINT_ARRAY_NAI(data , length)\
+    name##hash(data , length , digest);\
+
+
+
 int main() {
 
     // :catwiggle:
 
-
-    uchar_t digest[64] ;
-    uint64_t length = 690 ;
-    uchar_t input[] = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" ; 
-
-    printf("input : \n" );
-    PRINT_ARRAY(input , length , "%c");
-    PRINT_ARRAY(input , length , "%x");
     
-    uint64_t a = 0x0123456789abcdef ; 
-    uint64_t b ; 
-    uchar_t temp[8] ;
-    uchar_t temp2[8] = {0x67 , 0x89 , 0xab , 0xcd  , 0x01 , 0x23 , 0x45 ,  0xef} ;
+    uchar_t key[] = "4566546546546545645sd5qs4d5sq4dqs54dQS4dQSQSDQs54dQdQdQqs555165165161" ; 
+    size_t key_len = 69 ; 
+
+    uchar_t data[] = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" ; 
+    size_t data_len = 75 ; 
+
+    uchar_t mac[32] ; 
+    size_t mac_len = 32 ; 
+
+    printf("key : \n" );
+    PRINT_ARRAY_NAI(key , key_len , "%0.2x") ;
+    PRINT_ARRAY_NOSPCLEN(key , key_len , "%0.2x") ;
+
+
+    printf("data : \n" );
+    PRINT_ARRAY_NAI(data , data_len , "%0.2x") ;
+    PRINT_ARRAY_NOSPCLEN(data , data_len , "%0.2x") ;
+
 
     
     // sha512_hash(input , length , digest) ; 
-    sha256_hash(input , length , digest) ; 
+    // sha256_hash(input , length , digest) ; 
+    hmac_sha256(key , key_len , data , data_len , mac) ; 
+    // hmac_sha512(key , key_len , data , data_len , mac) ; 
 
-    printf("digest : \n" );
-    PRINT_ARRAY(digest , 32 , "%0.2x") ;
-    PRINT_ARRAY_NOSPC(digest , 32 , "%0.2x") ;
+    printf("mac : \n" );
+    PRINT_ARRAY_NAI(mac , mac_len , "%0.2x") ;
+    PRINT_ARRAY_NOSPCLEN(mac , mac_len , "%0.2x") ;
+
+    // hmac_sha256mine(key , key_len , data , data_len , mac) ; 
+    hmac_sha256mine(key , key_len , data , data_len , mac) ; 
+
+    printf("mac mine : \n" );
+    PRINT_ARRAY_NAI(mac , mac_len , "%0.2x") ;
+    PRINT_ARRAY_NOSPCLEN(mac , mac_len , "%0.2x") ;
 
 
 
