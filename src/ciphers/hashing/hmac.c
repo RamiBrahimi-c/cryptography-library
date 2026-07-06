@@ -141,7 +141,7 @@ void hmac_sha512(const uint8_t* key, size_t key_len,
     
     // step 8 : we concatenate opad_K0 and hashed(ipad_K0 || data)
     uchar_t *result3 = malloc(sizeof(uchar_t)*(B+SHA512_DIGEST_SIZE)) ;
-    assert(result1 != NULL) ; 
+    assert(result3 != NULL) ; 
     
     
     memcpy(result3 , opad_K0 , sizeof(uchar_t)*B) ;  
@@ -153,4 +153,6 @@ void hmac_sha512(const uint8_t* key, size_t key_len,
     sha512_hash(result3 , B + SHA512_DIGEST_SIZE , mac ) ; 
     // step 10 : by default t is the same as H digest length ...
 
+    free(result1) ; 
+    free(result3) ; 
 }
