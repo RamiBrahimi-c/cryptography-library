@@ -55,14 +55,6 @@ void hmac_sha256(const uint8_t* key, size_t key_len,
                  const uint8_t* data, size_t data_len,
                  uint8_t mac[32]);
 
-void hmac_sha256mine(const uchar_t* key, size_t key_len,
-                 const uchar_t* data, size_t data_len,
-                 uchar_t mac[32]) ;
-
-void hmac_sha512mine(const uchar_t* key, size_t key_len,
-                 const uchar_t* data, size_t data_len,
-                 uchar_t mac[32]) ;
-
 void hmac_sha512(const uint8_t* key, size_t key_len,
                  const uint8_t* data, size_t data_len,
                  uint8_t mac[64]);

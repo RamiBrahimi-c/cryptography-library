@@ -109,7 +109,7 @@ int main() {
     PRINT_ARRAY_NOSPCLEN(mac , mac_len , "%0.2x") ;
 
     // hmac_sha256mine(key , key_len , data , data_len , mac) ; 
-    hmac_sha256mine(key , key_len , data , data_len , mac) ; 
+    // hmac_sha256mine(key , key_len , data , data_len , mac) ; 
 
     printf("mac mine : \n" );
     PRINT_ARRAY_NAI(mac , mac_len , "%0.2x") ;

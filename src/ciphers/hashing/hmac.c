@@ -11,7 +11,7 @@
 //  |
 // /\ 
 
-void hmac_sha256mine(const uchar_t* key, size_t key_len, const uchar_t* data, size_t data_len, uchar_t mac[SHA256_DIGEST_SIZE]) {
+void hmac_sha256(const uchar_t* key, size_t key_len, const uchar_t* data, size_t data_len, uchar_t mac[SHA256_DIGEST_SIZE]) {
 
     size_t B = SHA256_BLOCK_SIZE;
     size_t t = SHA256_BLOCK_SIZE;
@@ -82,7 +82,7 @@ void hmac_sha256mine(const uchar_t* key, size_t key_len, const uchar_t* data, si
 
 // for explanation i done it above im quite lazy to repeat all of that \o/
 // (ended up doing it ...)
-void hmac_sha512mine(const uint8_t* key, size_t key_len,
+void hmac_sha512(const uint8_t* key, size_t key_len,
                  const uint8_t* data, size_t data_len,
                  uint8_t mac[SHA512_DIGEST_SIZE]) {
 
