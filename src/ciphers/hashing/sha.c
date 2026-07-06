@@ -262,8 +262,8 @@ uchar_t* sha256_padding(uchar_t M[] , uint64_t b , uint64_t *output_length ) {
     // b number of bits ?
     // the specification says that it needs not be to be mulytiply of 8 ??? (pretty much weird)
     *output_length = b +64 +  (512 - ((b+64)  % 512)) ;
-    printf("b: %ld \n" , b) ; 
-    printf("calculated output length before: %ld \n" , *output_length) ; 
+    // printf("b: %ld \n" , b) ; 
+    // printf("calculated output length before: %ld \n" , *output_length) ; 
     uchar_t *output = malloc(*output_length * sizeof(uchar_t)  ) ;
     if (b % 8 == 0)
     {
@@ -303,11 +303,11 @@ uchar_t* sha256_padding(uchar_t M[] , uint64_t b , uint64_t *output_length ) {
         index += 4 ; 
 
 
-        printf("calculated output length : %ld \n" , *output_length ) ;
-        printf("calculated output length/8 : %ld \n" , *output_length / 8) ;
-        printf("index : %u \n" , index) ;
+        // printf("calculated output length : %ld \n" , *output_length ) ;
+        // printf("calculated output length/8 : %ld \n" , *output_length / 8) ;
+        // printf("index : %u \n" , index) ;
         *output_length = index *8; 
-        printf("calculated output length after: %ld in bytes : %ld \n" , *output_length , *output_length) ; 
+        // printf("calculated output length after: %ld in bytes : %ld \n" , *output_length , *output_length) ; 
         assert(index == *output_length / 8 && "these 2 should be equal ???") ;
     } else {
         // ????????????????????????
@@ -337,12 +337,12 @@ void sha256_hash(const uchar_t* data, size_t len, uchar_t digest[32]) {
     uchar_t *input_padded = sha256_padding(data , 8*len , &output_length) ; 
     output_length /= 8 ; 
 
-    PRINT_ARRAY(input_padded , output_length , "%.02x") ; 
+    // PRINT_ARRAY(input_padded , output_length , "%.02x") ; 
     int j = 0 ; 
     uint32_t a , b , c , d , e ,f , g, h ;
 
-    printf("N =  %d\n" , output_length) ; 
-    printf("here you go looping from 0 to N/(16*4)-1 : %d\n" , output_length/(16*4)-1) ; 
+    // printf("N =  %d\n" , output_length) ; 
+    // printf("here you go looping from 0 to N/(16*4)-1 : %d\n" , output_length/(16*4)-1) ; 
     for (size_t i = 0; i <= output_length/(16*4)-1; i++)
     {
 
@@ -563,9 +563,9 @@ uchar_t* sha512_padding(uchar_t M[] , uint64_t b , uint64_t *output_length ) {
         index += 4 ; 
 
 
-        printf("calculated output length : %ld \n" , *output_length ) ;
-        printf("calculated output length/8 : %ld \n" , *output_length / 8) ;
-        printf("index : %u \n" , index) ;
+        // printf("calculated output length : %ld \n" , *output_length ) ;
+        // printf("calculated output length/8 : %ld \n" , *output_length / 8) ;
+        // printf("index : %u \n" , index) ;
         *output_length = index *8; 
         assert(index == *output_length / 8 && "these 2 should be equal ???") ;
     } else {
@@ -592,20 +592,20 @@ void sha512_hash(const uint8_t* data, size_t len, uint8_t digest[64]) {
 
 
 
-    PRINT_ARRAY(K , 80 , "%lx") ; 
-    PRINT_ARRAY(H , 8 , "%lx") ; 
+    // PRINT_ARRAY(K , 80 , "%lx") ; 
+    // PRINT_ARRAY(H , 8 , "%lx") ; 
 
     uint64_t output_length  ; 
     uchar_t *input_padded = sha512_padding(data , 8*len , &output_length) ; 
     output_length /= 8 ; 
 
-    PRINT_ARRAY(input_padded , output_length , "%.02x") ; 
+    // PRINT_ARRAY(input_padded , output_length , "%.02x") ; 
 
 
     uint64_t a , b , c , d , e ,f , g, h ;
     int j =0 ;
-    printf("N =  %d\n" , output_length) ; 
-    printf("here you go looping from 0 to N/(16*8)-1 : %d\n" , output_length/(16*8)-1) ; 
+    // printf("N =  %d\n" , output_length) ; 
+    // printf("here you go looping from 0 to N/(16*8)-1 : %d\n" , output_length/(16*8)-1) ; 
     for (size_t i = 0; i <= output_length/(16*8)-1; i++)
     {
         for (size_t t = 0; t < 16; t++)
