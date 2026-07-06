@@ -23,12 +23,26 @@
         } \
         printf("\n"); \
     } while (0)
-
+// no length line printed
+#define PRINT_ARRAY_NAI(array , length , format) \
+    do { \
+        for (int _i = 0; _i < (length); _i++) { \
+                printf(format " ", (array)[_i]); \
+        } \
+        printf("\n"); \
+    } while (0)
 #define PRINT_ARRAY(array , length , format) \
     do { \
         printf("Array (%d):\n", length); \
         for (int _i = 0; _i < (length); _i++) { \
                 printf(format " ", (array)[_i]); \
+        } \
+        printf("\n"); \
+    } while (0)
+#define PRINT_ARRAY_NOSPCLEN(array , length , format) \
+    do { \
+        for (int _i = 0; _i < (length); _i++) { \
+                printf(format , (array)[_i]); \
         } \
         printf("\n"); \
     } while (0)
