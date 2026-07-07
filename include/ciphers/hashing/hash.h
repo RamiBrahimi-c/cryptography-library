@@ -72,7 +72,16 @@ void hkdf_sha256(const uint8_t* salt, size_t salt_len,
                 const uint8_t* info, size_t info_len,
                 uint8_t* okm, size_t okm_len);
 
+void hkdf_extract_sha512(const uchar_t* salt, size_t salt_len, const uchar_t* ikm, size_t ikm_len, uchar_t prk[64]) ;
 
+void hkdf_expand_sha512(const uchar_t prk[64],
+                       const uchar_t* info, size_t info_len,
+                       uchar_t* okm, size_t okm_len) ;
+
+void hkdf_sha512(const uchar_t* salt, size_t salt_len,
+                const uchar_t* ikm, size_t ikm_len,
+                const uchar_t* info, size_t info_len,
+                uchar_t* okm, size_t okm_len) ;
 
 // Constant-time memory compare for MAC verification.
 // Returns 0 iff the two buffers are equal; never short-circuits.
