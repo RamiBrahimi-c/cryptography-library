@@ -33,6 +33,7 @@ The current version has many dependecies and Ai help which will be removed event
 *   SHA-256
 *   SHA-512
 *   HMAC (SHA-256 , SHA-512)
+*   HKDF (SHA-256 )
 *   Avalanche effect testing and benchmarking tools.
 
 ### Multimedia Support
@@ -151,6 +152,9 @@ The project includes a server-client chat application. It establishes a secure c
 This library is for educational and academic purposes only. Do not use this implementation for securing sensitive production data, as it may lack protection against advanced side-channel attacks.
 
 ## References
+*   *HKDF*  :
+    *   https://datatracker.ietf.org/doc/html/rfc5869#autoid-4
+
 *   *HMAC*  :
     *   https://csrc.nist.gov/files/pubs/fips/198/final/docs/fips-198a.pdf
 
