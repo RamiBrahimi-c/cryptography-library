@@ -33,29 +33,30 @@ void hkdf_expand_sha256(const uchar_t prk[32],
 
     for (size_t i = 1; i <= N; i++)
     {
-        {
-            uchar_t *info_padded  ;
-            size_t info_padded_len  ;
-            if (i==1)
-            {
-                info_padded_len = info_len  + 1 ;
-                info_padded = malloc(sizeof(uchar_t)*(info_len  + 1)) ;
-
-                memcpy(info_padded  , info , info_len ) ; 
-            } else {
-                info_padded_len = info_len + inc + 1 ;
-                info_padded = malloc(sizeof(uchar_t)*(info_len + inc + 1)) ;
-            
-                memcpy(info_padded , T + (t-inc) , inc ) ; 
-                memcpy(info_padded + inc , info , info_len ) ; 
-            }
-            
-            info_padded[info_padded_len-1] = c ;
-            c++ ; 
-            hmac_sha256(prk , 32 ,info_padded  , info_padded_len , T + t ) ; 
-            
-        }
         
+        uchar_t *info_padded  ;
+        size_t info_padded_len  ;
+        if (i==1)
+        {
+            info_padded_len = info_len  + 1 ;
+            info_padded = malloc(sizeof(uchar_t)*(info_len  + 1)) ;
+            assert(info_padded != NULL && "guess malloc failed ??") ; 
+                
+            memcpy(info_padded  , info , info_len ) ; 
+        } else {
+            info_padded_len = info_len + inc + 1 ;
+            info_padded = malloc(sizeof(uchar_t)*(info_len + inc + 1)) ;
+            assert(info_padded != NULL && "guess malloc failed ??") ; 
+            
+            memcpy(info_padded , T + (t-inc) , inc ) ; 
+            memcpy(info_padded + inc , info , info_len ) ; 
+        }
+            
+        info_padded[info_padded_len-1] = c ;
+        c++ ; 
+        hmac_sha256(prk , 32 ,info_padded  , info_padded_len , T + t ) ; 
+
+        free(info_padded) ; 
         t += inc ;
 
     }
@@ -104,28 +105,29 @@ void hkdf_expand_sha512(const uchar_t prk[64],
 
     for (size_t i = 1; i <= N; i++)
     {
+        
+        uchar_t *info_padded  ;
+        size_t info_padded_len  ;
+        if (i==1)
         {
-            uchar_t *info_padded  ;
-            size_t info_padded_len  ;
-            if (i==1)
-            {
-                info_padded_len = info_len  + 1 ;
-                info_padded = malloc(sizeof(uchar_t)*(info_len  + 1)) ;
-
-                memcpy(info_padded  , info , info_len ) ; 
-            } else {
-                info_padded_len = info_len + inc + 1 ;
-                info_padded = malloc(sizeof(uchar_t)*(info_len + inc + 1)) ;
+            info_padded_len = info_len  + 1 ;
+            info_padded = malloc(sizeof(uchar_t)*(info_len  + 1)) ;
+            assert(info_padded != NULL && "guess malloc failed ??") ; 
+            memcpy(info_padded  , info , info_len ) ; 
+        } else {
+            info_padded_len = info_len + inc + 1 ;
+            info_padded = malloc(sizeof(uchar_t)*(info_len + inc + 1)) ;
+            assert(info_padded != NULL && "guess malloc failed ??") ; 
             
-                memcpy(info_padded , T + (t) , inc ) ; 
-                memcpy(info_padded + inc , info , info_len ) ; 
-            }
-            
-            info_padded[info_padded_len-1] = c ;
-            c++ ; 
-            hmac_sha512(prk , 64 ,info_padded  , info_padded_len , T + t ) ; 
-            
+            memcpy(info_padded , T + (t-inc) , inc ) ; 
+            memcpy(info_padded + inc , info , info_len ) ; 
         }
+            
+        info_padded[info_padded_len-1] = c ;
+        c++ ; 
+        hmac_sha512(prk , 64 ,info_padded  , info_padded_len , T + t ) ; 
+            
+        free(info_padded) ; 
         
         t += inc ;
 
