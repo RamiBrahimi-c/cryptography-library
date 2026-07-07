@@ -45,3 +45,6 @@ tests/sound/
 
 # useless for now 
 *.pcapng
+
+# secret file shhhh
+old.txt
