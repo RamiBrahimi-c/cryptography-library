@@ -1,6 +1,5 @@
 #include "hash.h"
 
-#include <openssl/sha.h>
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>

@@ -1,6 +1,6 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -Iinclude -Iinclude/ciphers/classical -Iinclude/ciphers/symmetric -Iinclude/ciphers/asymmetric -Iinclude/ciphers/hashing
-LDFLAGS = -lm -lgmp -lssl -lcrypto
+LDFLAGS = -lm -lgmp 
 SRCDIR = src
 OBJDIR = obj
 
