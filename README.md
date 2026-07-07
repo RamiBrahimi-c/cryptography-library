@@ -56,6 +56,8 @@ sudo apt-get install libgmp-dev libssl-dev
 
 ---
 
+Here's the updated "Building the Project" section for your README:
+
 ## Building the Project
 
 The provided Makefile manages the compilation of the library, tests, and the chat application.
@@ -64,6 +66,18 @@ The provided Makefile manages the compilation of the library, tests, and the cha
 To compile the core project implementation:
 ```bash
 make
+```
+
+### Static Libraries
+
+To build the full static library (requires OpenSSL/GMP):
+```bash
+make libcrypto.a
+```
+
+To build the lite static library (classical and symmetric ciphers only, no external dependencies):
+```bash
+make libcrypto-lite.a
 ```
 
 ### Running Tests
@@ -77,12 +91,29 @@ To run a specific test (e.g., for RSA):
 make test-rsa
 ```
 
+### Chat Application
+To build both the server and client:
+```bash
+make chat
+```
+
+To build them individually:
+```bash
+make server
+make client
+```
+
+Run the server in one terminal and the client in another:
+```bash
+./server
+./client
+```
+
 ### Cleaning Build Files
 To remove object files and compiled binaries:
 ```bash
 make clean
 ```
-
 ---
 
 ## Secure Chat Application
