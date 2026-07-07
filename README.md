@@ -155,9 +155,11 @@ This library is for educational and academic purposes only. Do not use this impl
 *   *HKDF*  :
     *   https://datatracker.ietf.org/doc/html/rfc5869#autoid-4
     *   (useful for testing) https://asecuritysite.com/kdf/HKDF
+    *   (official paper) https://eprint.iacr.org/2010/264
 
 *   *HMAC*  :
     *   https://csrc.nist.gov/files/pubs/fips/198/final/docs/fips-198a.pdf
+    *   (useful for testing) https://www.devglan.com/online-tools/hmac-sha256-online
 
 *   *SHA*  :
     *   (the manual SHS for SHA family ) https://nvlpubs.nist.gov/nistpubs/fips/nist.fips.180-4.pdf
