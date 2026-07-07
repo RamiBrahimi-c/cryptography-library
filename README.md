@@ -33,7 +33,7 @@ The current version has many dependecies and Ai help which will be removed event
 *   SHA-256
 *   SHA-512
 *   HMAC (SHA-256 , SHA-512)
-*   HKDF (SHA-256 )
+*   HKDF (SHA-256 , SHA-512)
 *   Avalanche effect testing and benchmarking tools.
 
 ### Multimedia Support
@@ -154,6 +154,7 @@ This library is for educational and academic purposes only. Do not use this impl
 ## References
 *   *HKDF*  :
     *   https://datatracker.ietf.org/doc/html/rfc5869#autoid-4
+    *   (useful for testing) https://asecuritysite.com/kdf/HKDF
 
 *   *HMAC*  :
     *   https://csrc.nist.gov/files/pubs/fips/198/final/docs/fips-198a.pdf
