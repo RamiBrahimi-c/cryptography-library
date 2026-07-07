@@ -59,24 +59,20 @@ void hmac_sha512(const uint8_t* key, size_t key_len,
                  const uint8_t* data, size_t data_len,
                  uint8_t mac[64]);
 
-// HKDF-SHA256 per RFC 5869.
-// Extract step: PRK = HMAC-SHA256(salt, IKM). If `salt` is NULL or empty,
-// a 32-byte zero salt is used per the spec.
 void hkdf_extract_sha256(const uint8_t* salt, size_t salt_len,
                          const uint8_t* ikm, size_t ikm_len,
                          uint8_t prk[32]);
 
-// Expand step: derive `okm_len` bytes of output keying material.
-// Returns 0 on success, -1 if okm_len > 255 * 32 (RFC 5869 §2.3).
-int hkdf_expand_sha256(const uint8_t prk[32],
+void hkdf_expand_sha256(const uint8_t prk[32],
                        const uint8_t* info, size_t info_len,
                        uint8_t* okm, size_t okm_len);
 
-// Combined Extract + Expand. Returns 0 on success, -1 on length error.
-int hkdf_sha256(const uint8_t* salt, size_t salt_len,
+void hkdf_sha256(const uint8_t* salt, size_t salt_len,
                 const uint8_t* ikm, size_t ikm_len,
                 const uint8_t* info, size_t info_len,
                 uint8_t* okm, size_t okm_len);
+
+
 
 // Constant-time memory compare for MAC verification.
 // Returns 0 iff the two buffers are equal; never short-circuits.
