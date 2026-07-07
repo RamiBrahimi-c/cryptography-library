@@ -47,11 +47,10 @@ The project includes external headers (stb) to demonstrate encryption on:
 To compile and run this project, you must have the following libraries installed:
 
 1.  **GMP (GNU Multiple Precision Arithmetic Library):** Used for large prime number calculations in asymmetric ciphers.
-2.  **OpenSSL (libcrypto):** Used for modern hashing algorithms (MD5, SHA).
 
-On Ubuntu/Debian, install them via:
+On Ubuntu/Debian, install it via:
 ```bash
-sudo apt-get install libgmp-dev libssl-dev
+sudo apt-get install libgmp-dev 
 ```
 
 ---
@@ -70,7 +69,7 @@ make
 
 ### Static Libraries
 
-To build the full static library (requires OpenSSL/GMP):
+To build the full static library (requires GMP):
 ```bash
 make libcrypto.a
 ```
