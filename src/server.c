@@ -105,7 +105,7 @@ int main() {
     aes.key_len = 16;
     aes.key_bytes = malloc(16);
     memcpy(aes.key_bytes, aes_key, 16);
-    uint8_t iv[16] = {0};
+    uchar_t iv[16] = {0};
     AES_init_ctx_iv(&aes.ctx, aes.key_bytes, iv);
 
     //  Chat loop 

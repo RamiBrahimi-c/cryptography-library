@@ -7,11 +7,11 @@
 
 
 // Count differing bits between two digests
-static int count_diff_bits(const uint8_t* d1, const uint8_t* d2, int len)
+static int count_diff_bits(const uchar_t* d1, const uchar_t* d2, int len)
 {
     int count = 0;
     for (int i = 0; i < len; i++) {
-        uint8_t diff = d1[i] ^ d2[i];
+        uchar_t diff = d1[i] ^ d2[i];
         // Count set bits
         for (int b = 0; b < 8; b++)
             if (diff & (1 << b)) count++;
@@ -19,14 +19,14 @@ static int count_diff_bits(const uint8_t* d1, const uint8_t* d2, int len)
     return count;
 }
 
-double avalanche_test(const uint8_t* input, size_t len,
-                      void (*hash_fn)(const uint8_t*, size_t, uint8_t*),
+double avalanche_test(const uchar_t* input, size_t len,
+                      void (*hash_fn)(const uchar_t*, size_t, uchar_t*),
                       int digest_len)
 {
-    uint8_t* modified = malloc(len);
+    uchar_t* modified = malloc(len);
     memcpy(modified, input, len);
 
-    uint8_t digest1[64], digest2[64];
+    uchar_t digest1[64], digest2[64];
     hash_fn(input, len, digest1);
 
     // Total bits across many runs
@@ -48,13 +48,14 @@ double avalanche_test(const uint8_t* input, size_t len,
     return (double)total_diff / (runs * digest_len * 8) * 100.0;
 }
 
-double bench_hash(void (*hash_fn)(const uint8_t*, size_t, uint8_t*),
+double bench_hash(void (*hash_fn)(const uchar_t*, size_t, uchar_t*),
                   size_t total_bytes, int digest_len)
 {
-    uint8_t* data = malloc(total_bytes);
+    digest_len = digest_len ; 
+    uchar_t* data = malloc(total_bytes);
     memset(data, 'A', total_bytes);
 
-    uint8_t digest[64];
+    uchar_t digest[64];
     clock_t start = clock();
     hash_fn(data, total_bytes, digest);
     clock_t end = clock();
@@ -71,9 +72,9 @@ double bench_hash(void (*hash_fn)(const uint8_t*, size_t, uint8_t*),
 // Returns 0 iff equal — preserves memcmp semantics for the equality case.
 int ct_memcmp(const void* a, const void* b, size_t len)
 {
-    const uint8_t* pa = (const uint8_t*)a;
-    const uint8_t* pb = (const uint8_t*)b;
-    uint8_t diff = 0;
-    for (size_t i = 0; i < len; i++) diff |= (uint8_t)(pa[i] ^ pb[i]);
+    const uchar_t* pa = (const uchar_t*)a;
+    const uchar_t* pb = (const uchar_t*)b;
+    uchar_t diff = 0;
+    for (size_t i = 0; i < len; i++) diff |= (uchar_t)(pa[i] ^ pb[i]);
     return diff;
 }

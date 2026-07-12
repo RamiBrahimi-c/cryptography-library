@@ -8,7 +8,7 @@ static unsigned char caesar_key = 5;
 void encrypt_caesar(unsigned char *src , int, unsigned char *dest)
 {
     unsigned char *c;
-    unsigned char *new_src = malloc(sizeof(unsigned char) * strlen(src));
+    unsigned char *new_src = malloc(sizeof(unsigned char) * strlen((const char*) src));
 
     int i = 0;
     for (c = src; *c != '\0'; c++)

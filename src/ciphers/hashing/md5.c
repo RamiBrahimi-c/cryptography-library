@@ -177,7 +177,7 @@ static uint32_t md5_round1_operation(uchar_t *A , uchar_t *B , uchar_t *C , ucha
     
     add_uchar_bytes_(result , B , A) ;
 
-
+    return 0 ; // ?????????????
 }
 
 // a = b + ((a + G(b,c,d) + X[k] + T[i]) <<< s)
@@ -211,7 +211,8 @@ static uint32_t md5_round2_operation(uchar_t *A , uchar_t *B , uchar_t *C , ucha
     
     add_uchar_bytes_(result , B , A) ;
 
-
+    // same ????
+    return 0 ; 
 }
 
 
@@ -243,6 +244,8 @@ static uint32_t md5_round3_operation(uchar_t *A , uchar_t *B , uchar_t *C , ucha
     
     add_uchar_bytes_(result , B , A) ;
 
+    // ???
+    return 0 ; 
 }
 
 
@@ -275,19 +278,20 @@ static uint32_t md5_round4_operation(uchar_t *A , uchar_t *B , uchar_t *C , ucha
     be_to_bytes_(  (rotl_32bit_((bytes_to_be_(temp6))  , s)) , result) ;
     add_uchar_bytes_(result , B , A) ;
 
-
+    // TODO : wth do we return ??
+    return 0 ; 
 }
 
 static double absd(double a) {
     return a >=0 ? a : -a ;
 }
 
-static void uint32_t_to_bytes(uint32_t number , uchar_t bytes[4] ) {
-    bytes[0] = (number >> 24) & 0xff ;
-    bytes[1] = (number >> 16) & 0xff ;
-    bytes[2] = (number >> 8) & 0xff ;
-    bytes[3] = (number) & 0xff ;
-}
+// static void uint32_t_to_bytes(uint32_t number , uchar_t bytes[4] ) {
+//     bytes[0] = (number >> 24) & 0xff ;
+//     bytes[1] = (number >> 16) & 0xff ;
+//     bytes[2] = (number >> 8) & 0xff ;
+//     bytes[3] = (number) & 0xff ;
+// }
 
 
 
@@ -321,10 +325,10 @@ void md5_hash(uchar_t M[] , int N , uchar_t *output) {
 
     uchar_t X[4*16] ;
     uchar_t AA[4] , BB[4] , CC[4] , DD[4] ;
-    int j ;
+    // int j ;
     // printf("N =  %d\n" , N) ; 
     // printf("here you go looping from 0 to N/(16*4)-1 : %d\n" , N/(16*4)-1) ; 
-    for (size_t i = 0; i <= N/(16*4)-1; i++)
+    for (size_t i = 0; i <= (size_t) (N/(16*4)-1); i++)
     {
 
         memcpy(X  , M + (i* 16 *4 ) , sizeof(uchar_t) * 4*16) ;

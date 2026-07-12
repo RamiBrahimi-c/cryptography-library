@@ -6,15 +6,22 @@
 #define SHA512_BLOCK_SIZE 128
 #define SHA512_DIGEST_SIZE 64
 
-
+/*
+    gcc was saying : 
+    `src/ciphers/hashing/hmac.c:12:1: warning: multi-line comment [-Wcomment]
+   12 | //x / \
+      | ^
+    `
+    you serious :( ??? 
 // \o/
 //  |
-// /\ 
+// / \ 
+*/
 
 void hmac_sha256(const uchar_t* key, size_t key_len, const uchar_t* data, size_t data_len, uchar_t mac[SHA256_DIGEST_SIZE]) {
 
     size_t B = SHA256_BLOCK_SIZE;
-    size_t t = SHA256_BLOCK_SIZE;
+    // size_t t = SHA256_BLOCK_SIZE;
     uchar_t K0[SHA256_BLOCK_SIZE]  ;
     uchar_t ipad = 0x36 ;                  
     uchar_t opad = 0x5c ;                  
@@ -73,7 +80,7 @@ void hmac_sha256(const uchar_t* key, size_t key_len, const uchar_t* data, size_t
     memcpy(result3 + B, result2 , sizeof(uchar_t)*SHA256_DIGEST_SIZE) ;  
     
     // step 9 : hash the last concatenated result from (step9)
-    uchar_t digest_final[SHA256_DIGEST_SIZE] ; 
+    // uchar_t digest_final[SHA256_DIGEST_SIZE] ; 
     sha256_hash(result3 , B + SHA256_DIGEST_SIZE , mac ) ; 
     
     // step 10 : by default t is the same as H digest length ...
@@ -82,12 +89,12 @@ void hmac_sha256(const uchar_t* key, size_t key_len, const uchar_t* data, size_t
 
 // for explanation i done it above im quite lazy to repeat all of that \o/
 // (ended up doing it ...)
-void hmac_sha512(const uint8_t* key, size_t key_len,
-                 const uint8_t* data, size_t data_len,
-                 uint8_t mac[SHA512_DIGEST_SIZE]) {
+void hmac_sha512(const uchar_t* key, size_t key_len,
+                 const uchar_t* data, size_t data_len,
+                 uchar_t mac[SHA512_DIGEST_SIZE]) {
 
     size_t B = SHA512_BLOCK_SIZE;
-    size_t t = SHA512_BLOCK_SIZE;
+    // size_t t = SHA512_BLOCK_SIZE;
     uchar_t K0[SHA512_BLOCK_SIZE]  ;
     uchar_t ipad = 0x36 ;                  
     uchar_t opad = 0x5c ;                  
@@ -149,7 +156,7 @@ void hmac_sha512(const uint8_t* key, size_t key_len,
     
     
     // step 9 : hash the last concatenated result from (step9)
-    uchar_t digest_final[SHA512_DIGEST_SIZE] ; 
+    // uchar_t digest_final[SHA512_DIGEST_SIZE] ; 
     sha512_hash(result3 , B + SHA512_DIGEST_SIZE , mac ) ; 
     // step 10 : by default t is the same as H digest length ...
 

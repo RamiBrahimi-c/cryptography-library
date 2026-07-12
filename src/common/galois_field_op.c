@@ -7,7 +7,7 @@ uint16_t keepMSB_16bit(uint16_t a) {
         return 0 ; 
     }
     uint16_t old_a = a ; 
-    int pos = 0 ;
+    size_t pos = 0 ;
     while (a > 0)
     {
         old_a = a ;
@@ -31,7 +31,7 @@ uchar_t keepMSB(uchar_t a) {
     }
     
     uchar_t old_a = a ; 
-    int pos = 0 ;
+    size_t pos = 0 ;
     while (a > 0)
     {
         old_a = a ;
@@ -137,7 +137,7 @@ uint16_t mul_GF_16bit(uint16_t a , uint16_t b) {
     uint32_t result = 0 ;
     uint16_t temp = a ;
     int position = 1 ;
-    uint16_t old_b = b ;
+    // uint16_t old_b = b ;
 
     for (size_t i = 0; i < 16; i++)
     {
@@ -172,8 +172,8 @@ uint16_t div_euclud_GF_16bit(uint16_t a , uint16_t b ) {
         return a ; 
     }
     
-    uint16_t divend = 0 ; 
-    uint16_t old_a = a ; 
+    // uint16_t divend = 0 ; 
+    // uint16_t old_a = a ; 
 
     while (keepMSB_16bit(a) >= keepMSB_16bit(b))
     {
@@ -205,7 +205,7 @@ uint16_t div_GF_16bit_edited(uint16_t a , uint16_t b) {
     }
     
     uint16_t divend = 0 ; 
-    uint16_t old_a = a ; 
+    // uint16_t old_a = a ; 
 
     while (keepMSB_16bit(a) >= keepMSB_16bit(b))
     {
@@ -236,7 +236,7 @@ uint16_t modInverse_polynoms(uint16_t n, uint16_t m)
     // if (gcd(n, m) != 1)
         // return -1;
     
-    uint16_t m0 = m;
+    // uint16_t m0 = m;
     uint16_t y = 0, x = 1;
 
 

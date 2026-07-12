@@ -18,14 +18,11 @@ void hill_encrypt(const uchar_t* input, uchar_t* output , int length, const void
     int step = hill_key->n ; 
 
     // just temporary stuff to hold results in apropriate format
-    uchar_t matrix1[MATRIX_MAX_DEGREE][MATRIX_MAX_DEGREE] ;
-    int l1 = hill_key->n , c1 = hill_key->n ;
     uchar_t matrix2[MATRIX_MAX_DEGREE][MATRIX_MAX_DEGREE] ;
     int l2 = step , c2 = 1 ;
     // int l2 = strlen((char *) input) , c2 = 1 ;
     
     uchar_t result[MATRIX_MAX_DEGREE][MATRIX_MAX_DEGREE] ;
-    int l3 = l1 , c3 = c2 ;
     
     // int length = strlen((char *) input) ; 
     
@@ -33,7 +30,7 @@ void hill_encrypt(const uchar_t* input, uchar_t* output , int length, const void
     printf("length : %d\n" , length ) ; 
     
 
-    int loop_times = length/step ;
+    size_t loop_times = length/step ;
     // int loop_times = strlen((char *) input)/step ;
     if (strlen((char *) input) %  step != 0 )
     {
@@ -87,7 +84,6 @@ void hill_decrypt(const uchar_t* input, uchar_t* output, const void* key) {
     // int l2 = strlen((char *) input) , c2 = 1 ;
     
     uchar_t result[MATRIX_MAX_DEGREE][MATRIX_MAX_DEGREE] ;
-    int l3 = l1 , c3 = c2 ;
     
     int length = strlen((char *) input) ; 
     
@@ -95,7 +91,7 @@ void hill_decrypt(const uchar_t* input, uchar_t* output, const void* key) {
     printf("length : %d\n" , length ) ; 
     
 
-    int loop_times = strlen((char *) input)/step ;
+    size_t loop_times = strlen((char *) input)/step ;
     if (strlen((char *) input) %  step != 0 )
     {
         loop_times++ ; 
@@ -126,7 +122,7 @@ void hill_decrypt(const uchar_t* input, uchar_t* output, const void* key) {
     // printf("in decrypt function \n");
 
     // PRINT_ARRAY(output , strlen(output));
-    output[strlen(input)-1] = '\0' ; 
+    output[strlen((const char *) input)-1] = '\0' ; 
     // PRINT_ARRAY(output , strlen(output));
     // printf("in decrypt function \n");
 }
@@ -180,7 +176,7 @@ void hill_set_key(void* key_struct, const char* key_str) {
         setRandomInversibleMatrix(hill_key->matrix , hill_key->n , hill_key->n) ; 
     }
     uint64_t det = determinant_gaussian_mod(hill_key->n , hill_key->matrix , ALPHABET_LENGTH) ;
-    printf("INFO : matrix inversible with determinent %u and inverse %u : \n" , det  
+    printf("INFO : matrix inversible with determinent %lu and inverse %u : \n" , det  
             , modInverse(det , ALPHABET_LENGTH));
 
     // for (size_t i = 0; i < hill_key->n; i++)
@@ -197,9 +193,7 @@ void hill_set_key(void* key_struct, const char* key_str) {
 }
 
 
-void hill_free_key(void* key_struct) {
-
-}
+void hill_free_key(void* key_struct) ;
 
 Cipher* get_hill_cipher(void);
 

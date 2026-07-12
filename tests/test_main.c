@@ -78,57 +78,26 @@ int main() {
 
     // :catwiggle:
 
-    
-    // uchar_t key[] = "4566546546546545645sd5qs4d5sq4dqs54dQS4dQSQSDQs54dQdQdQqs555165165161" ; 
-    // size_t key_len = 69 ; 
 
-    // uchar_t data[] = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" ; 
-    // size_t data_len = 75 ; 
-
-    // uchar_t mac[32] ; 
-    // size_t mac_len = 32 ; 
-
-    // printf("key : \n" );
-    // PRINT_ARRAY_NAI(key , key_len , "%0.2x") ;
-    // PRINT_ARRAY_NOSPCLEN(key , key_len , "%0.2x") ;
-
-
-    // printf("data : \n" );
-    // PRINT_ARRAY_NAI(data , data_len , "%0.2x") ;
-    // PRINT_ARRAY_NOSPCLEN(data , data_len , "%0.2x") ;
-
-
-    
-    // sha512_hash(input , length , digest) ; 
-    // sha256_hash(input , length , digest) ; 
-    // hmac_sha256(key , key_len , data , data_len , mac) ; 
-    // hmac_sha512(key , key_len , data , data_len , mac) ; 
     size_t salt_len = 10;
     uchar_t salt[] = { 0x8e , 0x94 , 0xef , 0x80 , 0x5b , 0x93 , 0xe6 , 0x83 , 0xff , 0x18};
-    size_t ikm_len  = 5;
-    uchar_t ikm[]  = "hello";
+    size_t ikm_len  = 76;
+    uchar_t ikm[]  = "hellolkqnsklqsndqsndlqskndqskjndqskjndhellolkqnsklqsndqsndlqskndqskjndqskjnd";
     size_t info_len = 3 ;
     uchar_t info[] = { 0x12 , 0x34 , 0x56 };
-    size_t okm_len = 32;
-    uchar_t okm[32] ;
-    
-    hkdf_sha256(salt ,salt_len , ikm , ikm_len , info , info_len , okm , okm_len ) ; 
+    size_t okm_len = 64;
+    uchar_t okm[64] ;
+
+
+
+    // hkdf_sha256(salt ,salt_len , ikm , ikm_len , info , info_len , okm , okm_len ) ; 
+    hkdf_sha512(salt ,salt_len , ikm , ikm_len , info , info_len , okm , okm_len ) ; 
     
     
     printf("okm : \n" );
     PRINT_ARRAY_NAI(okm , okm_len , "%0.2x") ;
     PRINT_ARRAY_NOSPCLEN(okm , okm_len , "%0.2x") ;
     
-    // hmac_sha256mine(key , key_len , data , data_len , mac) ; 
-    // hmac_sha256mine(key , key_len , data , data_len , mac) ; 
-    // hkdf_sha256_mine(salt ,salt_len , ikm , ikm_len , info , info_len , okm , okm_len ) ; 
-
-    printf("okm mine : \n" );
-    PRINT_ARRAY_NAI(okm , okm_len , "%0.2x") ;
-    PRINT_ARRAY_NOSPCLEN(okm , okm_len , "%0.2x") ;
-
-
-    printf("!!\n") ; 
 
     return 0 ; 
 }

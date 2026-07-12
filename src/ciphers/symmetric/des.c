@@ -891,7 +891,6 @@ void des_decrypt(const uchar_t* input, uchar_t* output , int length , const void
     
 
 
-    int scale = 8 ; 
     char buffer[8] ; 
     // char *key ;
     size_t k = 0 ; 

@@ -68,7 +68,7 @@ typedef struct AesKey {
     size_t expanded_key_length ;
     int Nr ; // rounds number 
     int Nk ; // number of 32 bit words compromising the key
-};
+}AesKey;
 
 
 void aes_encrypt(const uchar_t* input, uchar_t* output, int length, const void* key);

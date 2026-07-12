@@ -64,25 +64,25 @@ static void be64_to_bytes(uint64_t num , uchar_t input[8]) {
 
 
 
-static uint32_t rotl_32bit(uint32_t a , uint32_t times) {
-    times %= 32 ;
+// static uint32_t rotl_32bit(uint32_t a , uint32_t times) {
+//     times %= 32 ;
 
-    if (!times)
-        return a ;
-
-
-    return ((a << times) | (a >> (32 - times))) ;
-}
-
-static uint64_t rotl_64bit(uint64_t a , uint32_t times) {
-    times %= 64 ;
-
-    if (!times)
-        return a ;
+//     if (!times)
+//         return a ;
 
 
-    return ((a << times) | (a >> (64 - times))) ;
-}
+//     return ((a << times) | (a >> (32 - times))) ;
+// }
+
+// static uint64_t rotl_64bit(uint64_t a , uint32_t times) {
+//     times %= 64 ;
+
+//     if (!times)
+//         return a ;
+
+
+//     return ((a << times) | (a >> (64 - times))) ;
+// }
 
 
 static uint32_t rotr_32bit(uint32_t a , uint32_t times) {
@@ -118,14 +118,14 @@ static uint64_t shr_64bit(uint64_t a , uint64_t times) {
 }
 
 
-static uint32_t shl_32bit(uint32_t a , uint32_t times) {
-    times %= 32 ;
-    return a << times ;
-}
-static uint64_t shl_64bit(uint64_t a , uint64_t times) {
-    times %= 64 ;
-    return a << times ;
-}
+// static uint32_t shl_32bit(uint32_t a , uint32_t times) {
+//     times %= 32 ;
+//     return a << times ;
+// }
+// static uint64_t shl_64bit(uint64_t a , uint64_t times) {
+//     times %= 64 ;
+//     return a << times ;
+// }
 
 
 static void Ch_sha256(uchar_t *x , uchar_t *y , uchar_t *z , uchar_t *result) {
@@ -258,7 +258,7 @@ static void init_K(uchar_t K[64*4]) {
 
 
 
-uchar_t* sha256_padding(uchar_t M[] , uint64_t b , uint64_t *output_length ) {
+uchar_t* sha256_padding(const uchar_t M[] , uint64_t b , uint64_t *output_length ) {
     // b number of bits ?
     // the specification says that it needs not be to be mulytiply of 8 ??? (pretty much weird)
     *output_length = b +64 +  (512 - ((b+64)  % 512)) ;
@@ -338,7 +338,6 @@ void sha256_hash(const uchar_t* data, size_t len, uchar_t digest[32]) {
     output_length /= 8 ; 
 
     // PRINT_ARRAY(input_padded , output_length , "%.02x") ; 
-    int j = 0 ; 
     uint32_t a , b , c , d , e ,f , g, h ;
 
     // printf("N =  %d\n" , output_length) ; 
@@ -509,7 +508,7 @@ static void init_Hash_Values_sha512(uint64_t H[8]) {
 }
 
 
-uchar_t* sha512_padding(uchar_t M[] , uint64_t b , uint64_t *output_length ) {
+uchar_t* sha512_padding(const uchar_t M[] , uint64_t b , uint64_t *output_length ) {
     // b number of bits 
     *output_length = b +64 +  (1024 - ((b+64)  % 1024)) ;
 
@@ -582,7 +581,7 @@ uchar_t* sha512_padding(uchar_t M[] , uint64_t b , uint64_t *output_length ) {
 
 // man dont let anyone read this poor implementation ...
 // i chose a different approach which is to just deal with the input as raw bytes
-void sha512_hash(const uint8_t* data, size_t len, uint8_t digest[64]) {
+void sha512_hash(const uchar_t* data, size_t len, uchar_t digest[64]) {
     uint64_t H[8] ; 
     uchar_t W[80*8] ; 
     uint64_t K[80] ; 
@@ -603,7 +602,7 @@ void sha512_hash(const uint8_t* data, size_t len, uint8_t digest[64]) {
 
 
     uint64_t a , b , c , d , e ,f , g, h ;
-    int j =0 ;
+    // int j =0 ;
     // printf("N =  %d\n" , output_length) ; 
     // printf("here you go looping from 0 to N/(16*8)-1 : %d\n" , output_length/(16*8)-1) ; 
     for (size_t i = 0; i <= output_length/(16*8)-1; i++)

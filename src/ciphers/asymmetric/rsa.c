@@ -132,11 +132,15 @@ void rsa_set_key(void* key_struct, const char* key_str)
         mpz_set_str(rsa->d, tok_d, 16);
         rsa->bits = atoi(tok_bits);
         rsa->is_private = 1;
+        printf("wth1\n") ; 
     } else if (tok_n && tok_e && tok_bits) {
         mpz_set_str(rsa->n, tok_n, 16);
         mpz_set_str(rsa->e, tok_e, 16);
         rsa->bits = atoi(tok_bits);
         rsa->is_private = 0;
+        printf("wth2\n") ; 
+    } else {
+        printf("wth\n") ; 
     }
     free(copy);
 }

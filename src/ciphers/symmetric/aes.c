@@ -425,7 +425,7 @@ void aes_set_key(void* key_struct, const char* key_str)
     setup_parameteres_aes(aes_key->mode , &aes_key->Nr , &aes_key->Nk ) ;
     printf("mode : %d %d %d\n" , aes_key->mode , aes_key->Nr , aes_key->Nk);
     aes_key->expanded_key_length = 4 * (aes_key->Nr+1) * 4 ; 
-    printf("len : %d \n" , aes_key->expanded_key_length);
+    printf("len : %ld \n" , aes_key->expanded_key_length);
     
     aes_key->expanded_key = malloc(sizeof(uchar_t)*aes_key->expanded_key_length) ; 
     

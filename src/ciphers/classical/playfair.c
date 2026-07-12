@@ -1,8 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 
-static unsigned char* playfair_key = "Zakaria";
+static unsigned char* playfair_key =(unsigned char*) "Zakaria";
 
 static unsigned char grid[5][5];
 
@@ -11,7 +12,7 @@ static void init_grid()
     unsigned char array[26] = {0};
     unsigned char *c;
 
-    unsigned char *new_playfair_key = malloc(sizeof(unsigned char) * strlen(playfair_key));
+    unsigned char *new_playfair_key = malloc(sizeof(unsigned char) * strlen((const char*) playfair_key));
 
     int i = 0;
     
@@ -76,7 +77,7 @@ static void init_grid()
 void encrypt_playfair(unsigned char *src, unsigned char *dest)
 {
     unsigned char *c;
-    unsigned char *new_src = malloc(2 * sizeof(unsigned char) * strlen(src));
+    unsigned char *new_src = malloc(2 * sizeof(unsigned char) * strlen((const char*) src));
 
     int i = 0;
     for (c = src; *c != '\0'; c++)
@@ -95,7 +96,7 @@ void encrypt_playfair(unsigned char *src, unsigned char *dest)
     
     unsigned char *d = dest;
     unsigned char *e;
-    *c = new_src;
+    c = new_src;
     
     while (*c != '0')
     {

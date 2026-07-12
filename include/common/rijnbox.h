@@ -7,7 +7,7 @@ typedef unsigned char uchar_t ;
 #include "utils.h"
 
 
-void initialize_aes_sbox(uint8_t sbox[256]);
+void initialize_aes_sbox(uchar_t sbox[256]);
 
 
 

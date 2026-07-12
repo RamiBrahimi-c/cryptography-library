@@ -40,41 +40,12 @@ static void reverse(uchar_t arr[], uint32_t start, uint32_t end) {
     }
 }
 // 32-bit conversion
-static uint32_t swap_endian_32(uint32_t value) {
-    return ((value >> 24) & 0xFF) |
-           ((value >> 8)  & 0xFF00) |
-           ((value << 8)  & 0xFF0000) |
-           ((value << 24) & 0xFF000000);
-}
-
-
-static void add_uchar_bytes2betterrrrr(uchar_t num1[4] ,uchar_t num2[4] , uchar_t result[4] ) {
-
-    uchar_t temp1[4] ;
-    uchar_t temp2[4] ;
-
-    uint32_t a = swap_endian_32(bytes_to_be(num1)) ;
-    uint32_t b = swap_endian_32(bytes_to_be(num2)) ;
-
-    be_to_bytes(a , temp1) ;
-    be_to_bytes(b , temp2) ;
-    printf("\n\n") ;
-    printf("temp1 : %x \n\n" , a) ;
-    printf("temp2 : %x \n\n" , b) ;
-
-
-    // be_to_bytes(swap_endian_32(a + b) , result) ;
-    uchar_t carry = 0 ;
-    for (int i = 0; i < 4 ; i++)
-    {
-        uint16_t sum = temp1[i] + temp2[i] + carry ;
-        result[i] = (sum) % 0x100 ;
-        carry = sum >> 8 ;
-
-    }
-
-}
-
+// static uint32_t swap_endian_32(uint32_t value) {
+//     return ((value >> 24) & 0xFF) |
+//            ((value >> 8)  & 0xFF00) |
+//            ((value << 8)  & 0xFF0000) |
+//            ((value << 24) & 0xFF000000);
+// }
 
 
 
@@ -203,6 +174,7 @@ static uint32_t round1_operation(uchar_t *A , uchar_t *B , uchar_t *C , uchar_t 
 
     be_to_bytes(  (rotl_32bit((bytes_to_be(temp3))  , s)) , A) ;
 
+    return 0;
 }
 
 
@@ -235,7 +207,7 @@ static uint32_t round2_operation(uchar_t* A , uchar_t* B , uchar_t* C , uchar_t*
     be_to_bytes(rotl_32bit( (bytes_to_be(temp6)) , s) , A) ;
 
 
-
+    return 0 ; 
 }
 
 
@@ -273,7 +245,7 @@ static uint32_t round3_operation(uchar_t* A , uchar_t* B , uchar_t* C , uchar_t*
 
 
     // be_to_bytes(rotl_32bit((uint32_t) (bytes_to_le(A) +bytes_to_le(temp) + swap_endian_32(bytes_to_le(X + i) ) + 0x6ED9EBA1) , s  ) , A );
-
+    return 0 ; 
 }
 
 
@@ -375,10 +347,9 @@ void md4_hash(uchar_t M[] , int N , uchar_t *output) {
 
     uchar_t X[4*16] ;
     uchar_t AA[4] , BB[4] , CC[4] , DD[4] ;
-    int j ;
     printf("N =  %d\n" , N) ; 
     printf("here you go looping from 0 to N/(16*4)-1 : %d\n" , N/(16*4)-1) ; 
-    for (size_t i = 0; i <= N/(16*4)-1; i++)
+    for (size_t i = 0; i <=(size_t) (N/(16*4)-1); i++)
     {
 
         memcpy(X  , M + (i* 16 *4 ) , sizeof(uchar_t) * 4*16) ;

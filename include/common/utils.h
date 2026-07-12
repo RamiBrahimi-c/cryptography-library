@@ -85,7 +85,7 @@ _Bool isMatrixInversible_mod(uchar_t matrix[][MATRIX_MAX_DEGREE], int lines, int
 
 int64_t determinant_mod(int n, uchar_t matrix[][MATRIX_MAX_DEGREE], uint64_t mod) ;
 
-void getCofactor(int n, uchar_t matrix[][MATRIX_MAX_DEGREE],uchar_t temp[][MATRIX_MAX_DEGREE-1], int skipRow, int skipCol) ;
+void getCofactor(int n, uchar_t matrix[][MATRIX_MAX_DEGREE],uchar_t temp[][MATRIX_MAX_DEGREE], int skipRow, int skipCol) ;
 
 int64_t determinant_mod(int n, uchar_t matrix[][MATRIX_MAX_DEGREE], uint64_t mod) ;
 
@@ -106,7 +106,7 @@ void initilizeAlphabets(uchar_t *array , char choice) ;
 int compareUChars(const void* a, const void* b) ;
 
 
-_Bool areElementsUniqueSorted(__u_char arr[], int n) ;
+_Bool areElementsUniqueSorted(const __u_char arr[], int n) ;
 
 
 int findIndexMap(const uchar_t *array , uchar_t value ) ;

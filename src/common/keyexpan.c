@@ -104,7 +104,7 @@ void key_expan(uchar_t *key ,uchar_t *output   , int Nk , int Nr , uchar_t rci[1
         // printf("i = %d \n" , i ) ;
         // uchar_t temp = output[i-1] ; 
         uc_word temp = {0} ;
-        int index = (i - 1)*4 ;
+        // int index = (i - 1)*4 ;
         // printf("first index : %d \n" , index) ; 
         temp.word[0] = output[(i - 1)*4 ] ; 
         temp.word[1] = output[(i - 1)*4 + 1] ; 

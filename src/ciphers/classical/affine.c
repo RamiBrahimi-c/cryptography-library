@@ -12,14 +12,14 @@
 
 
 
-void affine_encrypt(const uchar_t* input,uchar_t* output , int length, const void* key) {
+void affine_encrypt(const uchar_t* input,uchar_t* output , size_t length, const void* key) {
     assert(key != NULL && "key is null");
     AffineKey *affine_key = (AffineKey *) (key) ;
     
     
     // int length = strlen((char *) input) ; 
     printf("alpha num : %d \n" , ALPHABET_LENGTH) ; 
-    printf("length : %d\n" , length ) ; 
+    printf("length : %ld\n" , length ) ; 
     
     for (size_t i = 0; i < length; i++)
     {
@@ -36,9 +36,9 @@ void affine_decrypt(const uchar_t* input,uchar_t* output, const void* key) {
     
     
     
-    int length = strlen((char *) input) ;
+    size_t length = strlen((char *) input) ;
     uint16_t inv_a = modInverse(affine_key->a , ALPHABET_LENGTH) ;
-    printf("mod multiplicative inv : %lu \n" , inv_a); 
+    printf("mod multiplicative inv : %u \n" , inv_a); 
     for (size_t i = 0; i < length; i++)
     {
         output[i] = ( (input[i] - affine_key->b) * inv_a ) % ALPHABET_LENGTH ;
@@ -59,15 +59,12 @@ void affine_set_key(void* key_struct, const char* key_str) {
     affineKey->a = key_num; 
     // affineKey->b = 0; 
     affineKey->b = key_num ^ UINT64_MAX; 
-    if (affineKey->b < 0)
-        affineKey->b *= -1 ; 
     
     printf(" a = %lu   b = %lu  \n" , affineKey->a , affineKey->b );
 }   
 
 
-void affine_free_key(void* key_struct) {
-}
+void affine_free_key(void* key_struct) ;
 
 Cipher* get_affine_cipher(void);
 

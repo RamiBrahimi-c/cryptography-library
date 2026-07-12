@@ -3,13 +3,13 @@
 #include <string.h>
 #include <ctype.h>
 
-static unsigned char *vigenere_key = "Zakaria";
+static unsigned char *vigenere_key =(unsigned char *) "Zakaria";
 
 void encrypt_vigenere(unsigned char *src, unsigned char *dest)
 {
     unsigned char *c;
-    unsigned char *new_src = malloc(sizeof(unsigned char) * strlen(src));
-    unsigned char *new_vigenere_key = malloc(sizeof(unsigned char) * strlen(vigenere_key));
+    unsigned char *new_src = malloc(sizeof(unsigned char) * strlen((const char*)src));
+    unsigned char *new_vigenere_key = malloc(sizeof(unsigned char) * strlen((const char*) vigenere_key));
 
     int i = 0;
     

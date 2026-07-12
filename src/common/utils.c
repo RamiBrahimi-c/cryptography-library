@@ -99,9 +99,9 @@ void multiplyMatrix(uchar_t matrix1[][MATRIX_MAX_DEGREE] , int n , int m , uchar
 void setRandomInversibleMatrix(uchar_t  matrix[][MATRIX_MAX_DEGREE],int lines , int cols) {
 
 
-    for (size_t i = 0; i < lines; i++)
+    for (int i = 0; i < lines; i++)
     {
-        for (size_t j = 0; j < cols; j++)
+        for (int j = 0; j < cols; j++)
         {
             // ?????????????????????
             matrix[i][j] = rand() % ALPHABET_LENGTH ;
@@ -118,7 +118,6 @@ void copyData(const uchar_t* input , int length , int start_index, int n , uchar
     
     size_t i = start_index;
     int j = 0;
-    int k = 0 ;
     while ( j < n)
     {
         // just respecting the order which is a convention
@@ -135,9 +134,12 @@ void copyDataInv( uchar_t matrix[][MATRIX_MAX_DEGREE] , int lines  ,  uchar_t* r
     //     // just respecting the order which is a convention
     //     result[i] =  matrix[i][0] ;
     // }
+
+    // yea man idk what are these 2 serving .. lets just make GCC quite :D 
+    lines = lines; 
+    length = length;
     size_t i = start_index;
     int j = 0;
-    int k = 0 ;
     // while ( j < n && i < length)
     while ( j < n )
     {
@@ -259,7 +261,7 @@ _Bool isMatrixInversible_mod(uchar_t matrix[][MATRIX_MAX_DEGREE], int lines, int
 // }
 
 void getCofactor(int n, uchar_t matrix[][MATRIX_MAX_DEGREE], 
-                 uchar_t temp[][MATRIX_MAX_DEGREE-1], int skipRow, int skipCol) {
+                 uchar_t temp[][MATRIX_MAX_DEGREE], int skipRow, int skipCol) {
     int i = 0, j = 0;
     for (int row = 0; row < n; row++) {
         for (int col = 0; col < n; col++) {
@@ -289,7 +291,7 @@ int64_t determinant_mod(int n, uchar_t matrix[][MATRIX_MAX_DEGREE], uint64_t mod
         int64_t d = matrix[1][1];
         
         int64_t det = (a * d - b * c);
-        printf("det : %lld\n", det);
+        printf("det : %ld\n", det);
         
         det %= (int64_t)mod;
         if (det < 0) det += mod;
@@ -297,7 +299,7 @@ int64_t determinant_mod(int n, uchar_t matrix[][MATRIX_MAX_DEGREE], uint64_t mod
     }
     
     // Recursive case - temp should match matrix type
-    uchar_t temp[MATRIX_MAX_DEGREE-1][MATRIX_MAX_DEGREE-1];
+    uchar_t temp[MATRIX_MAX_DEGREE][MATRIX_MAX_DEGREE];
     int64_t det = 0;
     int sign = 1;
     
@@ -327,7 +329,7 @@ void cofactorMatrix(int n, uchar_t matrix[][MATRIX_MAX_DEGREE],
         return;
     }
     
-    uchar_t temp[MATRIX_MAX_DEGREE-1][MATRIX_MAX_DEGREE-1];
+    uchar_t temp[MATRIX_MAX_DEGREE][MATRIX_MAX_DEGREE];
     
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < n; j++) {
@@ -335,7 +337,7 @@ void cofactorMatrix(int n, uchar_t matrix[][MATRIX_MAX_DEGREE],
             getCofactor(n, matrix, temp, i, j);
             
             // Calculate determinant of submatrix
-            int64_t det = determinant_mod(n - 1, temp, mod);
+            int64_t det = determinant_mod(n - 1 ,  temp, mod);
             
             // Apply sign: (-1)^(i+j)
             if ((i + j) % 2 == 1) {
@@ -426,10 +428,10 @@ int compareUChars(const void* a, const void* b) {
     return (*(uchar_t*)a - *(uchar_t*)b);
 }
 
-_Bool areElementsUniqueSorted(__u_char arr[], int n) {
+_Bool areElementsUniqueSorted(const __u_char arr[], int n) {
     char temp_array[ARRAY_MAX_SIZE] ; 
 
-    strcpy(temp_array , arr) ; 
+    strcpy(temp_array ,(const char*) arr) ; 
     // Sort the array
     qsort(temp_array, n, sizeof(__u_char), compareUChars);
 

@@ -24,8 +24,8 @@ void hkdf_expand_sha256(const uchar_t prk[32],
                        const uchar_t* info, size_t info_len,
                        uchar_t* okm, size_t okm_len) {
     size_t N = (size_t) ceil(okm_len / SHA256_DIGEST_LENGTH);
-    uchar_t old_T[SHA256_DIGEST_LENGTH] ; 
-    size_t len_T ; 
+    // uchar_t old_T[SHA256_DIGEST_LENGTH] ; 
+    // size_t len_T ; 
     uchar_t *T = malloc(sizeof(uchar_t)*okm_len) ;
     size_t inc = SHA256_DIGEST_LENGTH ; 
     size_t t = 0 ;
@@ -87,7 +87,7 @@ void hkdf_extract_sha512(const uchar_t* salt, size_t salt_len, const uchar_t* ik
 
     }
     printf("prk : \n") ; 
-    PRINT_ARRAY_NOSPCLEN(prk , 64 , "%0.2x") ; 
+    PRINT_ARRAY_NOSPCLEN(prk , 64 , "%.2x") ; 
 
 }
 
@@ -96,8 +96,8 @@ void hkdf_expand_sha512(const uchar_t prk[64],
                        const uchar_t* info, size_t info_len,
                        uchar_t* okm, size_t okm_len) {
     size_t N = (size_t) ceil(okm_len / SHA512_DIGEST_LENGTH);
-    uchar_t old_T[SHA512_DIGEST_LENGTH] ; 
-    size_t len_T ; 
+    // uchar_t old_T[SHA512_DIGEST_LENGTH] ; 
+    // size_t len_T ; 
     uchar_t *T = malloc(sizeof(uchar_t)*okm_len) ;
     size_t inc = SHA512_DIGEST_LENGTH ; 
     size_t t = 0 ;

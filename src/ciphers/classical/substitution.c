@@ -18,7 +18,7 @@ void substittution_encrypt(const uchar_t* input, uchar_t* output, const void* ke
     SubstitutionKey *substitution_key = (SubstitutionKey *) (key) ;
 
 
-    int length = strlen(input) ; 
+    size_t length = strlen((const char*) input) ; 
 
     for (size_t i = 0; i < length ; i++)
     {
@@ -34,7 +34,7 @@ void substittution_decrypt(const uchar_t* input, uchar_t* output, const void* ke
     SubstitutionKey *substitution_key = (SubstitutionKey *) (key) ;
 
 
-    int length = strlen(input) ; 
+    size_t length = strlen((const char*) input) ; 
 
     for (size_t i = 0; i < length ; i++)
     {
@@ -58,20 +58,20 @@ void substittution_set_key(void* key_struct, const char* key_str) {
     {
         // we gotta fill our map
         // initilizeAlphabets(substitution_key->map , 'l' ) ;
-        if (strlen(key_str) != substitution_key->alphabet_size   )
+        if ((int) strlen((const char *) key_str) != substitution_key->alphabet_size   )
         {
             printf("ERROR: key too short to be used in substitution encryption\n");
             return ; 
         }
         
-        if (!areElementsUniqueSorted(key_str , substitution_key->alphabet_size)   )
+        if (!areElementsUniqueSorted((const uchar_t*) key_str , substitution_key->alphabet_size)   )
         {
             printf("ERROR: key has duplicates values therefore it cant be used\n");
             return ; 
         }
         
         // copy it
-        strcpy(substitution_key->map , key_str) ; 
+        strcpy((char *) substitution_key->map , key_str) ; 
         
     }
     
