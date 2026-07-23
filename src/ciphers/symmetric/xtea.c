@@ -215,7 +215,7 @@ void xtea_set_key(void* key_struct, const char* key_str) {
     // how can we make sure that key_str is actually TEA_KEY_MAX_SIZE bytes ...
     memcpy(xtea_key->key , key_str , sizeof(uchar_t)*XTEA_KEY_MAX_SIZE) ; 
     xtea_key->length = XTEA_KEY_MAX_SIZE   ; 
-
+    xtea_key->type = BLOCK_CIPHER ; 
 }
 
 

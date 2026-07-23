@@ -93,6 +93,7 @@ void rc4_set_key(void* key_struct, const char* key_str) {
     rc4_key->i = 0 ; 
     rc4_key->j = 0 ; 
     
+    rc4_key->type = STREAM_CIPHER ;
 }
 
 void rc4_free_key(void* key_struct);

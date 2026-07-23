@@ -12,10 +12,32 @@ typedef struct {
     char* name;
 } Cipher;
 
+typedef enum CipherType {
+    STREAM_CIPHER,
+    BLOCK_CIPHER
+}CipherType;
 
+typedef enum BlockCipher_MODE_OP { // gotta find a better name
+    ECB,
+    CBC,
+    OFB,
+    CFB,
+    CTR,
+    GCM
+}BlockCipher_MODE_OP;
+
+
+typedef union Cipher_Info{
+    CipherType cipher_type;
+    BlockCipher_MODE_OP block_cipher_mode_op;
+}Cipher_Info;
 
 
 void register_cipher(Cipher* cipher);
 Cipher* get_cipher(const char* name);
+
+// the name sucks ik :(
+// i let it as global variable to be accessible from anywhere + automatically initilized to 0 (ECB mode) and stored in .BSS :D
+extern BlockCipher_MODE_OP block_cipher_mode_operation ;
 
 #endif

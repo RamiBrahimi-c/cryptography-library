@@ -9,7 +9,7 @@
 typedef struct {
     // 8 or 7 ????????
     uchar_t key[8] ; 
-    
+    CipherType type;
 } DesKey;
 
 

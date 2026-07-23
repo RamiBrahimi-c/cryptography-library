@@ -12,6 +12,7 @@
 typedef struct {
     uchar_t key[XTEA_KEY_MAX_SIZE] ; 
     int length ;
+    CipherType type;
 } XTeaKey;
 
 /*

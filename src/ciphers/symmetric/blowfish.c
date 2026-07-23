@@ -468,7 +468,7 @@ void blowfish_set_key(void* key_struct, const char* key_str) {
     
 
 
-
+    blowfish_key->type = BLOCK_CIPHER ;
 
 
 }

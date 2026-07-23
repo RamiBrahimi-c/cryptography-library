@@ -434,7 +434,7 @@ void aes_set_key(void* key_struct, const char* key_str)
 
     key_expan(aes_key->key , aes_key->expanded_key ,aes_key->Nk ,aes_key->Nr , rci   ) ; 
     
-    
+    aes_key->type = BLOCK_CIPHER ;
 }
 
 

@@ -68,6 +68,7 @@ typedef struct AesKey {
     size_t expanded_key_length ;
     int Nr ; // rounds number 
     int Nk ; // number of 32 bit words compromising the key
+    CipherType type;
 }AesKey;
 
 

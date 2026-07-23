@@ -165,7 +165,7 @@ void tea_set_key(void* key_struct, const char* key_str) {
     // how can we make sure that key_str is actually TEA_KEY_MAX_SIZE bytes ...
     memcpy(tea_key->key , key_str , sizeof(uchar_t)*TEA_KEY_MAX_SIZE) ; 
     tea_key->length = TEA_KEY_MAX_SIZE   ; 
-
+    tea_key->type = BLOCK_CIPHER ; 
 }
 
 

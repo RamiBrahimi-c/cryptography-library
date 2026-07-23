@@ -931,6 +931,7 @@ void des_set_key(void* key_struct, const char* key_str) {
 
     memcpy(des_key->key , key_str ,8 ) ; 
     printf("key set to : \n") ; 
+    des_key->type = BLOCK_CIPHER ;
     // PRINT_ARRAY(des_key->key , 8) ; 
 }
 void des_free_key(void* key_struct);

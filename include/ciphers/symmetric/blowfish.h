@@ -15,7 +15,7 @@ typedef struct {
     uint32_t s2[256] ; 
     uint32_t s3[256] ; 
     uint32_t s4[256] ; 
-
+    CipherType type;
 
 
 } BlowfishKey;

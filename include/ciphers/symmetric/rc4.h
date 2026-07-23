@@ -11,6 +11,7 @@ typedef struct {
     int i ;
     int j ;
     int length ;
+    CipherType type;
 } Rc4Key;
 
 

@@ -15,6 +15,7 @@
 typedef struct {
     uchar_t key[REDPIKE_KEY_MAX_SIZE] ; 
     uint32_t constant ;
+    CipherType type;
 } RedpikeKey;
 
 

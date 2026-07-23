@@ -11,6 +11,7 @@
 typedef struct {
     uchar_t key[TEA_KEY_MAX_SIZE] ; 
     int length ;
+    CipherType type;
 } TeaKey;
 
 /*

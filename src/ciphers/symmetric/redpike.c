@@ -132,6 +132,7 @@ void redpike_set_key(void* key_struct, const char* key_str) {
     memcpy(redpike_key->key , key_str , sizeof(uchar_t)*REDPIKE_KEY_MAX_SIZE) ; 
     redpike_key->constant = CONST ; 
 
+    redpike_key->type = BLOCK_CIPHER ;
 
 }
 
