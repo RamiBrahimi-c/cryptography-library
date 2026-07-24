@@ -114,4 +114,9 @@ int findIndexMap(const uchar_t *array , uchar_t value ) ;
 void swapUnsignedChar(uchar_t *a ,uchar_t *b ) ;
 
 
+uchar_t binaryXorUchar(void *a , void *b) ;
+
+void mapOperation(uchar_t *arr1 ,uchar_t *arr2  , uchar_t *result, int length  ,uchar_t opp(void * , void *) ) ;
+
+
 #endif

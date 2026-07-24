@@ -400,6 +400,7 @@ void setFirstPermutation(uchar_t *input , int input_size , uchar_t *right , int 
 
 }
 
+// maybe we should migrate this to other place ???
 uchar_t binaryXorUchar(void *a , void *b) {
     return *((uchar_t*) a) ^ *((uchar_t *)b) ;  
 }
