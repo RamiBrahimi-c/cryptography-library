@@ -77,6 +77,20 @@ typedef struct {
 typedef unsigned char uchar_t ; 
 
 
+#define TEST_HASH_HKDF() do \
+{\
+    \
+    size_t salt_len = 10;\
+    uchar_t salt[] = { 0x8e , 0x94 , 0xef , 0x80 , 0x5b , 0x93 , 0xe6 , 0x83 , 0xff , 0x18};\
+    size_t ikm_len  = 76;\
+    uchar_t ikm[]  = "hellolkqnsklqsndqsndlqskndqskjndqskjndhellolkqnsklqsndqsndlqskndqskjndqskjnd";\
+    size_t info_len = 3 ;\
+    uchar_t info[] = { 0x12 , 0x34 , 0x56 };\
+    size_t okm_len = 64;\
+    uchar_t okm[64] ;\
+\
+\
+} while (condition);
 
 
 #define TEST_ON_TEXT_ENCRYPTION(name , _original_text , _encrypted_text , _length, _key , _key_type ) do { \
@@ -129,16 +143,22 @@ typedef unsigned char uchar_t ;
     char full_path_result_image_file[FULL_PATH_LENGTH]  ;\
     setupFullFilePath(directory_input_images, filename ,full_path_image_file  , FULL_PATH_LENGTH ) ; \
     setupFullResultFilePath(directory_output_images , enc_type_algo , filename , algo_name ,full_path_result_image_file  , FULL_PATH_LENGTH , ".png") ;\
-    uchar_t *original_text = stbi_load(full_path_image_file, &width, &height, &channels, 0);\
-    ASSERT_NOT_NULL(original_text);\
-    int length = width * height * channels ; \
-    uchar_t *encrypted_text = malloc(sizeof(uchar_t) * length );\
-    ASSERT_NOT_NULL(encrypted_text);\
     void *key_##name = calloc(1 , sizeof(_key_type)) ;\
     ASSERT_NOT_NULL(key_##name);\
     printf("INFO: setting key... \n");\
     name##_set_key(key_##name , _key);\
     printf("INFO: key set with success\n");\
+    uchar_t *original_text = stbi_load(full_path_image_file, &width, &height, &channels, 0);\
+    ASSERT_NOT_NULL(original_text);\
+    int length = width * height * channels ; \
+    if (length % 8 != 0 && ((_key_type*) key_##name)->type == BLOCK_CIPHER  )\
+    {\
+        printf("INFO : doing a random padding *-*\n");\
+        int rest = length % 8 ;\
+        length += (8-rest);\
+    }\
+    uchar_t *encrypted_text = malloc(sizeof(uchar_t) * length );\
+    ASSERT_NOT_NULL(encrypted_text);\
     name##_encrypt(original_text ,encrypted_text  ,length , key_##name );\
     printf("INFO: encrypted with success\n");\
     \
