@@ -74,7 +74,7 @@ typedef struct AesKey {
 
 void aes_encrypt(const uchar_t* input, uchar_t* output, int length, const void* key);
 void aes_decrypt(const uchar_t* input, uchar_t* output, int length, const void* key);
-void aes_set_key(void* key_struct, const char* key_str);
+void aes_set_key(void* key_struct, const CString key_str);
 void aes_free_key(void* key_struct);
 
 Cipher* get_aes_cipher(void);

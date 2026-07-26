@@ -2,12 +2,13 @@
 #define CIPHER_INTERFACE_H
 
 #include "./common/constants.h"
+#include "common/custom_string.h"
 #include <stddef.h>
 
 typedef struct {
     void (*encrypt)(const uchar_t* input, uchar_t* output, const void* key);
     void (*decrypt)(const uchar_t* input, uchar_t* output, const void* key);
-    void (*set_key)(void* key_struct, const char* key_str);
+    void (*set_key)(void* key_struct, const CString key_str);
     void (*free_key)(void* key_struct);
     char* name;
 } Cipher;

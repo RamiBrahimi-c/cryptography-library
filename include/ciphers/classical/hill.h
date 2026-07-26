@@ -18,7 +18,7 @@ typedef struct {
 
 void hill_encrypt(const uchar_t* input, uchar_t* output , int length, const void* key);
 void hill_decrypt(const uchar_t* input, uchar_t* output, const void* key);
-void hill_set_key(void* key_struct, const char* key_str);
+void hill_set_key(void* key_struct, const CString key_str);
 void hill_free_key(void* key_struct);
 
 Cipher* get_hill_cipher(void);
