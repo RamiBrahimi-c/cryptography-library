@@ -131,10 +131,10 @@ void hill_decrypt(const uchar_t* input, uchar_t* output, const void* key) {
 
 
 
-void hill_set_key(void* key_struct, const char* key_str) {
+void hill_set_key(void* key_struct, const CString key_str) {
     HillKey *hill_key = (HillKey*) key_struct ;
 
-    uint64_t matrix_degree = atoi(key_str) ; 
+    uint64_t matrix_degree = atoi(key_str.string) ; 
     
 
     assert(matrix_degree>0 

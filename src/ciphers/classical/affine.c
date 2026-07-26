@@ -49,10 +49,10 @@ void affine_decrypt(const uchar_t* input,uchar_t* output, const void* key) {
 }
 
 
-void affine_set_key(void* key_struct, const char* key_str) {
+void affine_set_key(void* key_struct, const CString key_str) {
     AffineKey *affineKey = (AffineKey*) key_struct ;
 
-    uint64_t key_num = atoi(key_str) ; 
+    uint64_t key_num = atoi(key_str.string) ; 
     
     assert(key_num>0 && isCoprime(key_num , ALPHABET_LENGTH) == 1 && "key must be coprime with alphabet number ");
 
