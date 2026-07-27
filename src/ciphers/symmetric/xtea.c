@@ -7,11 +7,16 @@
 // TODO : maybe we need some refacturing here ?? idk
 // who is even gonna notice *-* ????
 
+#define XTEA_BLOCK_SIZE 8 
+
 /*
     uchar_t *vv : gotta be size of 8 bytes
     uchar_t *kk : gotta be size of 16 bytes
 */
-static void xtea_decrypt_block(uchar_t *vv , uchar_t *kk) {
+static void xtea_decrypt_block(uchar_t *vv ,uchar_t *output, void *key) {
+    assert(key != NULL && "key is null");
+    XTeaKey *xtea_key = (XTeaKey *) (key) ;
+    uchar_t *kk = xtea_key->key ;
 
     uint32_t v[2] ;
     uint32_t k[4] ;
@@ -75,17 +80,17 @@ static void xtea_decrypt_block(uchar_t *vv , uchar_t *kk) {
     v[0] = z ;
     v[1] = y ;
 
-        // copy back to vv ...
-    vv[0] = v[0] >> 24 ; 
-    vv[1] = v[0] >> 16 ; 
-    vv[2] = v[0] >> 8 ; 
-    vv[3] = v[0]  ; 
+        // copy back result to output ...
+    output[0] = v[0] >> 24 ; 
+    output[1] = v[0] >> 16 ; 
+    output[2] = v[0] >> 8 ; 
+    output[3] = v[0]  ; 
 
 
-    vv[4] = v[1] >> 24 ; 
-    vv[5] = v[1] >> 16 ; 
-    vv[6] = v[1] >> 8 ; 
-    vv[7] = v[1]  ; 
+    output[4] = v[1] >> 24 ; 
+    output[5] = v[1] >> 16 ; 
+    output[6] = v[1] >> 8 ; 
+    output[7] = v[1]  ; 
 
     
 } 
@@ -95,7 +100,11 @@ static void xtea_decrypt_block(uchar_t *vv , uchar_t *kk) {
     uchar_t *vv : gotta be size of 8 bytes
     uchar_t *kk : gotta be size of 16 bytes
 */
-static void xtea_encrypt_block(uchar_t *vv , uchar_t *kk) {
+static void xtea_encrypt_block(uchar_t *vv  , uchar_t *output, void *key) {
+    assert(key != NULL && "key is null");
+    XTeaKey *xtea_key = (XTeaKey *) (key) ;
+    uchar_t *kk = xtea_key->key ;
+
     // printf("") ; 
     // the specifications has `long *` but long could be 8 bytes so 
     // imma limit it to exactly 32 bit word
@@ -161,50 +170,36 @@ static void xtea_encrypt_block(uchar_t *vv , uchar_t *kk) {
     v[0] = z ;
     v[1] = y ;
 
-        // copy back to vv ...
-    vv[0] = v[0] >> 24 ; 
-    vv[1] = v[0] >> 16 ; 
-    vv[2] = v[0] >> 8 ; 
-    vv[3] = v[0]  ; 
+        // copy back result to *output ...
+    output[0] = v[0] >> 24 ; 
+    output[1] = v[0] >> 16 ; 
+    output[2] = v[0] >> 8 ; 
+    output[3] = v[0]  ; 
 
 
-    vv[4] = v[1] >> 24 ; 
-    vv[5] = v[1] >> 16 ; 
-    vv[6] = v[1] >> 8 ; 
-    vv[7] = v[1]  ; 
+    output[4] = v[1] >> 24 ; 
+    output[5] = v[1] >> 16 ; 
+    output[6] = v[1] >> 8 ; 
+    output[7] = v[1]  ; 
 }
 
 
 
 void xtea_encrypt(const uchar_t* input, uchar_t* output , int length , const void* key) {
-    assert(key != NULL && "key is null");
-    XTeaKey *xtea_key = (XTeaKey *) (key) ;
 
-    // meh just basic ECB
-    // TODO : well ECB aint that good gotta add other modes ...
-    for (size_t i = 0; i < length/8; i++)
-    {
-        xtea_encrypt_block(input + i*8 , xtea_key->key) ; 
-    }
-    
-    // whatever
-    memcpy(output , input , sizeof(uchar_t)*length) ; 
-    
+    uchar_t *iv = malloc(sizeof(uchar_t)*XTEA_BLOCK_SIZE) ;
+    blockcipher_encrypt_modeop(input , output , iv , length , XTEA_BLOCK_SIZE , key , xtea_encrypt_block) ;
+    free(iv);    
+
     
 }
 
 
 void xtea_decrypt(const uchar_t* input, uchar_t* output , int length , const void* key) {
-    assert(key != NULL && "key is null");
-    XTeaKey *xtea_key = (XTeaKey *) (key) ;
-    
-    // TODO : add other modes here too ...
-    for (size_t i = 0; i < length/8; i++)
-    {
-        xtea_decrypt_block(input + i*8 , xtea_key->key) ; 
-    }
-    
-    memcpy(output , input , sizeof(uchar_t)*length) ; 
+
+    uchar_t *iv = malloc(sizeof(uchar_t)*XTEA_BLOCK_SIZE) ;
+    blockcipher_decrypt_modeop(input , output , iv , length , XTEA_BLOCK_SIZE , key , xtea_decrypt_block) ;
+    free(iv);
     
 }
 
