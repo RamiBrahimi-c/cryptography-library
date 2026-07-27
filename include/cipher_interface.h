@@ -8,7 +8,7 @@
 typedef struct {
     void (*encrypt)(const uchar_t* input, uchar_t* output, const void* key);
     void (*decrypt)(const uchar_t* input, uchar_t* output, const void* key);
-    void (*set_key)(void* key_struct, const CString key_str);
+    void (*set_key)(void* key_struct, const uchar_t* key_str , size_t key_len);
     void (*free_key)(void* key_struct);
     char* name;
 } Cipher;
