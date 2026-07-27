@@ -1,3 +1,8 @@
+/*
+    BRUH .. OT DOESNT FREAKING WORK AHJDNLKJNDKJDNLKJQNDKJNQKJDNKJQNDKJSQNDKJNSKJDNKN
+    screw ts
+*/
+
 #ifndef DES_C
 #define DES_C
 
@@ -9,6 +14,7 @@
 #include <string.h>
 #include <stdlib.h>
 
+#define DES_BLOCK_SIZE 8
 
 // static void swapUnsignedChar(uchar_t *a ,uchar_t *b ) {
 //     uchar_t temp = *a ; 
@@ -707,10 +713,9 @@ void mergeLeftRight(uchar_t *output , int output_size, uchar_t *left , int left_
 }
 
 
-
-
-
-void des_encrypt_wrapper(uchar_t *input  , uchar_t *output , uchar_t *key ) {
+void des_encrypt_wrapper(uchar_t *input  , uchar_t *output , const void *key ) {
+    assert(key != NULL && "key is null");
+    DesKey *des_key = (DesKey *) (key) ;
     int rounds = 16 ; 
 
     uchar_t right[4] = {0} ;
@@ -732,7 +737,7 @@ void des_encrypt_wrapper(uchar_t *input  , uchar_t *output , uchar_t *key ) {
 
     setFirstPermutation(input , 8 ,right ,4 , left , 4  );
     
-    reducingKey64to56Bits(key , 8 , key_reduced , 7) ;
+    reducingKey64to56Bits(des_key->key , 8 , key_reduced , 7) ;
     
     for (size_t i = 1; i <= rounds; i++)
     {
@@ -783,62 +788,18 @@ void des_encrypt_wrapper(uchar_t *input  , uchar_t *output , uchar_t *key ) {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 void des_encrypt(const uchar_t* input, uchar_t* output , int length , const void* key) {
-    assert(key != NULL && "key is null");
-    DesKey *des_key = (DesKey *) (key) ;
 
-    
-    int block_size = 8;
-    int full_blocks = length / block_size;
-    int remaining = length % block_size;
-
-    int scale = 8 ; 
-    char buffer[8] ; 
-    // char *key ;
-    size_t k = 0 ; 
-    for (size_t i = 0; i < length/8; i++)
-    {
-        des_encrypt_wrapper(input + i*8 , output + i*8 ,des_key->key   ) ; 
-        k++ ; 
-    }
-
-    if (remaining > 0) {
-        uchar_t last_block[8] = {0};
-        int last_block_index = full_blocks * block_size;
-        
-        // Copy remaining bytes
-        memcpy(last_block, input + last_block_index, remaining);
-        
-        // Add PKCS#7 padding
-        uchar_t padding_value = 8 - remaining;
-        for (int i = remaining; i < 8; i++) {
-            last_block[i] = padding_value;
-        }
-        
-        // Encrypt the padded block and write to output
-        des_encrypt_wrapper(last_block, output + last_block_index, des_key->key);
-    }
-    
-
-
-
+    uchar_t *iv = malloc(sizeof(uchar_t)*DES_BLOCK_SIZE) ;
+    blockcipher_encrypt_modeop(input , output , iv , length , DES_BLOCK_SIZE , key , des_encrypt_wrapper) ;
+    free(iv);    
 
 }
 
-void des_decrypt_block(uchar_t *input, uchar_t *output, uchar_t *key) {
+void des_decrypt_block(uchar_t *input, uchar_t *output, void *key) {
+    assert(key != NULL && "key is null");
+    DesKey *des_key = (DesKey *) (key) ;
+
     int rounds = 16;
     uchar_t right[4] = {0};
     uchar_t left[4] = {0};
@@ -855,7 +816,7 @@ void des_decrypt_block(uchar_t *input, uchar_t *output, uchar_t *key) {
     
     // 2. Generate all round keys first (store them)
     uchar_t all_round_keys[16][7] = {0};
-    reducingKey64to56Bits(key, 8, key_reduced, 7);
+    reducingKey64to56Bits(des_key->key, 8, key_reduced, 7);
     
     for (int i = 1; i <= rounds; i++) {
         genKey(key_reduced, 7, all_round_keys[i-1], 7, i);
@@ -886,51 +847,17 @@ void des_decrypt_block(uchar_t *input, uchar_t *output, uchar_t *key) {
 
 
 void des_decrypt(const uchar_t* input, uchar_t* output , int length , const void* key ){
-    assert(key != NULL && "key is null");
-    DesKey *des_key = (DesKey *) (key) ;
-
-    
-
-
-    char buffer[8] ; 
-    // char *key ;
-    size_t k = 0 ; 
-    for (size_t i = 0; i < length/8; i++)
-    {
-        des_decrypt_block(input + i*8 , output + i*8 ,des_key->key   ) ; 
-        k++ ; 
-    }
-    if (length % 8 != 0)
-    {
-        printf("hi innnn\n");
-        int rest = length % 8 ; 
-        int k = length / 8 ; 
-        k *= 8 ;
-        memset(buffer , 0 , 8) ; 
-        for (size_t i = 0; i < rest; i++)
-        {
-            buffer[i] = input[k] ;
-            k++ ; 
-        }
-        for (size_t i = rest; i < 8; i++)
-        {
-            buffer[i] = 8 - rest ; 
-        }
-        // PRINT_ARRAY(buffer , 8) ;
-        uchar_t result_buffer[8] ;           
-        des_decrypt_block(buffer , result_buffer ,des_key->key   ) ; 
-        
-        printf("hi innnn22\n");
-          
-    }
+    uchar_t *iv = malloc(sizeof(uchar_t)*DES_BLOCK_SIZE) ;
+    blockcipher_decrypt_modeop(input , output , iv , length , DES_BLOCK_SIZE , key , des_decrypt_block) ;
+    free(iv);    
 
 }
 
 
-void des_set_key(void* key_struct, const char* key_str) {
+void des_set_key(void* key_struct, const CString key_str) {
     DesKey *des_key = (DesKey *) key_struct ;
 
-    memcpy(des_key->key , key_str ,8 ) ; 
+    memcpy(des_key->key , key_str.string ,8 ) ; 
     printf("key set to : \n") ; 
     des_key->type = BLOCK_CIPHER ;
     // PRINT_ARRAY(des_key->key , 8) ; 
