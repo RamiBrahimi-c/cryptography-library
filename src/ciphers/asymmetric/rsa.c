@@ -233,7 +233,7 @@ void hybrid_test(void) {
 
     // 4. Encrypt with AES 
     AesKey aes_ctx;   // assuming AES struct
-    aes_set_key(&aes_ctx, (const char*)aes_key);
+    aes_set_key(&aes_ctx, (const uchar_t*) aes_key , 32);
 
     size_t padded_size = file_size + (16 - (file_size % 16));   // PKCS#7 padding
     uchar_t* aes_cipher = malloc(padded_size);
