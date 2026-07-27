@@ -21,7 +21,7 @@ typedef struct {
 
 void tea_encrypt(const uchar_t* input, uchar_t* output , int length , const void* key);
 void tea_decrypt(const uchar_t* input, uchar_t* output , int length , const void* key);
-void tea_set_key(void* key_struct, const CString key_str);
+void tea_set_key(void* key_struct, const uchar_t* key_str , size_t key_len);
 void tea_free_key(void* key_struct);
 
 Cipher* get_tea_cipher(void);

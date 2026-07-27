@@ -21,7 +21,7 @@ typedef struct {
 
 void xtea_encrypt(const uchar_t* input, uchar_t* output , int length , const void* key);
 void xtea_decrypt(const uchar_t* input, uchar_t* output , int length , const void* key);
-void xtea_set_key(void* key_struct, const CString key_str);
+void xtea_set_key(void* key_struct, const uchar_t* key_str , size_t key_len);
 void xtea_free_key(void* key_struct);
 
 Cipher* get_xtea_cipher(void);
