@@ -7,14 +7,18 @@
     thanks to : https://link.springer.com/chapter/10.1007/3-540-60590-8_29
 */
 
+#define TEA_BLOCK_SIZE 8
 
 /*
     uchar_t *vv : gotta be size of 8 bytes
     uchar_t *kk : gotta be size of 16 bytes
+    uchar_t *output : gotta be size of 8 bytes
 */
 
-static void tea_encrypt_block(uchar_t *vv , uchar_t *kk) {
-
+static void tea_encrypt_block(uchar_t *vv , uchar_t *output, void *key) {
+    assert(key != NULL && "key is null");
+    TeaKey *tea_key = (TeaKey *) (key) ;
+    uchar_t *kk = tea_key->key ;
     // printf("") ; 
     // the specifications has `long *` but long could be 8 bytes so 
     // imma limit it to exactly 32 bit word
@@ -50,29 +54,31 @@ static void tea_encrypt_block(uchar_t *vv , uchar_t *kk) {
     v[1] = z ; 
 
 
-    // copy back to vv ...
-  vv[0] = v[0] >> 24 ; 
-  vv[1] = v[0] >> 16 ; 
-  vv[2] = v[0] >> 8 ; 
-  vv[3] = v[0]  ; 
+    // copy back result to output ...
+  output[0] = v[0] >> 24 ; 
+  output[1] = v[0] >> 16 ; 
+  output[2] = v[0] >> 8 ; 
+  output[3] = v[0]  ; 
 
 
-  vv[4] = v[1] >> 24 ; 
-  vv[5] = v[1] >> 16 ; 
-  vv[6] = v[1] >> 8 ; 
-  vv[7] = v[1]  ; 
+  output[4] = v[1] >> 24 ; 
+  output[5] = v[1] >> 16 ; 
+  output[6] = v[1] >> 8 ; 
+  output[7] = v[1]  ; 
 
 
 }
 
 
-static 
+
 /*
     uchar_t *vv : gotta be size of 8 bytes
     uchar_t *kk : gotta be size of 16 bytes
 */
-void tea_decrypt_block(uchar_t *vv , uchar_t *kk) {
-
+static void tea_decrypt_block(uchar_t *vv , uchar_t *output, void *key) {
+    assert(key != NULL && "key is null");
+    TeaKey *tea_key = (TeaKey *) (key) ;
+    uchar_t *kk = tea_key->key ;
     // printf("") ; 
     // the specifications has `long *` but long could be 8 bytes so 
     // imma limit it to exactly 32 bit word
@@ -109,17 +115,17 @@ void tea_decrypt_block(uchar_t *vv , uchar_t *kk) {
     v[1] = z ; 
 
 
-    // copy back to vv ...
-  vv[0] = v[0] >> 24 ; 
-  vv[1] = v[0] >> 16 ; 
-  vv[2] = v[0] >> 8 ; 
-  vv[3] = v[0]  ; 
+    // copy back result to output ...
+  output[0] = v[0] >> 24 ; 
+  output[1] = v[0] >> 16 ; 
+  output[2] = v[0] >> 8 ; 
+  output[3] = v[0]  ; 
 
 
-  vv[4] = v[1] >> 24 ; 
-  vv[5] = v[1] >> 16 ; 
-  vv[6] = v[1] >> 8 ; 
-  vv[7] = v[1]  ; 
+  output[4] = v[1] >> 24 ; 
+  output[5] = v[1] >> 16 ; 
+  output[6] = v[1] >> 8 ; 
+  output[7] = v[1]  ; 
 
 
 }
@@ -127,35 +133,22 @@ void tea_decrypt_block(uchar_t *vv , uchar_t *kk) {
 
 
 void tea_encrypt(const uchar_t* input, uchar_t* output , int length , const void* key) {
-    assert(key != NULL && "key is null");
-    TeaKey *tea_key = (TeaKey *) (key) ;
-
-    // meh just basic ECB
-    // TODO : well ECB aint that good gotta add other modes ...
-    for (size_t i = 0; i < length/8; i++)
-    {
-        tea_encrypt_block(input + i*8 , tea_key->key) ; 
-    }
     
-    // whatever
-    memcpy(output , input , sizeof(uchar_t)*length) ; 
+
+    uchar_t *iv = malloc(sizeof(uchar_t)*TEA_BLOCK_SIZE) ;
+    blockcipher_encrypt_modeop(input , output , iv , length , TEA_BLOCK_SIZE , key , tea_encrypt_block) ;
+    free(iv);    
     
     
 }
 
 
 void tea_decrypt(const uchar_t* input, uchar_t* output , int length , const void* key) {
-    assert(key != NULL && "key is null");
-    TeaKey *tea_key = (TeaKey *) (key) ;
-    
-    // TODO : add other modes here too ...
-    for (size_t i = 0; i < length/8; i++)
-    {
-        tea_decrypt_block(input + i*8 , tea_key->key) ; 
-    }
-    
-    memcpy(output , input , sizeof(uchar_t)*length) ; 
-    
+
+    uchar_t *iv = malloc(sizeof(uchar_t)*TEA_BLOCK_SIZE) ;
+    blockcipher_decrypt_modeop(input , output , iv , length , TEA_BLOCK_SIZE , key , tea_decrypt_block) ;
+    free(iv);    
+        
 }
 
 
