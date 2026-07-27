@@ -1,11 +1,11 @@
-#include "custom_string.h"
+#include "../../include/common/custom_string.h"
 
 
 
 int cstrcpy(uchar_t *dest , CString src) {
-    if (dest == NULL)
+    if (dest == NULL || src.string == NULL)
     {
-        fprintf(stderr , "ERROR : dest is NULL\n");
+        fprintf(stderr , "ERROR : dest OR src.string is NULL\n");
         return -1;
     }
     
@@ -16,3 +16,15 @@ int cstrcpy(uchar_t *dest , CString src) {
     dest[src.length]=0x0 ;
     return 0;
 }
+
+void print_cstring(CString str){
+    
+}
+
+void init_cstring(CString *dest , uchar_t *src , size_t len) {
+    dest->length = len ;
+    dest->string = malloc(sizeof(uchar_t)*len) ; 
+    assert(dest->string != NULL);
+    memcpy(dest->string , src , sizeof(uchar_t)*len) ; 
+}
+

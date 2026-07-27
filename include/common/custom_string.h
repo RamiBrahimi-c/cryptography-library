@@ -21,7 +21,7 @@ typedef struct
 // the user is responsible for allocation bytes to `uchar_t *dest`
 // returns 0 on success , otherise it returns -1 and reports error to stderr  
 int cstrcpy(uchar_t *dest , CString src) ;
-
-
+void print_cstring(CString str);
+void init_cstring(CString *dest , uchar_t *src , size_t len);
 
 #endif
