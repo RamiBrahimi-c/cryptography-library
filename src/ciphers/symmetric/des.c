@@ -854,10 +854,10 @@ void des_decrypt(const uchar_t* input, uchar_t* output , int length , const void
 }
 
 
-void des_set_key(void* key_struct, const CString key_str) {
+// TODO : this part needs to be checked again
+void des_set_key(void* key_struct, const uchar_t* key_str , size_t key_len) {
     DesKey *des_key = (DesKey *) key_struct ;
-
-    memcpy(des_key->key , key_str.string ,8 ) ; 
+    memcpy(des_key->key , key_str ,8 ) ; 
     printf("key set to : \n") ; 
     des_key->type = BLOCK_CIPHER ;
     // PRINT_ARRAY(des_key->key , 8) ; 

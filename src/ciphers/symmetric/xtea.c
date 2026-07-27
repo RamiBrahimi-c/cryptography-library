@@ -209,10 +209,11 @@ void xtea_decrypt(const uchar_t* input, uchar_t* output , int length , const voi
 }
 
 
-void xtea_set_key(void* key_struct, const char* key_str) {
+void xtea_set_key(void* key_struct, const uchar_t* key_str , size_t key_len) {
     XTeaKey *xtea_key = (XTeaKey *) key_struct ;
     
     // how can we make sure that key_str is actually TEA_KEY_MAX_SIZE bytes ...
+    assert(key_len >= 16 && "key length here must be 16 bytes");    
     memcpy(xtea_key->key , key_str , sizeof(uchar_t)*XTEA_KEY_MAX_SIZE) ; 
     xtea_key->length = XTEA_KEY_MAX_SIZE   ; 
     xtea_key->type = BLOCK_CIPHER ; 

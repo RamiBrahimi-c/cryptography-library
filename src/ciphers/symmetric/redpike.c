@@ -125,10 +125,11 @@ void redpike_decrypt(const uchar_t* input, uchar_t* output , int length , const 
 }
 
 
-void redpike_set_key(void* key_struct, const char* key_str) {
+void redpike_set_key(void* key_struct, const uchar_t* key_str , size_t key_len) {
     RedpikeKey *redpike_key = (RedpikeKey *) key_struct ;
     
     // how can we make sure that key_str is actually 8 bytes ...
+    assert(key_len >= 8 && "key length here must be 8 bytes");
     memcpy(redpike_key->key , key_str , sizeof(uchar_t)*REDPIKE_KEY_MAX_SIZE) ; 
     redpike_key->constant = CONST ; 
 

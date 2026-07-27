@@ -71,7 +71,7 @@ void rc4_decrypt(const uchar_t* input, uchar_t* output , int length, const void*
         
 }
 
-void rc4_set_key(void* key_struct, const char* key_str) {
+void rc4_set_key(void* key_struct, const uchar_t* key_str , size_t key_len) {
     Rc4Key *rc4_key = (Rc4Key *) key_struct ;
     
 
@@ -83,7 +83,7 @@ void rc4_set_key(void* key_struct, const char* key_str) {
     }
 
     uchar_t j = 0 ; 
-    int key_length = strlen(key_str) ; 
+    int key_length = key_len ; 
 
     for (size_t i = 0; i < rc4_key->length; i++)
     {

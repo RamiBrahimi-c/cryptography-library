@@ -364,11 +364,11 @@ void aes_decrypt(const uchar_t* input, uchar_t* output, int length, const void* 
 
 #include <assert.h>
 
-void aes_set_key(void* key_struct, const CString key_str)
+void aes_set_key(void* key_struct, const uchar_t* key_str , size_t key_len)
 {
     AesKey *aes_key = (AesKey *) key_struct ;
 
-    if (!key_str.string)
+    if (!key_str)
     {
         // TODO: handle the random thing
         printf("INFO : Assigning random key ...\n ") ; 
@@ -380,12 +380,12 @@ void aes_set_key(void* key_struct, const CString key_str)
 
     
     } else {
-        int temp_len = key_str.length ; 
+        int temp_len = key_len ; 
         if (temp_len == 16)
         {
             printf("INFO: AES128 chosen !\n");
             aes_key->mode = AES128 ; 
-            cstrcpy(aes_key->key , key_str) ;
+            memcpy(aes_key->key ,key_str , key_len );
             aes_key->key_length = 16 ;  
         }
         else if (temp_len == 24)
@@ -393,7 +393,7 @@ void aes_set_key(void* key_struct, const CString key_str)
             printf("INFO: AES196 chosen !\n");
             
             aes_key->mode = AES192 ; 
-            cstrcpy(aes_key->key , key_str) ;
+            memcpy(aes_key->key ,key_str , key_len );
             aes_key->key_length = 24 ;  
             
         }
@@ -401,7 +401,7 @@ void aes_set_key(void* key_struct, const CString key_str)
         {
             printf("INFO: AES256 chosen !\n");
             aes_key->mode = AES256 ; 
-            cstrcpy(aes_key->key , key_str) ;
+            memcpy(aes_key->key ,key_str , key_len );
             aes_key->key_length = 32 ;  
             
         } else {
@@ -409,7 +409,7 @@ void aes_set_key(void* key_struct, const CString key_str)
             printf("INFO: AES128 is assigned with custom standard key  !\n");
             aes_key->mode = AES128 ;
             uchar_t temp_standard_key[16] = {0x2b  ,0x7e, 0x15, 0x16, 0x28, 0xae, 0xd2, 0xa6, 0xab, 0xf7, 0x15, 0x88, 0x09, 0xcf, 0x4f, 0x3c } ; 
-            strcpy(aes_key->key , temp_standard_key) ; 
+            memcpy(aes_key->key ,temp_standard_key , 16 );
             aes_key->key_length = 16 ;  
 
         }

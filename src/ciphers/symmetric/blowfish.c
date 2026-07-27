@@ -189,7 +189,7 @@ void blowfish_decrypt(const uchar_t* input, uchar_t* output , int length , const
 
 
 #include "../include/common/utils.h"
-void blowfish_set_key(void* key_struct, const CString key_str) {
+void blowfish_set_key(void* key_struct, const uchar_t* key_str , size_t key_len) {
 
     
     BlowfishKey *blowfish_key =(BlowfishKey *)  key_struct ;
@@ -397,17 +397,14 @@ void blowfish_set_key(void* key_struct, const CString key_str) {
     
     
     
-    blowfish_key->length = key_str.length ; 
+    blowfish_key->length = key_len ; 
     
     // printf("INFO:blowfish_key->length %d \n" , blowfish_key->length) ; 
     
     assert(blowfish_key->length >= 4 && blowfish_key->length <= 56 && "blowfish_key size") ; 
     
     blowfish_key->key = malloc(sizeof(uchar_t)*blowfish_key->length); 
-    if (cstrcpy(blowfish_key->key ,key_str ) < 0) {
-        printf("ERROR: couldnt set up key properly , exiting function \n");
-        return ;
-    }
+    memcpy(blowfish_key->key ,key_str , key_len ) ;
 
 
     // now the boring routine ...
