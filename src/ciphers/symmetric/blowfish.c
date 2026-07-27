@@ -4,6 +4,9 @@
 #include <assert.h>
 #include <string.h>
 
+#if 0 
+    #define DEBUG
+#endif
 
 
 static uint32_t bytes_to_uint32_t(uchar_t bytes[4] ) {
@@ -36,11 +39,41 @@ static uint32_t blowfish_ffunc(uint32_t input ,BlowfishKey blowfish_key   ) {
 
 }
 
+#ifdef DEBUG
+    #include "../../../include/common/utils.h"
+    static void debug_key(BlowfishKey key) {
+        printf("========================================\n");
+
+        printf("length : %d\n" , key.length) ;
+        for (size_t i = 0; i < key.length; i++)
+        {
+            printf(" %x " , key.key[i]);
+        }
+        printf("P[] :");
+        PRINT_ARRAY_NAI(key.p , 18 , "%.2x");
+        printf("S1[] :");
+        PRINT_ARRAY_NAI(key.s1 , 256 , "%.2x");
+        printf("S2[] :");
+        PRINT_ARRAY_NAI(key.s2 , 256 , "%.2x");
+        printf("S3[] :");
+        PRINT_ARRAY_NAI(key.s3 , 256 , "%.2x");
+        printf("S4[] :");
+        PRINT_ARRAY_NAI(key.s4 , 256 , "%.2x");
+        
+        printf("type ; %d\n" ,key.type );
+
+        printf("========================================\n");
+    }
+#endif
 
 #define ROUNDS_NUM_BLOWFISH 16
-
+#define BLOCK_SIZE_BLOWFISH 8
+#include "../../../include/common/utils.h" ;
 // @input must be 64bit block aka 8 bytes
-void blowfish_encrypt_block(const uchar_t* input, uchar_t* output , int length , const BlowfishKey* blowfish_key) {
+void blowfish_encrypt_block(const uchar_t* input, uchar_t* output  , const void* key) {
+    BlowfishKey *blowfish_key = (BlowfishKey*) key ; 
+    assert(blowfish_key != NULL && "blowfish key should not be null") ;
+
     uint32_t left ;
     uint32_t right ;
 
@@ -91,7 +124,10 @@ void blowfish_encrypt_block(const uchar_t* input, uchar_t* output , int length ,
 // @input must be 64bit block aka 8 bytes
 // NOTES : apparently i could have kept the same encryption routine but only reversed indexes order ...
 // i tried to be smart here you see :(
-void blowfish_decrypt_block(const uchar_t* input, uchar_t* output , int length , const BlowfishKey* blowfish_key) {
+void blowfish_decrypt_block(const uchar_t* input, uchar_t* output , const void* key) {
+    BlowfishKey *blowfish_key = (BlowfishKey*) key ; 
+    assert(blowfish_key != NULL && "blow fish key should not be null") ;
+
     uint32_t left ;
     uint32_t right ;
 
@@ -134,41 +170,26 @@ void blowfish_decrypt_block(const uchar_t* input, uchar_t* output , int length ,
 
 
 void blowfish_encrypt(const uchar_t* input, uchar_t* output , int length , const void* key) {
-    BlowfishKey *blowfish_key = (BlowfishKey*) key ; 
-    assert(blowfish_key != NULL && "blow fish key should not be null") ;
-    // printf("blowfish_key pointer : %p \n" , blowfish_key) ; 
-    
-    
-    for (size_t i = 0; i < length/8; i++)
-    {
-        blowfish_encrypt_block(input + i*8 , output + i*8 , 8 , blowfish_key) ; 
-        
-    }
-    
-    
 
+    uchar_t *iv = malloc(sizeof(uchar_t)*BLOCK_SIZE_BLOWFISH) ;
+    blockcipher_encrypt_modeop(input , output , iv , length , BLOCK_SIZE_BLOWFISH , key , blowfish_encrypt_block) ;
+    free(iv);
 
 }
 
 
 
 void blowfish_decrypt(const uchar_t* input, uchar_t* output , int length , const void* key) {
-    BlowfishKey *blowfish_key = (BlowfishKey*) key ; 
-    assert(blowfish_key != NULL && "blow fish key should not be null") ;
-    // printf("blowfish_key pointer : %p \n" , blowfish_key) ; 
-    
-    
-    for (size_t i = 0; i < length/8; i++)
-    {
-        blowfish_decrypt_block(input + i*8 , output + i*8 , 8 , blowfish_key) ; 
-        
-    }
+
+    uchar_t *iv = malloc(sizeof(uchar_t)*BLOCK_SIZE_BLOWFISH) ;
+    blockcipher_decrypt_modeop(input , output , iv , length , BLOCK_SIZE_BLOWFISH , key , blowfish_decrypt_block) ;
+    free(iv);
 
 }
 
 
 #include "../include/common/utils.h"
-void blowfish_set_key(void* key_struct, const char* key_str) {
+void blowfish_set_key(void* key_struct, const CString key_str) {
 
     
     BlowfishKey *blowfish_key =(BlowfishKey *)  key_struct ;
@@ -376,17 +397,17 @@ void blowfish_set_key(void* key_struct, const char* key_str) {
     
     
     
-    // TODO : find a better way than strlen() to get the actual desired key length since strlen stops at first 0x00 byte ...
-    blowfish_key->length = strlen(key_str) ; 
+    blowfish_key->length = key_str.length ; 
     
     // printf("INFO:blowfish_key->length %d \n" , blowfish_key->length) ; 
     
     assert(blowfish_key->length >= 4 && blowfish_key->length <= 56 && "blowfish_key size") ; 
     
     blowfish_key->key = malloc(sizeof(uchar_t)*blowfish_key->length); 
-    
-    memcpy(blowfish_key->key , key_str , sizeof(uchar_t)* blowfish_key->length) ; 
-
+    if (cstrcpy(blowfish_key->key ,key_str ) < 0) {
+        printf("ERROR: couldnt set up key properly , exiting function \n");
+        return ;
+    }
 
 
     // now the boring routine ...
@@ -405,7 +426,7 @@ void blowfish_set_key(void* key_struct, const char* key_str) {
 
     for (size_t i = 0; i < 18; i+=2)
     {   
-        blowfish_encrypt_block(buffer , buffer , 8 , blowfish_key) ;
+        blowfish_encrypt_block(buffer , buffer  , blowfish_key) ;
         
         blowfish_key->p[i] = bytes_to_uint32_t(buffer) ; 
         blowfish_key->p[i+1] = bytes_to_uint32_t(buffer + 4) ; 
@@ -417,7 +438,7 @@ void blowfish_set_key(void* key_struct, const char* key_str) {
     
     for (size_t i = 0; i < 256; i+=2)
     {   
-        blowfish_encrypt_block(buffer , buffer , 8 , blowfish_key) ;
+        blowfish_encrypt_block(buffer , buffer  , blowfish_key) ;
         
         blowfish_key->s1[i] = bytes_to_uint32_t(buffer) ; 
         blowfish_key->s1[i+1] = bytes_to_uint32_t(buffer + 4) ; 
@@ -430,7 +451,7 @@ void blowfish_set_key(void* key_struct, const char* key_str) {
     
     for (size_t i = 0; i < 256; i+=2)
     {   
-        blowfish_encrypt_block(buffer , buffer , 8 , blowfish_key) ;
+        blowfish_encrypt_block(buffer , buffer  , blowfish_key) ;
         
         blowfish_key->s2[i] = bytes_to_uint32_t(buffer) ; 
         blowfish_key->s2[i+1] = bytes_to_uint32_t(buffer + 4) ; 
@@ -443,7 +464,7 @@ void blowfish_set_key(void* key_struct, const char* key_str) {
     
     for (size_t i = 0; i < 256; i+=2)
     {   
-        blowfish_encrypt_block(buffer , buffer , 8 , blowfish_key) ;
+        blowfish_encrypt_block(buffer , buffer  , blowfish_key) ;
         
         blowfish_key->s3[i] = bytes_to_uint32_t(buffer) ; 
         blowfish_key->s3[i+1] = bytes_to_uint32_t(buffer + 4) ; 
@@ -456,7 +477,7 @@ void blowfish_set_key(void* key_struct, const char* key_str) {
     
     for (size_t i = 0; i < 256; i+=2)
     {   
-        blowfish_encrypt_block(buffer , buffer , 8 , blowfish_key) ;
+        blowfish_encrypt_block(buffer , buffer  , blowfish_key) ;
         
         blowfish_key->s4[i] = bytes_to_uint32_t(buffer) ; 
         blowfish_key->s4[i+1] = bytes_to_uint32_t(buffer + 4) ; 
