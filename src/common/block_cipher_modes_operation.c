@@ -4,6 +4,7 @@
     TODO : OFB is not tested with official test vectors
     TODO : OFB for decryption needs a better approach cuz the same function is needed for both encrypt + decrypt 
     TODO : same thing with CTR (tested it with tineyAES in test.c line 239) although it has the problem of same function called twice
+    TODO : yea same for CFB
 */
 
 BlockCipher_MODE_OP block_cipher_mode_operation ;
@@ -29,6 +30,11 @@ void blockcipher_encrypt_modeop(uchar_t *input , uchar_t *output ,uchar_t *iv , 
         case CTR:
             printf("encrypting in CTR mode *-*\n");
             ctr_encrypt(input , output , iv , length , block_size , key , encrypt_block); 
+            break;
+
+        case CFB:
+            printf("encrypting in CFB mode *-*\n");
+            cfb_encrypt(input , output , iv , length , block_size , key , encrypt_block); 
             break;
 
         
@@ -57,9 +63,15 @@ void blockcipher_decrypt_modeop(uchar_t *input , uchar_t *output ,uchar_t *iv , 
             break;
 
         case CTR:
-            printf("encrypting in CTR mode *-*\n");
+            printf("decrypting in CTR mode *-*\n");
             ctr_encrypt(input , output , iv , length , block_size , key , decrypt_block); 
             break;
+
+        case CFB:
+            printf("decrypting in CFB mode *-*\n");
+            cfb_decrypt(input , output , iv , length , block_size , key , decrypt_block); 
+            break;
+
 
         default:
             printf("decrypting in ECB mode *-*\n");
@@ -231,5 +243,59 @@ void ctr_encrypt(uchar_t *input , uchar_t *output , uchar_t *iv , size_t length 
 void ctr_decrypt(uchar_t *input , uchar_t *output , uchar_t *iv , size_t length , size_t block_size  ,const void* key ,void (*decrypt_block)(const uchar_t* , uchar_t* , const void* ) ) {
     // ctr_encrypt(input , output , iv , length , block_size , key , decrypt_block) ;
     
+}
+
+void cfb_encrypt(uchar_t *input , uchar_t *output , uchar_t *iv , size_t length , size_t block_size  ,const void* key ,void (*encrypt_block)(const uchar_t* , uchar_t*, const void* ) ) {
+    size_t t = length / block_size ;
+    if (t*block_size != length || length < block_size )
+    {
+        fprintf(stderr , "ERROR: (length < block_size ) OR make sure the input is padded or smth cuz length/block_size = %ld/%ld = %f \n" , length , block_size , (float) (length/block_size) ) ;
+        return;
+    }
+
+    // basically the Si
+    uchar_t *buffer =(uchar_t*) malloc(sizeof(uchar_t)*block_size) ; 
+    assert(buffer != NULL && "ummmm buy more ram lol");
+
+    encrypt_block(iv , buffer  , key) ;
+
+    mapOperation(buffer , input , output , block_size , binaryXorUchar) ;
+    
+    for (size_t i = 1; i < t ; i++)
+    {
+        encrypt_block(output + (i-1)*block_size  , buffer , key) ;
+        mapOperation( buffer , input + i*block_size , output + i*block_size , block_size , binaryXorUchar) ;
+    }
+    
+
+    free(buffer);
+    
+}
+
+void cfb_decrypt(uchar_t *input , uchar_t *output , uchar_t *iv , size_t length , size_t block_size  ,const void* key ,void (*decrypt_block)(const uchar_t* , uchar_t*, const void* ) ) {
+    size_t t = length / block_size ;
+    if (t*block_size != length || length < block_size )
+    {
+        fprintf(stderr , "ERROR: (length < block_size ) OR make sure the input is padded or smth cuz length/block_size = %ld/%ld = %f \n" , length , block_size , (float) (length/block_size) ) ;
+        return;
+    }
+
+    // basically the Si
+    uchar_t *buffer =(uchar_t*) malloc(sizeof(uchar_t)*block_size) ; 
+    assert(buffer != NULL && "ummmm buy more ram lol");
+
+    decrypt_block(iv , buffer  , key) ;
+
+    mapOperation(buffer , input , output , block_size , binaryXorUchar) ;
+    
+    for (size_t i = 1; i < t ; i++)
+    {
+        decrypt_block(input + (i-1)*block_size  , buffer , key) ;
+        mapOperation( buffer , input + i*block_size , output + i*block_size , block_size , binaryXorUchar) ;
+    }
+    
+
+    free(buffer);
+
 }
 
