@@ -153,7 +153,7 @@ void cbc_decrypt(uchar_t *input , uchar_t *output , uchar_t *iv , size_t length 
     for (size_t i = 1; i < t ; i++)
     {
         decrypt_block(input +i*block_size , buffer  , key) ;
-        mapOperation(buffer , iv , output + (i-1)*block_size , block_size , binaryXorUchar) ;
+        mapOperation(buffer , input + (i-1)*block_size , output + i*block_size , block_size , binaryXorUchar) ;
     }
     
 
