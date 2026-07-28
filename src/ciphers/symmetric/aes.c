@@ -325,7 +325,7 @@ void aes_decrypt(const uchar_t* input, uchar_t* output, int length, const void* 
 {
 
     uchar_t *iv = malloc(sizeof(uchar_t)*AES_BLOCK_SIZE) ;
-    blockcipher_decrypt_modeop(input , output , iv , length , AES_BLOCK_SIZE , key , aes_cipher_block) ;
+    blockcipher_decrypt_modeop(input , output , iv , length , AES_BLOCK_SIZE , key , aes_cipher_inverse_block) ;
     free(iv);    
 
 }
