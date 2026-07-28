@@ -22,6 +22,13 @@ The current version has many dependecies and Ai help which will be removed event
 *   XTEA (eXtended TEA) - Block Cipher  .
 *   Blowfish 🐡 - Block Cipher  .
 
+### Block Modes Operations for Block Ciphers 
+* ECB
+* CBC
+* OFB
+* CFB
+* CTR
+
 ### Asymmetric Ciphers
 *   RSA - Supporting key generation, encryption, and decryption with GMP.
 *   ElGamal - Asymmetric encryption based on Diffie-Hellman.
@@ -152,6 +159,10 @@ The project includes a server-client chat application. It establishes a secure c
 This library is for educational and academic purposes only. Do not use this implementation for securing sensitive production data, as it may lack protection against advanced side-channel attacks.
 
 ## References
+*   *BLOCK CIPHERS : MODES OF OPERATIONS*  :
+    *   Understanding Cryptography **Christof Paar , Jan Pelzl** -- page 123 -- 
+
+
 *   *HKDF*  :
     *   https://datatracker.ietf.org/doc/html/rfc5869#autoid-4
     *   (useful for testing) https://asecuritysite.com/kdf/HKDF
