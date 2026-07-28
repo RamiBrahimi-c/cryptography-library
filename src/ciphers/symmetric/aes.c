@@ -16,6 +16,7 @@
 #include "../../common/rijnbox.h"
 
 
+#define AES_BLOCK_SIZE 16
 
 
 
@@ -207,16 +208,19 @@ void fill_state_inv(uchar_t *key  , int k, uchar_t state[4][4]) {
 
 
 
-void aes_cipher_block(uchar_t *input   , uchar_t *output , uchar_t *key , int Nr) {
+static void aes_cipher_block(uchar_t *input   , uchar_t *output , void *key ) {
+    assert(key != NULL && "key is null");
+    AesKey *aes_key = (AesKey *) (key) ;
+    assert(aes_key != NULL && "aes_key is null");
     
     uchar_t state[4][4] ; 
     fill_state(input , 0 , state) ;
 
 
-    add_round_key(key , 0 , state) ; 
+    add_round_key(aes_key->expanded_key , 0 , state) ; 
 
 
-    for (int i = 1; i <= Nr -1 ; i++)
+    for (int i = 1; i <= aes_key->Nr -1 ; i++)
     {
 
         sub_bytes(state) ; 
@@ -225,7 +229,7 @@ void aes_cipher_block(uchar_t *input   , uchar_t *output , uchar_t *key , int Nr
 
         mix_culumns(state) ; 
 
-        add_round_key(key , 4 * i * 4  , state) ; 
+        add_round_key(aes_key->expanded_key , 4 * i * 4  , state) ; 
 
     }
 
@@ -233,7 +237,7 @@ void aes_cipher_block(uchar_t *input   , uchar_t *output , uchar_t *key , int Nr
 
     shift_rows(state) ; 
 
-    add_round_key(key , 4 * Nr * 4  , state) ; 
+    add_round_key(aes_key->expanded_key , 4 * aes_key->Nr * 4  , state) ; 
     
     fill_state_inv(output , 0 , state) ; 
 
@@ -241,23 +245,27 @@ void aes_cipher_block(uchar_t *input   , uchar_t *output , uchar_t *key , int Nr
 
 
 
-void aes_cipher_inverse_block(uchar_t *input   , uchar_t *output , uchar_t *key , int Nr) {
+static void aes_cipher_inverse_block(uchar_t *input   , uchar_t *output , void *key ) {
+    assert(key != NULL && "key is null");
+    AesKey *aes_key = (AesKey *) (key) ;
+    assert(aes_key != NULL && "aes_key is null");
+
     
     uchar_t state[4][4] ; 
     fill_state(input , 0 , state) ;
 
 
-    add_round_key(key , 4 * Nr * 4 , state) ; 
+    add_round_key(aes_key->expanded_key , 4 * aes_key->Nr * 4 , state) ; 
 
 
-    for (int i = Nr - 1; i >= 1 ; i--)
+    for (int i = aes_key->Nr - 1; i >= 1 ; i--)
     {
         inv_shift_rows(state) ; 
         
         rev_sub_bytes(state) ; 
 
 
-        add_round_key(key , 4 * i * 4  , state) ; 
+        add_round_key(aes_key->expanded_key , 4 * i * 4  , state) ; 
         
 
         
@@ -274,42 +282,11 @@ void aes_cipher_inverse_block(uchar_t *input   , uchar_t *output , uchar_t *key 
 
 
 
-    add_round_key(key , 0  , state) ; 
+    add_round_key(aes_key->expanded_key , 0  , state) ; 
     
     fill_state_inv(output , 0 , state) ; 
 
 }
-
-
-
-/* 
-    for now it only works with perfect buffer of size k * 16 (k > 0)
-*/
-void aes_cipher(uchar_t *input   , uchar_t *output, uchar_t *key  , int length, int Nr) {
-    
-
-    for (int i = 0; i <  (length / 16); i++)
-    {
-        int margin = i * 16 ;
-        aes_cipher_block(input  + margin , output + margin  ,key , Nr ) ;
-
-    }
-    
-}
-
-
-void aes_cipher_decrypt(uchar_t *input   , uchar_t *output, uchar_t *key  , int length, int Nr) {
-    
-
-    for (int i = 0; i < length / 16; i++)
-    {
-        int margin = i * 16 ; 
-        aes_cipher_inverse_block(input  + margin , output + margin  ,key , Nr ) ;
-
-    }
-    
-}
-
 
 
 void setup_parameteres_aes(AES_TYPE type , int *Nr , int *Nk) {
@@ -328,24 +305,16 @@ void setup_parameteres_aes(AES_TYPE type , int *Nr , int *Nk) {
 }
 
 
-
-
-
-
-
-
-
-
 /*
     for now only input with length of 16*k bytes is supported
 */
 void aes_encrypt(const uchar_t* input, uchar_t* output, int length, const void* key)
 {
-    assert(key != NULL && "key is null");
-    AesKey *aes_key = (AesKey *) (key) ;
 
-    aes_cipher(input , output , aes_key->expanded_key , length , aes_key->Nr ) ; 
-
+    uchar_t *iv = malloc(sizeof(uchar_t)*AES_BLOCK_SIZE) ;
+    blockcipher_encrypt_modeop(input , output , iv , length , AES_BLOCK_SIZE , key , aes_cipher_block) ;
+    free(iv);    
+    
 
 
 }
@@ -354,10 +323,10 @@ void aes_encrypt(const uchar_t* input, uchar_t* output, int length, const void* 
 
 void aes_decrypt(const uchar_t* input, uchar_t* output, int length, const void* key)
 {
-    assert(key != NULL && "key is null");
-    AesKey *aes_key = (AesKey *) (key) ;
 
-    aes_cipher_decrypt(input , output , aes_key->expanded_key , length , aes_key->Nr ) ; 
+    uchar_t *iv = malloc(sizeof(uchar_t)*AES_BLOCK_SIZE) ;
+    blockcipher_decrypt_modeop(input , output , iv , length , AES_BLOCK_SIZE , key , aes_cipher_block) ;
+    free(iv);    
 
 }
 

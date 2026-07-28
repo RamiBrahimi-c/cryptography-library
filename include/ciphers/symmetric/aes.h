@@ -48,8 +48,8 @@ void rev_mix_culumns(uchar_t state[4][4]) ;
 void fill_state_inv(uchar_t *key  , int k, uchar_t state[4][4]) ;
 
 
-void aes_cipher_block(uchar_t *input   , uchar_t *output , uchar_t *key , int Nr) ;
-void aes_cipher_inverse_block(uchar_t *input   , uchar_t *output , uchar_t *key , int Nr) ;
+static void aes_cipher_block(uchar_t *input   , uchar_t *output , void *key ) ;
+static void aes_cipher_inverse_block(uchar_t *input   , uchar_t *output , void *key ) ;
 void aes_cipher(uchar_t *input   , uchar_t *output, uchar_t *key  , int length, int Nr) ;
 void aes_cipher_decrypt(uchar_t *input   , uchar_t *output, uchar_t *key  , int length, int Nr) ;
 
