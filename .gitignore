@@ -50,3 +50,6 @@ tests/sound/
 old.txt
 
 TODO.md
+
+
+bin/*
