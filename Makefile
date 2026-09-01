@@ -3,7 +3,7 @@
 # ============================================================================
 CC       := gcc
 AR       := ar
-CFLAGS   := -Wall -Wextra -lm -lgmp
+CFLAGS   := -Wall -Wextra 
 CPPFLAGS := -Iinclude -Iinclude/ciphers/classical -Iinclude/ciphers/symmetric \
             -Iinclude/ciphers/asymmetric -Iinclude/ciphers/hashing
 
@@ -11,7 +11,7 @@ CPPFLAGS := -Iinclude -Iinclude/ciphers/classical -Iinclude/ciphers/symmetric \
 BIGNUM_DIR     := ./third-party/big-ar9am
 CPPFLAGS       += -I$(BIGNUM_DIR)/include
 LDFLAGS        := -L$(BIGNUM_DIR)/lib -lm
-LDLIBS         := -lbigra9m
+LDLIBS         := -lbigra9m -lm -lgmp 
 
 # ============================================================================
 # Directory structure
