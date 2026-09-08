@@ -30,7 +30,7 @@ The current version has many dependecies and Ai help which will be removed event
 * CTR
 
 ### Asymmetric Ciphers
-*   RSA - Supporting key generation, encryption, and decryption with GMP.
+*   RSA - Supporting key generation, encryption, and decryption with [**big-ar9am**](https://github.com/RamiBrahimi-c/big-ar9am).
 *   ElGamal - Asymmetric encryption based on Diffie-Hellman.
 *   Diffie-Hellman - Key exchange protocol for establishing shared secrets.
 
