@@ -90,9 +90,7 @@ void dh_generate_keypair(DHParty* party, const BigRa9m* p, const BigRa9m* g)
 
 void dh_compute_shared(BigRa9m* shared, const DHParty* me, const BigRa9m* their_public)
 {
-    printf("nooo\n") ; 
     bigra9m_modular_exponentiation( their_public , &me->private_key, &me->p ,shared ) ;
-    printf("nooo\n") ; 
 }
 
 
