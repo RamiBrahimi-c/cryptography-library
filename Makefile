@@ -3,15 +3,15 @@
 # ============================================================================
 CC       := gcc
 AR       := ar
-CFLAGS   := -Wall -Wextra 
+CFLAGS   := -Wall -Wextra -fPIC
 CPPFLAGS := -Iinclude -Iinclude/ciphers/classical -Iinclude/ciphers/symmetric \
             -Iinclude/ciphers/asymmetric -Iinclude/ciphers/hashing
 
-# Your bignum library
+# bignum library
 BIGNUM_DIR     := ./third-party/big-ar9am
 CPPFLAGS       += -I$(BIGNUM_DIR)/include
-LDFLAGS        := -L$(BIGNUM_DIR)/lib -lm
-LDLIBS         := -lbigra9m -lm -lgmp 
+LDFLAGS        := -L$(BIGNUM_DIR)/lib
+LDLIBS := -lbigra9m -lgmp -lm
 
 # ============================================================================
 # Directory structure
@@ -48,7 +48,7 @@ LITE_OBJ := $(patsubst $(SRCDIR)/%.c,$(OBJDIR)/lite/%.o,$(LITE_SRC))
 # ============================================================================
 .PHONY: all clean test chat server client
 
-all: $(LIBDIR)/libcrypto.a $(LIBDIR)/libcrypto-lite.a
+all: $(LIBDIR)/libcrypto.a $(LIBDIR)/libcrypto-lite.a $(LIBDIR)/libcrypto.so $(LIBDIR)/libcrypto-lite.so
 
 # Full static library
 $(LIBDIR)/libcrypto.a: $(FULL_OBJ)
@@ -59,6 +59,16 @@ $(LIBDIR)/libcrypto.a: $(FULL_OBJ)
 $(LIBDIR)/libcrypto-lite.a: $(LITE_OBJ)
 	@mkdir -p $(LIBDIR)
 	$(AR) rcs $@ $^
+
+# Full shared lib
+$(LIBDIR)/libcrypto.so: $(FULL_OBJ)
+	@mkdir -p $(LIBDIR)
+	$(CC) -shared -o $@ $^ $(LDFLAGS) $(LDLIBS)
+
+# Lite shared lib (no GMP --for now--)
+$(LIBDIR)/libcrypto-lite.so: $(LITE_OBJ)
+	@mkdir -p $(LIBDIR)
+	$(CC) -shared -o $@ $^ $(LDFLAGS) -lm
 
 # ============================================================================
 # Compilation rules
@@ -80,6 +90,7 @@ TEST_TARGETS := $(patsubst $(TESTDIR)/test_%.c,test_%,$(TEST_SOURCES))
 test: $(TEST_TARGETS)
 
 test_%: $(TESTDIR)/test_%.c $(LIBDIR)/libcrypto.a
+	@mkdir -p $(BINDIR)
 	$(CC) $(CPPFLAGS) $(CFLAGS) $< $(LIBDIR)/libcrypto.a $(LDFLAGS) $(LDLIBS) -o $(BINDIR)/$@
 	$(BINDIR)/$@
 
