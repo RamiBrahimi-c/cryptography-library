@@ -3,6 +3,12 @@
 This project is a comprehensive C implementation of various cryptographic algorithms, ranging from classical ciphers to modern symmetric and asymmetric systems. It also includes hashing utilities and a secure chat application demonstrating a hybrid cryptographic protocol.
 The current version has many dependecies and Ai help which will be removed eventually . 
 
+## Current Status
+
+**NOT STABLE**
+going through really a lot of stuff , since i am officially removing GMP totally , so it needs some time to test and make sure everything is stable !!!!!
+
+
 ## Features
 
 ### Classical Ciphers
@@ -52,14 +58,11 @@ The project includes external headers (stb) to demonstrate encryption on:
 
 ## Dependencies
 
-To compile and run this project, you must have the following libraries installed:
+**NO HEAVY DEPENDECIES**
 
-1.  **GMP (GNU Multiple Precision Arithmetic Library):** Used for large prime number calculations in asymmetric ciphers.
 
-On Ubuntu/Debian, install it via:
-```bash
-sudo apt-get install libgmp-dev 
-```
+
+~~To compile and run this project, you must have the following libraries installed:~~
 
 ---
 
@@ -77,7 +80,7 @@ make
 
 ### Static Libraries
 
-To build the full static library (requires GMP):
+To build the full static library :
 ```bash
 make libcrypto.a
 ```
