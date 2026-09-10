@@ -9,9 +9,13 @@ CPPFLAGS := -Iinclude -Iinclude/ciphers/classical -Iinclude/ciphers/symmetric \
 
 # bignum library
 BIGNUM_DIR     := ./third-party/big-ar9am
+BIGNUM_LIB     := $(BIGNUM_DIR)/lib/libbigra9m.a
 CPPFLAGS       += -I$(BIGNUM_DIR)/include
 LDFLAGS        := -L$(BIGNUM_DIR)/lib
-LDLIBS := -lbigra9m -lgmp -lm
+LDLIBS         := -lbigra9m -lm
+
+# Tests get GMP on top for verification purposes
+TEST_LDLIBS    := $(LDLIBS) -lgmp
 
 # ============================================================================
 # Directory structure
@@ -21,11 +25,11 @@ OBJDIR   := obj
 BINDIR   := bin
 LIBDIR   := lib
 TESTDIR  := tests
+TESTOUT  := $(TESTDIR)/output/bin
 
 # ============================================================================
 # Source discovery
 # ============================================================================
-# Split sources by category for better control
 COMMON_SRC     := $(wildcard $(SRCDIR)/common/*.c)
 CLASSICAL_SRC  := $(wildcard $(SRCDIR)/ciphers/classical/*.c)
 SYMMETRIC_SRC  := $(wildcard $(SRCDIR)/ciphers/symmetric/*.c)
@@ -36,7 +40,7 @@ HASHING_SRC    := $(wildcard $(SRCDIR)/ciphers/hashing/*.c)
 FULL_SRC := $(COMMON_SRC) $(CLASSICAL_SRC) $(SYMMETRIC_SRC) \
             $(ASYMMETRIC_SRC) $(HASHING_SRC)
 
-# Lite library sources (no GMP/OpenSSL dependency)
+# Lite library sources (no asymmetric, no hashing, no bignum)
 LITE_SRC := $(COMMON_SRC) $(CLASSICAL_SRC) $(SYMMETRIC_SRC)
 
 # Object files
@@ -44,31 +48,54 @@ FULL_OBJ := $(patsubst $(SRCDIR)/%.c,$(OBJDIR)/full/%.o,$(FULL_SRC))
 LITE_OBJ := $(patsubst $(SRCDIR)/%.c,$(OBJDIR)/lite/%.o,$(LITE_SRC))
 
 # ============================================================================
-# Targets
+# Phony targets
 # ============================================================================
-.PHONY: all clean test chat server client
+.PHONY: all clean deps chat server client crypto check-bignum
 
-all: $(LIBDIR)/libcrypto.a $(LIBDIR)/libcrypto-lite.a $(LIBDIR)/libcrypto.so $(LIBDIR)/libcrypto-lite.so
+# ============================================================================
+# Preflight checks
+# ============================================================================
+check-bignum:
+	@if [ ! -f $(BIGNUM_LIB) ]; then \
+		echo "*** libbigra9m.a not found at $(BIGNUM_LIB)"; \
+		echo "*** Please clone and build big-ra9am first, or drop a prebuilt"; \
+		echo "*** libbigra9m.a into $(BIGNUM_DIR)/lib/"; \
+		exit 1; \
+	fi
 
-# Full static library
-$(LIBDIR)/libcrypto.a: $(FULL_OBJ)
+# ============================================================================
+# Default target
+# ============================================================================
+all: $(LIBDIR)/libsifra.a $(LIBDIR)/libsifra.so \
+     $(LIBDIR)/libsifra-lite.a $(LIBDIR)/libsifra-lite.so
+
+# ---------------------------------------------------------------------------
+# Full static library (no bignum needed — just an archive of .o files)
+# ---------------------------------------------------------------------------
+$(LIBDIR)/libsifra.a: $(FULL_OBJ)
 	@mkdir -p $(LIBDIR)
 	$(AR) rcs $@ $^
 
+# ---------------------------------------------------------------------------
+# Full shared library (absorbs libbigra9m.a)
+# ---------------------------------------------------------------------------
+$(LIBDIR)/libsifra.so: check-bignum $(FULL_OBJ) $(BIGNUM_LIB)
+	@mkdir -p $(LIBDIR)
+	$(CC) -shared -o $@ $(FULL_OBJ) $(LDFLAGS) $(LDLIBS)
+
+# ---------------------------------------------------------------------------
 # Lite static library
-$(LIBDIR)/libcrypto-lite.a: $(LITE_OBJ)
+# ---------------------------------------------------------------------------
+$(LIBDIR)/libsifra-lite.a: $(LITE_OBJ)
 	@mkdir -p $(LIBDIR)
 	$(AR) rcs $@ $^
 
-# Full shared lib
-$(LIBDIR)/libcrypto.so: $(FULL_OBJ)
+# ---------------------------------------------------------------------------
+# Lite shared library (no bigra9m)
+# ---------------------------------------------------------------------------
+$(LIBDIR)/libsifra-lite.so: $(LITE_OBJ)
 	@mkdir -p $(LIBDIR)
-	$(CC) -shared -o $@ $^ $(LDFLAGS) $(LDLIBS)
-
-# Lite shared lib (no GMP --for now--)
-$(LIBDIR)/libcrypto-lite.so: $(LITE_OBJ)
-	@mkdir -p $(LIBDIR)
-	$(CC) -shared -o $@ $^ $(LDFLAGS) -lm
+	$(CC) -shared -o $@ $(LITE_OBJ) -lm
 
 # ============================================================================
 # Compilation rules
@@ -82,38 +109,49 @@ $(OBJDIR)/lite/%.o: $(SRCDIR)/%.c
 	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
 
 # ============================================================================
-# Tests (link against static library instead of recompiling)
+# Main executable
 # ============================================================================
-TEST_SOURCES := $(wildcard $(TESTDIR)/test_*.c)
-TEST_TARGETS := $(patsubst $(TESTDIR)/test_%.c,test_%,$(TEST_SOURCES))
+crypto: check-bignum $(BINDIR)/crypto
 
-test: $(TEST_TARGETS)
-
-test_%: $(TESTDIR)/test_%.c $(LIBDIR)/libcrypto.a
+$(BINDIR)/crypto: $(SRCDIR)/main.c $(LIBDIR)/libsifra.a
 	@mkdir -p $(BINDIR)
-	$(CC) $(CPPFLAGS) $(CFLAGS) $< $(LIBDIR)/libcrypto.a $(LDFLAGS) $(LDLIBS) -o $(BINDIR)/$@
-	$(BINDIR)/$@
+	$(CC) $(CPPFLAGS) $(CFLAGS) $< $(LIBDIR)/libsifra.a $(LDFLAGS) $(LDLIBS) -o $@
 
 # ============================================================================
 # Chat application
 # ============================================================================
-chat: $(BINDIR)/server $(BINDIR)/client
+chat: check-bignum $(BINDIR)/server $(BINDIR)/client
 
-$(BINDIR)/server: $(SRCDIR)/server.c $(LIBDIR)/libcrypto.a
-	@mkdir -p $(BINDIR)
-	$(CC) $(CPPFLAGS) $(CFLAGS) $< $(LIBDIR)/libcrypto.a $(LDFLAGS) $(LDLIBS) -o $@
+server: check-bignum $(BINDIR)/server
+client: check-bignum $(BINDIR)/client
 
-$(BINDIR)/client: $(SRCDIR)/client.c $(LIBDIR)/libcrypto.a
+$(BINDIR)/server: $(SRCDIR)/server.c $(LIBDIR)/libsifra.a
 	@mkdir -p $(BINDIR)
-	$(CC) $(CPPFLAGS) $(CFLAGS) $< $(LIBDIR)/libcrypto.a $(LDFLAGS) $(LDLIBS) -o $@
+	$(CC) $(CPPFLAGS) $(CFLAGS) $< $(LIBDIR)/libsifra.a $(LDFLAGS) $(LDLIBS) -o $@
+
+$(BINDIR)/client: $(SRCDIR)/client.c $(LIBDIR)/libsifra.a
+	@mkdir -p $(BINDIR)
+	$(CC) $(CPPFLAGS) $(CFLAGS) $< $(LIBDIR)/libsifra.a $(LDFLAGS) $(LDLIBS) -o $@
+
+# ============================================================================
+# Tests / with gmp tests
+# ============================================================================
+test_%: $(TESTDIR)/test_%.c $(LIBDIR)/libsifra.a check-bignum
+	@mkdir -p $(TESTOUT)
+	$(CC) $(CPPFLAGS) $(CFLAGS) $< $(LIBDIR)/libsifra.a $(LDFLAGS) $(LDLIBS) -o $(TESTOUT)/$@
+	$(TESTOUT)/$@
+
+test_gmp_%: $(TESTDIR)/asymmetric-gmp/test_%.c $(LIBDIR)/libsifra.a check-bignum
+	@mkdir -p $(TESTOUT)
+	$(CC) $(CPPFLAGS) $(CFLAGS) $< $(LIBDIR)/libsifra.a $(LDFLAGS) $(TEST_LDLIBS) -o $(TESTOUT)/$@
+	$(TESTOUT)/$@
 
 # ============================================================================
 # Utility targets
 # ============================================================================
 clean:
-	rm -rf $(OBJDIR) $(BINDIR) $(LIBDIR)
+	rm -rf $(OBJDIR) $(BINDIR) $(LIBDIR) $(TESTDIR)/output
 
-# Dependency generation 
 deps:
 	$(CC) $(CPPFLAGS) -MM $(FULL_SRC) > .depend
 
