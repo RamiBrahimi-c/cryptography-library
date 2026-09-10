@@ -1,55 +1,24 @@
-# Object files
-*.o
-*.obj
 obj/
-obj/*
+bin/
+lib/
+tests/output/
+third-party/*/lib/
 
-# Executables
-crypto
-run_tests
-*.exe
-*.out
-*.a
-*.so
+*.o
+*.gch
+.depend
 
-# Test images 
-tests/img/
-tests/results_img/
-tests/results_sound/
-tests/sound/
-*.jpg
-*.jpeg
-*.png
-*.bmp
-*.gif
-
-# IDE files
 .vscode/
 .idea/
 *.swp
-*.swo
-*~
 .DS_Store
-
-# Compiled files
-*.gch
-*.d
-
-# Makefile backup
-*~
-*.bak
-
-# Logs
 *.log
 
 
-# useless for now 
-*.pcapng
+img/
 
-# secret file shhhh
-old.txt
+getlastlib.sh
 
+run_tests
 TODO.md
-
-
-bin/*
+old.txt
