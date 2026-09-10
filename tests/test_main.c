@@ -28,37 +28,6 @@
 #include "stb_vorbis.c"
 
 
-
-void strip_extension(char *filename) {
-    // Find the last dot in the filename
-    char *dot = strrchr(filename, '.');
-    
-    // If a dot exists and it's not the first character (e.g., ".gitignore")
-    if (dot != NULL && dot != filename) {
-        *dot = '\0'; // Replace dot with null terminator
-    }
-}
-
-
-void setupFullFilePath(char *directory_name , char *filename , char *full_path , int total_size  ) {
-    snprintf(full_path ,total_size, "./%s/%s" , directory_name , filename )  ; 
-}
-
-void setupFullResultFilePath(char *directory_name , char *type_algo  , char *filename , char *algo_name , char *full_path ,  int total_size , char *extension ) {
-    
-    // NOTE: just to force the output to be .png
-    // NOTE: maybe add full date and time
-    char filename_copy[64] ; 
-    strcpy(filename_copy , filename) ; 
-
-    strip_extension(filename_copy) ;     
-    strcat(filename_copy ,  extension) ; 
-    
-    snprintf(full_path , total_size , "./%s/%s_%s_%s" , directory_name , type_algo   , algo_name, filename_copy )  ; 
-
-}
-
-
 #include "aes.h"
 #include "tea.h"
 #include "xtea.h"
@@ -79,26 +48,46 @@ int main() {
     // :catwiggle:
 
 
-    size_t salt_len = 10;
-    uchar_t salt[] = { 0x8e , 0x94 , 0xef , 0x80 , 0x5b , 0x93 , 0xe6 , 0x83 , 0xff , 0x18};
-    size_t ikm_len  = 76;
-    uchar_t ikm[]  = "hellolkqnsklqsndqsndlqskndqskjndqskjndhellolkqnsklqsndqsndlqskndqskjndqskjnd";
-    size_t info_len = 3 ;
-    uchar_t info[] = { 0x12 , 0x34 , 0x56 };
-    size_t okm_len = 64;
-    uchar_t okm[64] ;
 
+    // exit(0) ; 
 
-
-    // hkdf_sha256(salt ,salt_len , ikm , ikm_len , info , info_len , okm , okm_len ) ; 
-    hkdf_sha512(salt ,salt_len , ikm , ikm_len , info , info_len , okm , okm_len ) ; 
+    // uchar_t *input = generate_garbage_string(0x0 , 64) ;
+    uchar_t input[] = {0x60, 0x1e, 0xc3, 0x13, 0x77, 0x57, 0x89, 0xa5, 0xb7, 0xa7, 0xf5, 0x04, 0xbb, 0xf3, 0xd2, 0x28, 
+                        0xf4, 0x43, 0xe3, 0xca, 0x4d, 0x62, 0xb5, 0x9a, 0xca, 0x84, 0xe9, 0x90, 0xca, 0xca, 0xf5, 0xc5, 
+                        0x2b, 0x09, 0x30, 0xda, 0xa2, 0x3d, 0xe9, 0x4c, 0xe8, 0x70, 0x17, 0xba, 0x2d, 0x84, 0x98, 0x8d, 
+                        0xdf, 0xc9, 0xc5, 0x8d, 0xb6, 0x7a, 0xad, 0xa6, 0x13, 0xc2, 0xdd, 0x08, 0x45, 0x79, 0x41, 0xa6  } ;
+    uchar_t key[] = { 0x60, 0x3d, 0xeb, 0x10, 0x15, 0xca, 0x71, 0xbe, 0x2b, 0x73, 0xae, 0xf0, 0x85, 0x7d, 0x77, 0x81,
+                        0x1f, 0x35, 0x2c, 0x07, 0x3b, 0x61, 0x08, 0xd7, 0x2d, 0x98, 0x10, 0xa3, 0x09, 0x14, 0xdf, 0xf4 }  ;
+    size_t key_len = 32 ; 
+    uchar_t output[64]  ;
+    uchar_t output2[64]  ;
+    // memset(output , 0 , 8) ;
+    
+    // void *key_ptr = malloc(sizeof(DesKey)) ;
+    // des_set_key(key_ptr , key);
+    // des_encrypt(input , output , 8 , key_ptr) ; 
+    block_cipher_mode_operation = ECB ;
+    printf("input:\n");
+    PRINT_ARRAY_NAI(input , 64 , "%.2x");
+    
+    TEST_ON_TEXT_ENCRYPTION(aes,input,output,64,key  , key_len, AesKey) ;
+    
+    printf("output:\n");
+    PRINT_ARRAY_NAI(output , 64 , "%.2x");
     
     
-    printf("okm : \n" );
-    PRINT_ARRAY_NAI(okm , okm_len , "%0.2x") ;
-    PRINT_ARRAY_NOSPCLEN(okm , okm_len , "%0.2x") ;
+    TEST_ON_TEXT_DECRYPTION(aes,output,output2,64,key  , key_len, AesKey) ;
     
-
+    
+    printf("output decrypted:\n");
+    PRINT_ARRAY_NAI(output2 , 64 , "%.2x");
+    
+    // block_cipher_mode_operation = CBC ;
+        // TEST_ON_IMAGE_ENCRYPTION(aes , "rami.png" , key , key_len , AesKey) ; 
+    // des_decrypt(output , output2 , 8 , key_ptr) ; 
+    // printf("output2:\n");
+    // PRINT_ARRAY_NAI(output , 8 , "%.2x");
+    
     return 0 ; 
 }
 

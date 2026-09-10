@@ -106,7 +106,7 @@ void initilizeAlphabets(uchar_t *array , char choice) ;
 int compareUChars(const void* a, const void* b) ;
 
 
-_Bool areElementsUniqueSorted(const __u_char arr[], int n) ;
+_Bool areElementsUniqueSorted(const uchar_t arr[], int n) ;
 
 
 int findIndexMap(const uchar_t *array , uchar_t value ) ;

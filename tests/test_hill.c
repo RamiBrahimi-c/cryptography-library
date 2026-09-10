@@ -151,11 +151,11 @@
 //     // setupFullResultImagePath(directory_output_images , enc_type_algo , filename , algo_name ,full_path_result_image_file  , FULL_PATH_LENGTH) ; 
 //     // printf("%s\n" , full_path_result_image_file) ; 
 
-//     // __u_char *original_text = stbi_load(full_path_image_file, &width, &height, &channels, 0); ; 
+//     // uchar_t *original_text = stbi_load(full_path_image_file, &width, &height, &channels, 0); ; 
     
 //     // assert(original_text != NULL && "original text is null") ; 
     
-//     // __u_char *encrypted_text = malloc(sizeof(uchar_t) * width * height * channels)  ; 
+//     // uchar_t *encrypted_text = malloc(sizeof(uchar_t) * width * height * channels)  ; 
     
 //     // assert(encrypted_text != NULL && "failed to allocate") ; 
     

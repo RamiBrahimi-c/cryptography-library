@@ -4,15 +4,17 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdint.h>
+#include <assert.h>
 #define FULL_PATH_LENGTH 128
 
 
 
-void strip_extension(char *filename) ;
+// static void strip_extension(char *filename) ;
 
-void setupFullFilePath(char *directory_name , char *filename , char *full_path , int total_size  ) ;
+// static void setupFullFilePath(char *directory_name , char *filename , char *full_path , int total_size  ) ;
 
-void setupFullResultFilePath(char *directory_name , char *type_algo  , char *filename , char *algo_name , char *full_path ,  int total_size  , char *extension) ;
+// static void setupFullResultFilePath(char *directory_name , char *type_algo  , char *filename , char *algo_name , char *full_path ,  int total_size  , char *extension) ;
 
 
 
@@ -59,6 +61,51 @@ void setupFullResultFilePath(char *directory_name , char *type_algo  , char *fil
 #define COLOR_GREEN "\033[0;32m"
 #define COLOR_RED "\033[0;31m"
 #define COLOR_RESET "\033[0m"
+/* Reset */
+#define RESET       "\033[0m"
+
+/* Styles */
+#define BOLD        "\033[1m"
+#define DIM         "\033[2m"
+#define ITALIC      "\033[3m"
+#define UNDERLINE   "\033[4m"
+#define BLINK       "\033[5m"
+#define REVERSE     "\033[7m"
+#define STRIKE      "\033[9m"
+
+/* Foreground colors */
+#define BLACK       "\033[0;30m"
+#define RED         "\033[0;31m"
+#define GREEN       "\033[0;32m"
+#define YELLOW      "\033[0;33m"
+#define BLUE        "\033[0;34m"
+#define MAGENTA     "\033[0;35m"
+#define CYAN        "\033[0;36m"
+#define WHITE       "\033[0;37m"
+
+/* Bright foreground colors */
+#define BBLACK      "\033[1;30m"
+#define BRED        "\033[1;31m"
+#define BGREEN      "\033[1;32m"
+#define BYELLOW     "\033[1;33m"
+#define BBLUE       "\033[1;34m"
+#define BMAGENTA    "\033[1;35m"
+#define BCYAN       "\033[1;36m"
+#define BWHITE      "\033[1;37m"
+
+/* Background colors */
+#define BG_BLACK    "\033[40m"
+#define BG_RED      "\033[41m"
+#define BG_GREEN    "\033[42m"
+#define BG_YELLOW   "\033[43m"
+#define BG_BLUE     "\033[44m"
+#define BG_MAGENTA  "\033[45m"
+#define BG_CYAN     "\033[46m"
+#define BG_WHITE    "\033[47m"
+
+
+
+
 
 // Test summary tracker
 typedef struct {
@@ -134,8 +181,8 @@ typedef unsigned char uchar_t ;
     \
     int width, height, channels;\
     char *filename = _filename ; \
-    char *directory_input_images = "tests/img" ; \
-    char *directory_output_images = "tests/results_img" ;\ 
+    char *directory_input_images = "tests/input/img" ; \
+    char *directory_output_images = "tests/output/results_img" ;\ 
     char *algo_name = #name ; \
     char *enc_type_algo = "enc" ; \
     char *dec_type_algo = "dec" ; \
@@ -172,6 +219,8 @@ typedef unsigned char uchar_t ;
     \
 } while(0)
 
+
+// this shit does not work 
 #define TEST_ON_IMAGE_DECRYPTION(name , _filename , _key , _key_len , _key_type) do { \
     printf( "INFO :%sTesting %s... %s\n" , COLOR_GREEN , #name , COLOR_RESET); \
     printf( "INFO : Image \n"  ); \
@@ -225,8 +274,8 @@ typedef unsigned char uchar_t ;
     printf( "INFO : Sound \n" ); \
     int channels, sample_rate;\
     char *filename = _filename ; \
-    char *directory_input_sounds = "tests/sound" ; \
-    char *directory_output_sounds = "tests/results_sound" ;\ 
+    char *directory_input_sounds = "tests/input/sound" ; \
+    char *directory_output_sounds = "tests/output/results_sound" ;\ 
     char *algo_name = #name ; \
     char *enc_type_algo = "enc" ; \
     char *dec_type_algo = "dec" ; \
@@ -289,8 +338,8 @@ typedef unsigned char uchar_t ;
     \
     int width, height, channels; \
     char *filename = _filename; \
-    char *directory_input_images = "tests/img"; \
-    char *directory_output_images = "tests/results_img"; \
+    char *directory_input_images = "tests/input/img"; \
+    char *directory_output_images = "tests/output/results_img"; \
     char *algo_name = #name; \
     char *enc_type_algo = "enc"; \
     char full_path_image_file[FULL_PATH_LENGTH]; \
@@ -406,6 +455,50 @@ typedef unsigned char uchar_t ;
     dh_clear_party(&alice); dh_clear_party(&bob); \
     dh_clear_party(&mallory_a); dh_clear_party(&mallory_b); \
 } while(0)
+
+
+
+
+static inline void strip_extension(char *filename) {
+    // Find the last dot in the filename
+    char *dot = strrchr(filename, '.');
+    
+    // If a dot exists and it's not the first character (e.g., ".gitignore")
+    if (dot != NULL && dot != filename) {
+        *dot = '\0'; // Replace dot with null terminator
+    }
+}
+
+
+static inline void setupFullFilePath(char *directory_name , char *filename , char *full_path , int total_size  ) {
+    snprintf(full_path ,total_size, "./%s/%s" , directory_name , filename )  ; 
+}
+
+static inline void setupFullResultFilePath(char *directory_name , char *type_algo  , char *filename , char *algo_name , char *full_path ,  int total_size , char *extension ) {
+    
+    // NOTE: just to force the output to be .png
+    // NOTE: maybe add full date and time
+    char filename_copy[64] ; 
+    strcpy(filename_copy , filename) ; 
+
+    strip_extension(filename_copy) ;     
+    strcat(filename_copy ,  extension) ; 
+    
+    snprintf(full_path , total_size , "./%s/%s_%s_%s" , directory_name , type_algo   , algo_name, filename_copy )  ; 
+
+}
+
+
+static inline uchar_t* generate_garbage_string(uchar_t c , uint32_t n) {
+    uchar_t *ptr = (uchar_t*) malloc(sizeof(uchar_t)*n) ; 
+    ASSERT_NOT_NULL(ptr) ;
+    memset(ptr ,c , n ) ;
+    return ptr ;
+} 
+
+
+
+
 
 
 #endif

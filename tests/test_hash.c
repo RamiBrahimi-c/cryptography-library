@@ -1,4 +1,4 @@
-/*  
+ 
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -324,4 +324,4 @@ int main()
 
     printf("\n=== Done ===\n");
     return kat_failures == 0 ? 0 : 1;
-} */
+}

@@ -71,8 +71,8 @@
 //     printf("%s\n" , full_path_result_image_file) ; 
 
 
-//     __u_char *original_text = "ASSINET" ; 
-//     // __u_char *original_text = stbi_load(full_path_image_file, &width, &height, &channels, 0); ; 
+//     uchar_t *original_text = "ASSINET" ; 
+//     // uchar_t *original_text = stbi_load(full_path_image_file, &width, &height, &channels, 0); ; 
 //     assert(original_text != NULL && "original text is null") ; 
 
 
@@ -81,8 +81,8 @@
 //     // printf("length : %d \n" , strlen(original_text));
 
 
-//     __u_char encrypted_text[1024]  ; 
-//     // __u_char *encrypted_text = malloc(sizeof(uchar_t) * width * height * channels)  ; 
+//     uchar_t encrypted_text[1024]  ; 
+//     // uchar_t *encrypted_text = malloc(sizeof(uchar_t) * width * height * channels)  ; 
 //     assert(encrypted_text != NULL && "failed to allocate ") ; 
 
 
@@ -118,7 +118,7 @@
 //     printf("original text : %s\n" , original_text) ; 
 //     printf("encrypted text : %s\n" , encrypted_text) ; 
     
-//     // __u_char *decrypted_text = malloc(sizeof(uchar_t) * width * height * channels) ; 
+//     // uchar_t *decrypted_text = malloc(sizeof(uchar_t) * width * height * channels) ; 
     
 //     // affine_decrypt(encrypted_text , decrypted_text , key_affine);
     

@@ -428,12 +428,12 @@ int compareUChars(const void* a, const void* b) {
     return (*(uchar_t*)a - *(uchar_t*)b);
 }
 
-_Bool areElementsUniqueSorted(const __u_char arr[], int n) {
+_Bool areElementsUniqueSorted(const uchar_t arr[], int n) {
     char temp_array[ARRAY_MAX_SIZE] ; 
 
     strcpy(temp_array ,(const char*) arr) ; 
     // Sort the array
-    qsort(temp_array, n, sizeof(__u_char), compareUChars);
+    qsort(temp_array, n, sizeof(uchar_t), compareUChars);
 
     // Check adjacent elements
     for (int i = 0; i < n - 1; i++) {
