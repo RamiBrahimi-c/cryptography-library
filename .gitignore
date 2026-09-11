@@ -23,3 +23,10 @@ run_tests
 TODO.md
 old.txt
 NOTES.md
+
+
+
+*.jpg
+*.png
+*.ogg
+*.jpeg
