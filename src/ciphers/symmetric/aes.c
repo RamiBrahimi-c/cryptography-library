@@ -13,7 +13,7 @@
 // #include "../../common/keyexpan.h"
 
 // #include "../../common/galois_field_op.h"
-// #include "../../common/rijnbox.h"
+#include "../../block_cipher_modes_operation.h"
 
 
 #define AES_BLOCK_SIZE 16
@@ -209,9 +209,17 @@ static void fill_state_inv(uchar_t *key  , int k, uchar_t state[4][4]) {
 
 
 static void aes_cipher_block(uchar_t *input   , uchar_t *output , void *key ) {
-    assert(key != NULL && "key is null");
+    
     AesKey *aes_key = (AesKey *) (key) ;
-    assert(aes_key != NULL && "aes_key is null");
+    if (aes_key == NULL) {
+        fprintf(stderr , "ERROR : aes_key is NULL \n") ;
+        return 1 ;  
+    }
+    if (input == NULL || output == NULL) {
+        fprintf(stderr , "ERROR : input or output is NULL \n") ;
+        return 2 ;  
+        
+    }
     
     uchar_t state[4][4] ; 
     fill_state(input , 0 , state) ;
@@ -241,15 +249,22 @@ static void aes_cipher_block(uchar_t *input   , uchar_t *output , void *key ) {
     
     fill_state_inv(output , 0 , state) ; 
 
+    return 0 ; 
 }
 
 
 
 static void aes_cipher_inverse_block(uchar_t *input   , uchar_t *output , void *key ) {
-    assert(key != NULL && "key is null");
     AesKey *aes_key = (AesKey *) (key) ;
-    assert(aes_key != NULL && "aes_key is null");
-
+    if (aes_key == NULL) {
+        fprintf(stderr , "ERROR : aes_key is NULL \n") ;
+        return 1 ;  
+    }
+    if (input == NULL || output == NULL) {
+        fprintf(stderr , "ERROR : input or output is NULL \n") ;
+        return 2 ;  
+        
+    }
     
     uchar_t state[4][4] ; 
     fill_state(input , 0 , state) ;
@@ -286,6 +301,7 @@ static void aes_cipher_inverse_block(uchar_t *input   , uchar_t *output , void *
     
     fill_state_inv(output , 0 , state) ; 
 
+    return 0 ; 
 }
 
 
@@ -311,25 +327,123 @@ static void setup_parameteres_aes(AES_TYPE type , int *Nr , int *Nk) {
 int aes_encrypt(const uchar_t* input, uchar_t* output, int length, const void* key)
 {
 
-    uchar_t *iv = malloc(sizeof(uchar_t)*AES_BLOCK_SIZE) ;
-    blockcipher_encrypt_modeop(input , output , iv , length , AES_BLOCK_SIZE , key , aes_cipher_block) ;
-    free(iv);    
-    
+    int result =  ecb_encrypt( input , output ,  length , AES_BLOCK_SIZE  , key , aes_cipher_block  ) ; 
+    if (result != 0) {
+        fprintf(stderr , "ERROR: aes_encrypt : something wrong happened , couldnt encrypt \n" ) ;
+        return 1 ;  
+    }
 
-
+    return 0 ; 
 }
 
 
 
 int aes_decrypt(const uchar_t* input, uchar_t* output, int length, const void* key)
 {
-
-    uchar_t *iv = malloc(sizeof(uchar_t)*AES_BLOCK_SIZE) ;
-    blockcipher_decrypt_modeop(input , output , iv , length , AES_BLOCK_SIZE , key , aes_cipher_inverse_block) ;
-    free(iv);    
+    int result =  ecb_decrypt( input , output ,  length , AES_BLOCK_SIZE  , key , aes_cipher_inverse_block  ) ; 
+    if (result != 0) {
+        fprintf(stderr , "ERROR: aes_encrypt : something wrong happened , couldnt encrypt \n" ) ;
+        return 1 ;  
+    }
 
     return 0 ; 
 }
+
+
+int aes_encrypt_cbc(const uchar_t* input, uchar_t* output , uchar_t *iv , int length, const void* key)
+{
+
+    int result =  cbc_encrypt( input , output , iv , length , AES_BLOCK_SIZE  , key ,aes_cipher_block ) ; ; 
+    if (result != 0) {
+        fprintf(stderr , "ERROR: aes_encrypt_cbc : something wrong happened , couldnt encrypt \n" ) ;
+        return 1 ;  
+    }
+
+    return 0 ; 
+}
+
+int aes_decrypt_cbc(const uchar_t* input, uchar_t* output , uchar_t *iv, int length, const void* key)
+{
+    int result =  cbc_decrypt( input , output , iv , length , AES_BLOCK_SIZE  , key ,aes_cipher_inverse_block ) ; ; 
+    if (result != 0) {
+        fprintf(stderr , "ERROR: aes_decrypt_cbc : something wrong happened , couldnt encrypt \n" ) ;
+        return 1 ;  
+    }
+
+    return 0 ; 
+}
+
+int aes_encrypt_cfb(const uchar_t* input, uchar_t* output , uchar_t *iv , int length, const void* key)
+{
+
+    int result =  cfb_encrypt( input , output , iv , length , AES_BLOCK_SIZE  , key ,aes_cipher_block ) ; ; 
+    if (result != 0) {
+        fprintf(stderr , "ERROR: aes_encrypt_cfb : something wrong happened , couldnt encrypt \n" ) ;
+        return 1 ;  
+    }
+
+    return 0 ; 
+}
+
+int aes_decrypt_cfb(const uchar_t* input, uchar_t* output , uchar_t *iv, int length, const void* key)
+{
+    int result =  cfb_decrypt( input , output , iv , length , AES_BLOCK_SIZE  , key ,aes_cipher_block ) ; ; 
+    if (result != 0) {
+        fprintf(stderr , "ERROR: aes_decrypt_cfb : something wrong happened , couldnt encrypt \n" ) ;
+        return 1 ;  
+    }
+
+    return 0 ; 
+}
+
+
+int aes_encrypt_ofb(const uchar_t* input, uchar_t* output , uchar_t *iv , int length, const void* key)
+{
+
+    int result =  ofb_encrypt( input , output , iv , length , AES_BLOCK_SIZE  , key ,aes_cipher_block ) ; ; 
+    if (result != 0) {
+        fprintf(stderr , "ERROR: aes_encrypt_ofb : something wrong happened , couldnt encrypt \n" ) ;
+        return 1 ;  
+    }
+
+    return 0 ; 
+}
+
+int aes_decrypt_ofb(const uchar_t* input, uchar_t* output , uchar_t *iv, int length, const void* key)
+{
+    int result =  ofb_decrypt( input , output , iv , length , AES_BLOCK_SIZE  , key ,aes_cipher_block ) ; ; 
+    if (result != 0) {
+        fprintf(stderr , "ERROR: aes_decrypt_ofb : something wrong happened , couldnt encrypt \n" ) ;
+        return 1 ;  
+    }
+
+    return 0 ; 
+}
+
+int aes_encrypt_ctr(const uchar_t* input, uchar_t* output , uchar_t *iv , int length, const void* key)
+{
+
+    int result =  ctr_encrypt( input , output , iv , length , AES_BLOCK_SIZE  , key ,aes_cipher_block ) ; ; 
+    if (result != 0) {
+        fprintf(stderr , "ERROR: aes_encrypt_ctr : something wrong happened , couldnt encrypt \n" ) ;
+        return 1 ;  
+    }
+
+    return 0 ; 
+}
+
+int aes_decrypt_ctr(const uchar_t* input, uchar_t* output , uchar_t *iv, int length, const void* key)
+{
+    int result =  ctr_decrypt( input , output , iv , length , AES_BLOCK_SIZE  , key ,aes_cipher_block ) ; ; 
+    if (result != 0) {
+        fprintf(stderr , "ERROR: aes_decrypt_ctr : something wrong happened , couldnt encrypt \n" ) ;
+        return 1 ;  
+    }
+
+    return 0 ; 
+}
+
+
 
 
 #include <assert.h>
