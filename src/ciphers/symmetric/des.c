@@ -31,7 +31,7 @@
 /*
     returns a bit from buffer in first position LSB
 */
-uchar_t getBitInBuffer(uchar_t *buffer ,int size , int position  ) {
+static uchar_t getBitInBuffer(uchar_t *buffer ,int size , int position  ) {
     if (position < 1 || position > size * 8 )
     {
         printf("ERROR: cant look up to a bit in position : %d < 0 OR  > %d " , position , size * 8);
@@ -75,7 +75,7 @@ uchar_t getBitInBuffer(uchar_t *buffer ,int size , int position  ) {
 /*
     set bit in buffer to the value of @bit which is represented in first position LSB
 */
-uchar_t setBitInBuffer(uchar_t *buffer ,int size , int position , uchar_t bit  ) {
+static uchar_t setBitInBuffer(uchar_t *buffer ,int size , int position , uchar_t bit  ) {
     if (position < 1 || position > size * 8 )
     {
         printf("ERROR: cant look up to a bit in position : %d < 0 OR  > %d " , position , size * 8);
@@ -127,7 +127,7 @@ uchar_t setBitInBuffer(uchar_t *buffer ,int size , int position , uchar_t bit  )
 }
 
 
-void expansionTo48Bits(uchar_t *input , int input_size ,uchar_t *output , int output_size  ) {
+static void expansionTo48Bits(uchar_t *input , int input_size ,uchar_t *output , int output_size  ) {
     assert(input_size == 4 && "input size must be 4 bytes") ; 
     assert(output_size == 6 && "input size must be 6 bytes") ; 
     
@@ -160,7 +160,7 @@ void expansionTo48Bits(uchar_t *input , int input_size ,uchar_t *output , int ou
 }
 
 
-void transformationBySBox(uchar_t *input , int input_size , uchar_t *output , int output_size ) {
+static void transformationBySBox(uchar_t *input , int input_size , uchar_t *output , int output_size ) {
     assert(input_size == 6  && "input size must be 6 bytes 48 bits") ; 
     assert(output_size == 4  && "input size must be 4 bytes 32 bits") ; 
 
@@ -314,7 +314,7 @@ void transformationBySBox(uchar_t *input , int input_size , uchar_t *output , in
 
 
 
-void permutation(uchar_t *input , int input_size , uchar_t *output , int output_size) {
+static void permutation(uchar_t *input , int input_size , uchar_t *output , int output_size) {
     assert(input_size == 4 && "input size must be 4 bytes 32 bits");
     assert(output_size == 4 && "output size must be 4 bytes 32 bits");
 
@@ -335,7 +335,7 @@ void permutation(uchar_t *input , int input_size , uchar_t *output , int output_
 }
 
 
-void setFinalPermutation(uchar_t *input , int input_size , uchar_t *output , int output_size ) {
+static void setFinalPermutation(uchar_t *input , int input_size , uchar_t *output , int output_size ) {
     int arr[] = {
         40 , 8 , 48 , 16 , 56 , 24 , 64 , 32
     };
@@ -356,7 +356,7 @@ void setFinalPermutation(uchar_t *input , int input_size , uchar_t *output , int
     
 }
 
-void setFirstPermutation(uchar_t *input , int input_size , uchar_t *right , int right_size , uchar_t *left , int left_size) {
+static void setFirstPermutation(uchar_t *input , int input_size , uchar_t *right , int right_size , uchar_t *left , int left_size) {
     assert(input_size == 8 && "input size must be 8 bytes") ; 
     assert(left_size == 4 && "left size must be 4 bytes") ; 
     assert(right_size == 4 && "right size must be 4 bytes") ; 
@@ -416,7 +416,7 @@ void setFirstPermutation(uchar_t *input , int input_size , uchar_t *right , int 
     input must be 64 bits (8 bytes) 
     output must be 56 bits (7 bytes)
 */
-void reducingKey64to56Bits(uchar_t *input , int input_size , uchar_t *output , int output_size) {
+static void reducingKey64to56Bits(uchar_t *input , int input_size , uchar_t *output , int output_size) {
     assert(input_size == 8 && "input must be 8 bytes");
     assert(output_size == 7 && "output must be 8 bytes");
     
@@ -452,7 +452,7 @@ void reducingKey64to56Bits(uchar_t *input , int input_size , uchar_t *output , i
 /*
     input_size must be in bytes !!!!!!!!!!!!!!!!!!!!
 */
-void leftRound(uchar_t *input , int input_size ) {
+static void leftRound(uchar_t *input , int input_size ) {
     
     uchar_t reminder = getBitInBuffer(input , input_size , 1 ) ; 
     int length = input_size * 8 ; 
@@ -471,7 +471,7 @@ void leftRound(uchar_t *input , int input_size ) {
         
 }
 
-void leftRoundNTimes(uchar_t *input , int input_size , int times) {
+static void leftRoundNTimes(uchar_t *input , int input_size , int times) {
     for (size_t i = 0; i < times; i++)
     {
         leftRound(input , input_size) ; 
@@ -482,7 +482,7 @@ void leftRoundNTimes(uchar_t *input , int input_size , int times) {
 
 
 
-int getShiftsNumByRounds(int round_number) {
+static int getShiftsNumByRounds(int round_number) {
     if (round_number == 1 || round_number == 2 ||  round_number == 9 || round_number == 16)
         return 1 ; 
     
@@ -490,7 +490,7 @@ int getShiftsNumByRounds(int round_number) {
 }
 
 
-void rotate28BitsLeft(uchar_t *half) {
+static void rotate28BitsLeft(uchar_t *half) {
     // 1. Save the very first bit
     uchar_t bit1 = getBitInBuffer(half, 4, 1);
     
@@ -509,7 +509,7 @@ void rotate28BitsLeft(uchar_t *half) {
 /*
     @param1 input is on 56 bits ( 7 bytes )
 */
-void genKey(uchar_t *input , int input_size , uchar_t *output , int output_size , int round_number) {
+static void genKey(uchar_t *input , int input_size , uchar_t *output , int output_size , int round_number) {
     assert(output_size == 7 ) ;    
     assert(input_size == 7 ) ;    
     
@@ -651,7 +651,7 @@ void genKey(uchar_t *input , int input_size , uchar_t *output , int output_size 
     // stop
 }
 
-void expansionKey(uchar_t *input ,int input_size , uchar_t *output , int output_size ){
+static void expansionKey(uchar_t *input ,int input_size , uchar_t *output , int output_size ){
     assert(input_size == 7) ; 
     assert(output_size == 6) ; 
     // output size must be 6 bytes 48 bits
@@ -685,7 +685,7 @@ void expansionKey(uchar_t *input ,int input_size , uchar_t *output , int output_
 
 }
 
-void mergeLeftRight(uchar_t *output , int output_size, uchar_t *left , int left_size , uchar_t * right , int right_size) {
+static void mergeLeftRight(uchar_t *output , int output_size, uchar_t *left , int left_size , uchar_t * right , int right_size) {
     assert(output_size == 8 && "input size must be 8 bytes") ; 
     assert(left_size == 4 && "left size must be 4 bytes") ; 
     assert(right_size == 4 && "right size must be 4 bytes") ; 
@@ -705,7 +705,7 @@ void mergeLeftRight(uchar_t *output , int output_size, uchar_t *left , int left_
 }
 
 
-int des_encrypt_wrapper(uchar_t *input  , uchar_t *output , const void *key ) {
+static int des_encrypt_wrapper(uchar_t *input  , uchar_t *output , const void *key ) {
     assert(key != NULL && "key is null");
     DesKey *des_key = (DesKey *) (key) ;
     int rounds = 16 ; 
@@ -778,7 +778,7 @@ int des_encrypt_wrapper(uchar_t *input  , uchar_t *output , const void *key ) {
     
 }
 
-int des_decrypt_block(uchar_t *input, uchar_t *output, void *key) {
+static int des_decrypt_block(uchar_t *input, uchar_t *output, void *key) {
     assert(key != NULL && "key is null");
     DesKey *des_key = (DesKey *) (key) ;
 
