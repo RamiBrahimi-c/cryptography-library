@@ -194,7 +194,7 @@ int blowfish_decrypt(const uchar_t* input, uchar_t* output , int length , const 
     
     int result =  ecb_decrypt( input , output ,  length , BLOCK_SIZE_BLOWFISH  , key , blowfish_decrypt_block  ) ; 
     if (result != 0) {
-        fprintf(stderr , "ERROR: blowfish_encrypt : something wrong happened , couldnt encrypt \n" ) ;
+        fprintf(stderr , "ERROR: blowfish_decrypt : something wrong happened , couldnt encrypt \n" ) ;
         return 1 ;  
     }
 

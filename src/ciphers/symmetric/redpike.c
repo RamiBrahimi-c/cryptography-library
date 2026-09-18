@@ -124,7 +124,7 @@ int redpike_encrypt(const uchar_t* input, uchar_t* output , int length , const v
 
     int result =  ecb_encrypt( input , output ,  length , REDPIKE_BLOCK_SIZE  , key , redpike_encrypt_block  ) ; 
     if (result != 0) {
-        fprintf(stderr , "ERROR: aes_encrypt : something wrong happened , couldnt encrypt \n" ) ;
+        fprintf(stderr , "ERROR: redpike_encrypt : something wrong happened , couldnt encrypt \n" ) ;
         return 1 ;  
     }
 
@@ -135,7 +135,7 @@ int redpike_decrypt(const uchar_t* input, uchar_t* output , int length , const v
 
     int result =  ecb_decrypt( input , output ,  length , REDPIKE_BLOCK_SIZE  , key , redpike_decrypt_block  ) ; 
     if (result != 0) {
-        fprintf(stderr , "ERROR: aes_encrypt : something wrong happened , couldnt encrypt \n" ) ;
+        fprintf(stderr , "ERROR: redpike_encrypt : something wrong happened , couldnt encrypt \n" ) ;
         return 1 ;  
     }
 

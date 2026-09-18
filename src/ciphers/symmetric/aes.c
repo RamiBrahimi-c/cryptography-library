@@ -342,7 +342,7 @@ int aes_decrypt(const uchar_t* input, uchar_t* output, int length, const void* k
 {
     int result =  ecb_decrypt( input , output ,  length , AES_BLOCK_SIZE  , key , aes_cipher_inverse_block  ) ; 
     if (result != 0) {
-        fprintf(stderr , "ERROR: aes_encrypt : something wrong happened , couldnt encrypt \n" ) ;
+        fprintf(stderr , "ERROR: aes_decrypt : something wrong happened , couldnt encrypt \n" ) ;
         return 1 ;  
     }
 
