@@ -842,9 +842,6 @@ int des_decrypt_block(uchar_t *input, uchar_t *output, void *key) {
 
 int des_encrypt(const uchar_t* input, uchar_t* output , int length , const void* key) {
 
-    uchar_t *iv = malloc(sizeof(uchar_t)*DES_BLOCK_SIZE) ;
-    blockcipher_encrypt_modeop(input , output , iv , length , DES_BLOCK_SIZE , key , des_encrypt_wrapper) ;
-    free(iv);    
 
     int result =  ecb_encrypt( input , output ,  length , DES_BLOCK_SIZE  , key , des_encrypt_wrapper  ) ; 
     if (result != 0) {
