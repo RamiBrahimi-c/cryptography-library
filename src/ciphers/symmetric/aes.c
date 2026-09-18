@@ -10,10 +10,10 @@
 
 
 #include <stdio.h>
-#include "../../common/keyexpan.h"
+// #include "../../common/keyexpan.h"
 
-#include "../../common/galois_field_op.h"
-#include "../../common/rijnbox.h"
+// #include "../../common/galois_field_op.h"
+// #include "../../common/rijnbox.h"
 
 
 #define AES_BLOCK_SIZE 16
@@ -22,7 +22,7 @@
 
 
 
-void fill_state(uchar_t *input  , int index, uchar_t state[4][4]) {
+static void fill_state(uchar_t *input  , int index, uchar_t state[4][4]) {
     
     for (int i = 0; i < 4; i++)
     {
@@ -37,7 +37,7 @@ void fill_state(uchar_t *input  , int index, uchar_t state[4][4]) {
 }
 
 
-void add_round_key(uchar_t *key , int k , uchar_t state[4][4]) {
+static void add_round_key(uchar_t *key , int k , uchar_t state[4][4]) {
     for (int i = 0; i < 4; i++)
     {
         for (int j = 0; j < 4; j++)
@@ -53,7 +53,7 @@ void add_round_key(uchar_t *key , int k , uchar_t state[4][4]) {
 /*
     the function that is used in AES rounds !!!!
 */
-void sub_bytes(uchar_t state[4][4] ) {
+static void sub_bytes(uchar_t state[4][4] ) {
     for (int i = 0; i < 4; i++)
     {
         for (int j = 0; j < 4; j++)
@@ -65,7 +65,7 @@ void sub_bytes(uchar_t state[4][4] ) {
     
 }
 
-void rev_sub_bytes(uchar_t state[4][4] ) {
+static void rev_sub_bytes(uchar_t state[4][4] ) {
     for (int i = 0; i < 4; i++)
     {
         for (int j = 0; j < 4; j++)
@@ -81,7 +81,7 @@ void rev_sub_bytes(uchar_t state[4][4] ) {
 
 
 // Function to reverse a portion of the array
-void reverse(uchar_t* arr, int start, int end) {
+static void reverse(uchar_t* arr, int start, int end) {
     while (start < end) {
         int temp = arr[start];
         arr[start] = arr[end];
@@ -92,7 +92,7 @@ void reverse(uchar_t* arr, int start, int end) {
 }
 
 // Function to rotate an array by d elements to the left
-void rotateArr(uchar_t* arr, int n, int d) {
+static void rotateArr(uchar_t* arr, int n, int d) {
     
     // Handle the case where d > size of array
     d %= n;
@@ -108,7 +108,7 @@ void rotateArr(uchar_t* arr, int n, int d) {
 }
 
 // Function to rotate an array by d elements to the right
-void rotateArrR(uchar_t* arr, int n, int d) {
+static void rotateArrR(uchar_t* arr, int n, int d) {
     
     // Handle the case where d > size of array
     d %= n;
@@ -124,7 +124,7 @@ void rotateArrR(uchar_t* arr, int n, int d) {
 }
 
 
-void shift_rows(uchar_t state[4][4]) {
+static void shift_rows(uchar_t state[4][4]) {
     int rotation_num = 0 ; 
     for (int i = 0; i < 4; i++)
     {
@@ -135,7 +135,7 @@ void shift_rows(uchar_t state[4][4]) {
 }
 
 
-void inv_shift_rows(uchar_t state[4][4]) {
+static void inv_shift_rows(uchar_t state[4][4]) {
     int rotation_num = 0 ; 
     for (int i = 0; i < 4; i++)
     {
@@ -148,7 +148,7 @@ void inv_shift_rows(uchar_t state[4][4]) {
 
 
 
-void mix_culumns(uchar_t state[4][4]) {
+static void mix_culumns(uchar_t state[4][4]) {
     uchar_t temp0 , temp1 , temp2 , temp3 ; 
     for (int i = 0; i < 4; i++)
     {
@@ -170,7 +170,7 @@ void mix_culumns(uchar_t state[4][4]) {
 
 
 
-void rev_mix_culumns(uchar_t state[4][4]) {
+static void rev_mix_culumns(uchar_t state[4][4]) {
     uchar_t temp0 , temp1 , temp2 , temp3 ; 
     for (int i = 0; i < 4; i++)
     {
@@ -193,7 +193,7 @@ void rev_mix_culumns(uchar_t state[4][4]) {
 
 
 
-void fill_state_inv(uchar_t *key  , int k, uchar_t state[4][4]) {
+static void fill_state_inv(uchar_t *key  , int k, uchar_t state[4][4]) {
     for (int i = 0; i < 4; i++)
     {
         for (int j = 0; j < 4; j++)
@@ -289,7 +289,7 @@ static void aes_cipher_inverse_block(uchar_t *input   , uchar_t *output , void *
 }
 
 
-void setup_parameteres_aes(AES_TYPE type , int *Nr , int *Nk) {
+static void setup_parameteres_aes(AES_TYPE type , int *Nr , int *Nk) {
     if (type == AES128 ) {
         *Nk = 4 ; 
         *Nr = 10 ; 
@@ -308,7 +308,7 @@ void setup_parameteres_aes(AES_TYPE type , int *Nr , int *Nk) {
 /*
     for now only input with length of 16*k bytes is supported
 */
-void aes_encrypt(const uchar_t* input, uchar_t* output, int length, const void* key)
+int aes_encrypt(const uchar_t* input, uchar_t* output, int length, const void* key)
 {
 
     uchar_t *iv = malloc(sizeof(uchar_t)*AES_BLOCK_SIZE) ;
@@ -321,31 +321,28 @@ void aes_encrypt(const uchar_t* input, uchar_t* output, int length, const void* 
 
 
 
-void aes_decrypt(const uchar_t* input, uchar_t* output, int length, const void* key)
+int aes_decrypt(const uchar_t* input, uchar_t* output, int length, const void* key)
 {
 
     uchar_t *iv = malloc(sizeof(uchar_t)*AES_BLOCK_SIZE) ;
     blockcipher_decrypt_modeop(input , output , iv , length , AES_BLOCK_SIZE , key , aes_cipher_inverse_block) ;
     free(iv);    
 
+    return 0 ; 
 }
 
 
 #include <assert.h>
 
-void aes_set_key(void* key_struct, const uchar_t* key_str , size_t key_len)
+int aes_set_key(void* key_struct, const uchar_t* key_str , size_t key_len)
 {
     AesKey *aes_key = (AesKey *) key_struct ;
 
     if (!key_str)
     {
-        // TODO: handle the random thing
-        printf("INFO : Assigning random key ...\n ") ; 
-        // then generate some random ...
-        aes_key->mode = AES128 ;
-        uchar_t temp_standard_key[16] = {0x2b  ,0x7e, 0x15, 0x16, 0x28, 0xae, 0xd2, 0xa6, 0xab, 0xf7, 0x15, 0x88, 0x09, 0xcf, 0x4f, 0x3c } ; 
-        strcpy(aes_key->key , temp_standard_key) ; 
-        aes_key->key_length = 16 ;  
+
+        fprintf(stderr , "ERROR: key @key_str is null\n") ; 
+        return 1 ; 
 
     
     } else {
@@ -374,6 +371,9 @@ void aes_set_key(void* key_struct, const uchar_t* key_str , size_t key_len)
             aes_key->key_length = 32 ;  
             
         } else {
+            fprintf(stderr , "ERROR: key length is not compatible with AES standard {16,24,32} bytes\n") ; 
+            return 2 ;
+
             // TODO : assigning random key here is much wiser :)
             printf("INFO: AES128 is assigned with custom standard key  !\n");
             aes_key->mode = AES128 ;
@@ -409,12 +409,20 @@ void aes_set_key(void* key_struct, const uchar_t* key_str , size_t key_len)
     key_expan(aes_key->key , aes_key->expanded_key ,aes_key->Nk ,aes_key->Nr , rci   ) ; 
     
     aes_key->type = BLOCK_CIPHER ;
+
+    return 0 ; 
 }
 
 
+size_t aes_get_output_len(size_t input_len) {
+    return (size_t) (input_len + (AES_BLOCK_SIZE - (input_len % AES_BLOCK_SIZE)));
+}
 
-void aes_free_key(void* key_struct)
+
+int aes_free_key(void* key_struct)
 {
+
+    return 0  ;
 }
 
 
