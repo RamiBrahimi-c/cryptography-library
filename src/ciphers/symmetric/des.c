@@ -14,6 +14,10 @@
 #include <string.h>
 #include <stdlib.h>
 
+#include "../../block_cipher_modes_operation.h"
+
+
+
 #define DES_BLOCK_SIZE 8
 
 // static void swapUnsignedChar(uchar_t *a ,uchar_t *b ) {
@@ -406,18 +410,6 @@ void setFirstPermutation(uchar_t *input , int input_size , uchar_t *right , int 
 
 }
 
-// maybe we should migrate this to other place ???
-uchar_t binaryXorUchar(void *a , void *b) {
-    return *((uchar_t*) a) ^ *((uchar_t *)b) ;  
-}
-
-void mapOperation(uchar_t *arr1 ,uchar_t *arr2  , uchar_t *result, int length  ,uchar_t opp(void * , void *) ) {
-    for (size_t i = 0; i < length; i++)
-    {
-        result[i] = opp((void *) &arr1[i] ,(void *) &arr2[i]) ; 
-    }
-    
-}
 
 
 /*
@@ -975,7 +967,7 @@ int des_set_key(void* key_struct, const uchar_t* key_str , size_t key_len) {
     }
 
     memcpy(des_key->key , key_str ,8 ) ; 
-    printf("key set to : \n") ; 
+    // printf("key set to : \n") ; 
     des_key->type = BLOCK_CIPHER ;
     // PRINT_ARRAY(des_key->key , 8) ; 
     return 0 ; 
