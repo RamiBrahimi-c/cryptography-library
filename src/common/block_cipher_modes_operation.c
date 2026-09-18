@@ -11,8 +11,8 @@
     TODO : yea same for CFB
 */
 
-BlockCipher_MODE_OP block_cipher_mode_operation ;
-
+// BlockCipher_MODE_OP block_cipher_mode_operation ;
+/* 
 void blockcipher_encrypt_modeop(uchar_t *input , uchar_t *output ,uchar_t *iv , size_t length , size_t block_size  ,const void* key ,void (*encrypt_block)(const uchar_t* , uchar_t* , const void* )) {
     switch (block_cipher_mode_operation)
     {
@@ -82,7 +82,7 @@ void blockcipher_decrypt_modeop(uchar_t *input , uchar_t *output ,uchar_t *iv , 
             ecb_decrypt(input , output , length , block_size , key , decrypt_block); 
             break;
     }
-}
+} */
 
 int ecb_encrypt(uchar_t *input , uchar_t *output , size_t length , size_t block_size  ,const void* key ,int (*encrypt_block)(const uchar_t* , uchar_t*  , const void* ) ) {
 

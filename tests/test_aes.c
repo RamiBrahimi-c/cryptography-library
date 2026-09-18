@@ -47,7 +47,6 @@ int main() {
     // void *key_ptr = malloc(sizeof(DesKey)) ;
     // des_set_key(key_ptr , key);
     // des_encrypt(input , output , 8 , key_ptr) ; 
-    block_cipher_mode_operation = ECB ;
     
     // printing input : 
     printf("input:\n");

@@ -7,9 +7,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-
-void blockcipher_encrypt_modeop(uchar_t *input , uchar_t *output ,uchar_t *iv , size_t length , size_t block_size  ,const void* key ,void (*encrypt_block)(const uchar_t* , uchar_t*, const void* )) ;
-void blockcipher_decrypt_modeop(uchar_t *input , uchar_t *output ,uchar_t *iv , size_t length , size_t block_size  ,const void* key ,void (*decrypt_block)(const uchar_t* , uchar_t*, const void* )) ;
+// why would something that causes problems with threading be introduced here :
+// void blockcipher_encrypt_modeop(uchar_t *input , uchar_t *output ,uchar_t *iv , size_t length , size_t block_size  ,const void* key ,void (*encrypt_block)(const uchar_t* , uchar_t*, const void* )) ;
+// void blockcipher_decrypt_modeop(uchar_t *input , uchar_t *output ,uchar_t *iv , size_t length , size_t block_size  ,const void* key ,void (*decrypt_block)(const uchar_t* , uchar_t*, const void* )) ;
 
 // returns 0 on success otherwise non-zero for error and it woll be reported to stderr
 int ecb_encrypt(uchar_t *input , uchar_t *output , size_t length , size_t block_size  ,const void* key ,int (*encrypt_block)(const uchar_t* , uchar_t* , const void* ) ) ;

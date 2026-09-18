@@ -15,17 +15,15 @@
 
 
 #define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
+#include "third-party/stb-nothing/stb_image.h"
 
 #define STB_IMAGE_WRITE_IMPLEMENTATION
-#include "stb_image_write.h"
+#include "third-party/stb-nothing/stb_image_write.h"
 
 
 #define STB_VORBIS_IMPLEMENTATION
-#include "stb_vorbis.c"
+#include "third-party/stb-nothing/stb_vorbis.c"
 
-#define STB_VORBIS_HEADER_ONLY
-#include "stb_vorbis.c"
 
 
 #include "aes.h"
@@ -66,7 +64,6 @@ int main() {
     // void *key_ptr = malloc(sizeof(DesKey)) ;
     // des_set_key(key_ptr , key);
     // des_encrypt(input , output , 8 , key_ptr) ; 
-    block_cipher_mode_operation = ECB ;
     printf("input:\n");
     PRINT_ARRAY_NAI(input , 64 , "%.2x");
     
@@ -81,8 +78,8 @@ int main() {
     
     printf("output decrypted:\n");
     PRINT_ARRAY_NAI(output2 , 64 , "%.2x");
-    
-    // block_cipher_mode_operation = CBC ;
+    printf("fuck you \n") ; 
+    // TEST_RSA_ENCRYPT_IMAGE(rsa , "rami.png" , 1024) ; 
         // TEST_ON_IMAGE_ENCRYPTION(aes , "rami.png" , key , key_len , AesKey) ; 
     // des_decrypt(output , output2 , 8 , key_ptr) ; 
     // printf("output2:\n");
