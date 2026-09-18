@@ -27,10 +27,26 @@ typedef struct {
         yea ... wtv 🐡🐡🐡🐡🐡🐡🐡🐡🐡🐡🐡🐡🐡🐡🐡🐡🐡🐡🐡🐡🐡🐡🐡🐡🐡🐡🐡🐡🐡🐡🐡🐡🐡🐡🐡🐡🐡🐡
 */
 
-void blowfish_encrypt(const uchar_t* input, uchar_t* output , int length , const void* key);
-void blowfish_decrypt(const uchar_t* input, uchar_t* output , int length , const void* key);
-void blowfish_set_key(void* key_struct, const uchar_t* key_str , size_t key_len);
-void blowfish_free_key(void* key_struct);
+int blowfish_encrypt(const uchar_t* input, uchar_t* output , int length , const void* key);
+int blowfish_decrypt(const uchar_t* input, uchar_t* output , int length , const void* key);
+int blowfish_set_key(void* key_struct, const uchar_t* key_str , size_t key_len);
+int blowfish_free_key(void* key_struct);
+
+
+
+int blowfish_encrypt_cbc(const uchar_t* input, uchar_t* output , uchar_t *iv , int length, const void* key) ;
+int blowfish_encrypt_cbc(const uchar_t* input, uchar_t* output , uchar_t *iv , int length, const void* key) ;
+
+int blowfish_encrypt_cfb(const uchar_t* input, uchar_t* output , uchar_t *iv , int length, const void* key) ;
+int blowfish_decrypt_cfb(const uchar_t* input, uchar_t* output , uchar_t *iv , int length, const void* key) ;
+
+int blowfish_encrypt_ofb(const uchar_t* input, uchar_t* output , uchar_t *iv , int length, const void* key) ;
+int blowfish_decrypt_ofb(const uchar_t* input, uchar_t* output , uchar_t *iv , int length, const void* key) ;
+
+int blowfish_encrypt_ctr(const uchar_t* input, uchar_t* output , uchar_t *iv , int length, const void* key) ;
+int blowfish_decrypt_ctr(const uchar_t* input, uchar_t* output , uchar_t *iv , int length, const void* key) ;
+
+
 
 Cipher* get_blowfish_cipher(void);
 
