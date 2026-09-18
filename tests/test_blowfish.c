@@ -42,13 +42,8 @@ int main() {
     size_t  key_len = 16  ; 
     uchar_t output[128]   ;
     uchar_t output2[128]  ;
-    // memset(output , 0 , 8) ;
     
-    // void *key_ptr = malloc(sizeof(DesKey)) ;
-    // des_set_key(key_ptr , key);
-    // des_encrypt(input , output , 8 , key_ptr) ; 
-    block_cipher_mode_operation = ECB ;
-    
+
     // printing input : 
     printf("input:\n");
     PRINT_ARRAY_NOSPCLEN(input , input_len , "%.c");
@@ -64,16 +59,16 @@ int main() {
     PRINT_ARRAY_NOSPCLEN(iv , iv_len , "%.2x");
     
     // testing the encryption
-    // TEST_ON_TEXT_ENCRYPTION_CBC(aes,input,output , iv ,input_len ,key  , key_len, AesKey) ;
-    TEST_ON_TEXT_ENCRYPTION_MODE(aes ,ctr ,input,output , iv ,input_len ,key  , key_len, AesKey) ;
+    // TEST_ON_TEXT_ENCRYPTION(blowfish,input,output  ,input_len ,key  , key_len, BlowfishKey ) ;
+    TEST_ON_TEXT_ENCRYPTION_MODE(blowfish ,cfb ,input,output , iv ,input_len ,key  , key_len, BlowfishKey) ;
     
     // seeing the output : 
     printf("output:\n");
     PRINT_ARRAY_NOSPCLEN(output , input_len , "%x");
     
     // do a decryption : 
-    // TEST_ON_TEXT_DECRYPTION_CBC(aes,output,output2 , iv,input_len,key  , key_len, AesKey) ;
-    TEST_ON_TEXT_DECRYPTION_MODE(aes , ctr,output,output2 , iv,input_len,key  , key_len, AesKey) ;
+    TEST_ON_TEXT_DECRYPTION_MODE(blowfish , cfb ,output,output2 , iv,input_len,key  , key_len, BlowfishKey) ;
+    // TEST_ON_TEXT_DECRYPTION(blowfish ,output,output2 ,input_len,key  , key_len, BlowfishKey) ;
     
     // see the decrypted output : 
     printf("output decrypted:\n");
