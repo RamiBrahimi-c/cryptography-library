@@ -3,6 +3,8 @@
 #include "redpike.h"
 #include <string.h>
 #include <assert.h>
+#include "../../block_cipher_modes_operation.h"
+
 
 #define ROUNDS 16
 #define ROTL(X, R) (((X) << ((R) & 31)) | ((X) >> (32 - ((R) & 31))))
@@ -117,26 +119,137 @@ static void redpike_decrypt_block(uchar_t * x1 , uchar_t *output, const void * k
 
 
 
-void redpike_encrypt(const uchar_t* input, uchar_t* output , int length , const void* key) {
+int redpike_encrypt(const uchar_t* input, uchar_t* output , int length , const void* key) {
 
-	uchar_t *iv = malloc(sizeof(uchar_t)*REDPIKE_BLOCK_SIZE) ;
-    blockcipher_encrypt_modeop(input , output , iv , length , REDPIKE_BLOCK_SIZE , key , redpike_encrypt_block) ;
-    free(iv);    
-    
+    int result =  ecb_encrypt( input , output ,  length , REDPIKE_BLOCK_SIZE  , key , redpike_encrypt_block  ) ; 
+    if (result != 0) {
+        fprintf(stderr , "ERROR: aes_encrypt : something wrong happened , couldnt encrypt \n" ) ;
+        return 1 ;  
+    }
+
+    return 0 ;    
 }
 
-void redpike_decrypt(const uchar_t* input, uchar_t* output , int length , const void* key) {
+int redpike_decrypt(const uchar_t* input, uchar_t* output , int length , const void* key) {
 
-	uchar_t *iv = malloc(sizeof(uchar_t)*REDPIKE_BLOCK_SIZE) ;
-    blockcipher_decrypt_modeop(input , output , iv , length , REDPIKE_BLOCK_SIZE , key , redpike_decrypt_block) ;
-    free(iv);    	
-    
+    int result =  ecb_decrypt( input , output ,  length , REDPIKE_BLOCK_SIZE  , key , redpike_decrypt_block  ) ; 
+    if (result != 0) {
+        fprintf(stderr , "ERROR: aes_encrypt : something wrong happened , couldnt encrypt \n" ) ;
+        return 1 ;  
+    }
+
+    return 0 ; 
 }
 
 
-void redpike_set_key(void* key_struct, const uchar_t* key_str , size_t key_len) {
+
+int redpike_encrypt_cbc(const uchar_t* input, uchar_t* output , uchar_t *iv , int length, const void* key)
+{
+
+    int result =  cbc_encrypt( input , output , iv , length , REDPIKE_BLOCK_SIZE  , key ,redpike_encrypt_block ) ; ; 
+    if (result != 0) {
+        fprintf(stderr , "ERROR: redpike_encrypt_cbc : something wrong happened , couldnt encrypt \n" ) ;
+        return 1 ;  
+    }
+
+    return 0 ; 
+}
+
+int redpike_decrypt_cbc(const uchar_t* input, uchar_t* output , uchar_t *iv, int length, const void* key)
+{
+    int result =  cbc_decrypt( input , output , iv , length , REDPIKE_BLOCK_SIZE  , key ,redpike_decrypt_block ) ; ; 
+    if (result != 0) {
+        fprintf(stderr , "ERROR: redpike_decrypt_cbc : something wrong happened , couldnt encrypt \n" ) ;
+        return 1 ;  
+    }
+
+    return 0 ; 
+}
+
+int redpike_encrypt_cfb(const uchar_t* input, uchar_t* output , uchar_t *iv , int length, const void* key)
+{
+
+    int result =  cfb_encrypt( input , output , iv , length , REDPIKE_BLOCK_SIZE  , key ,redpike_encrypt_block ) ; ; 
+    if (result != 0) {
+        fprintf(stderr , "ERROR: redpike_encrypt_cfb : something wrong happened , couldnt encrypt \n" ) ;
+        return 1 ;  
+    }
+
+    return 0 ; 
+}
+
+int redpike_decrypt_cfb(const uchar_t* input, uchar_t* output , uchar_t *iv, int length, const void* key)
+{
+    int result =  cfb_decrypt( input , output , iv , length , REDPIKE_BLOCK_SIZE  , key ,redpike_encrypt_block ) ; ; 
+    if (result != 0) {
+        fprintf(stderr , "ERROR: redpike_decrypt_cfb : something wrong happened , couldnt encrypt \n" ) ;
+        return 1 ;  
+    }
+
+    return 0 ; 
+}
+
+
+int redpike_encrypt_ofb(const uchar_t* input, uchar_t* output , uchar_t *iv , int length, const void* key)
+{
+
+    int result =  ofb_encrypt( input , output , iv , length , REDPIKE_BLOCK_SIZE  , key ,redpike_encrypt_block ) ; ; 
+    if (result != 0) {
+        fprintf(stderr , "ERROR: redpike_encrypt_ofb : something wrong happened , couldnt encrypt \n" ) ;
+        return 1 ;  
+    }
+
+    return 0 ; 
+}
+
+int redpike_decrypt_ofb(const uchar_t* input, uchar_t* output , uchar_t *iv, int length, const void* key)
+{
+    int result =  ofb_decrypt( input , output , iv , length , REDPIKE_BLOCK_SIZE  , key ,redpike_encrypt_block ) ; ; 
+    if (result != 0) {
+        fprintf(stderr , "ERROR: redpike_decrypt_ofb : something wrong happened , couldnt encrypt \n" ) ;
+        return 1 ;  
+    }
+
+    return 0 ; 
+}
+
+int redpike_encrypt_ctr(const uchar_t* input, uchar_t* output , uchar_t *iv , int length, const void* key)
+{
+
+    int result =  ctr_encrypt( input , output , iv , length , REDPIKE_BLOCK_SIZE  , key ,redpike_encrypt_block ) ; ; 
+    if (result != 0) {
+        fprintf(stderr , "ERROR: redpike_encrypt_ctr : something wrong happened , couldnt encrypt \n" ) ;
+        return 1 ;  
+    }
+
+    return 0 ; 
+}
+
+int redpike_decrypt_ctr(const uchar_t* input, uchar_t* output , uchar_t *iv, int length, const void* key)
+{
+    int result =  ctr_decrypt( input , output , iv , length , REDPIKE_BLOCK_SIZE  , key ,redpike_encrypt_block ) ; ; 
+    if (result != 0) {
+        fprintf(stderr , "ERROR: redpike_decrypt_ctr : something wrong happened , couldnt encrypt \n" ) ;
+        return 1 ;  
+    }
+
+    return 0 ; 
+}
+
+
+
+
+int redpike_set_key(void* key_struct, const uchar_t* key_str , size_t key_len) {
     RedpikeKey *redpike_key = (RedpikeKey *) key_struct ;
-    
+    if (redpike_key == NULL) {
+		fprintf(stderr , "ERROR : redpike_key is null\n") ;
+		return 1 ;  
+	}
+	
+	if (key_len < 8) {
+		fprintf(stderr , "ERROR : key_len is too short must be (>=8) bytes \n") ;
+		return 2 ;  
+	}
     // how can we make sure that key_str is actually 8 bytes ...
     assert(key_len >= 8 && "key length here must be 8 bytes");
     memcpy(redpike_key->key , key_str , sizeof(uchar_t)*REDPIKE_KEY_MAX_SIZE) ; 
@@ -144,11 +257,16 @@ void redpike_set_key(void* key_struct, const uchar_t* key_str , size_t key_len) 
 
     redpike_key->type = BLOCK_CIPHER ;
 
+	return 0 ; 
 }
 
 
 
-void redpike_free_key(void* key_struct);
+int redpike_free_key(void* key_struct) {
+
+	free(key_struct) ; 
+	return 0;
+}
 
 Cipher* get_redpike_cipher(void);
 
