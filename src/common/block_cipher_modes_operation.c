@@ -201,7 +201,6 @@ int ofb_encrypt(uchar_t *input , uchar_t *output , uchar_t *iv , size_t length ,
         fprintf(stderr , "ERROR: (length < block_size ) OR make sure the input is padded or smth cuz length/block_size = %ld/%ld = %f \n" , length , block_size , (float) (length/block_size) ) ;
         return 1;
     }
-
     // basically the Si
     uchar_t *prev_si =(uchar_t*) malloc(sizeof(uchar_t)*block_size) ; 
     uchar_t *cur_si =(uchar_t*) malloc(sizeof(uchar_t)*block_size) ; 
@@ -228,11 +227,9 @@ int ofb_encrypt(uchar_t *input , uchar_t *output , uchar_t *iv , size_t length ,
     return 0 ; 
 }
 
-// TODO : NOT IMPLEMENTED
 int ofb_decrypt(uchar_t *input , uchar_t *output , uchar_t *iv , size_t length , size_t block_size  ,const void* key ,int (*decrypt_block)(const uchar_t* , uchar_t*, const void* ) ) {
-    // ofb_encrypt(input , output , iv , length , block_size , key , ofb_encrypt) ;
-    fprintf(stderr , "ERROR: NOT IMPLEMENTED ! \n") ; 
-    return 0 ; 
+    // fprintf(stderr , "ERROR: NOT IMPLEMENTED ! \n") ; 
+    return ofb_encrypt(input , output , iv , length , block_size , key , decrypt_block) ;
 }
 
 int ctr_encrypt(uchar_t *input , uchar_t *output , uchar_t *iv , size_t length , size_t block_size  ,const void* key ,int (*encrypt_block)(const uchar_t* , uchar_t* , const void* ) ) {
@@ -263,12 +260,9 @@ int ctr_encrypt(uchar_t *input , uchar_t *output , uchar_t *iv , size_t length ,
     return 0 ; 
 }
 
-// TODO : NOT IMPLEMENTED
 int ctr_decrypt(uchar_t *input , uchar_t *output , uchar_t *iv , size_t length , size_t block_size  ,const void* key ,int (*decrypt_block)(const uchar_t* , uchar_t* , const void* ) ) {
-    // ctr_encrypt(input , output , iv , length , block_size , key , decrypt_block) ;
-    fprintf(stderr , "ERROR: NOT IMPLEMENTED ! \n") ; 
 
-    return 0 ;    
+    return ctr_encrypt(input , output , iv , length , block_size , key , decrypt_block) ;    
 }
 
 int cfb_encrypt(uchar_t *input , uchar_t *output , uchar_t *iv , size_t length , size_t block_size  ,const void* key ,int (*encrypt_block)(const uchar_t* , uchar_t*, const void* ) ) {
