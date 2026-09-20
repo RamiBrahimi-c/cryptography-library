@@ -8,7 +8,7 @@
 #include "ciphers/hashing/hash.h"
 
 #define PORT 8080
-#define BUFFER_SIZE 65536
+#define BUFFER_SIZE 1024
 
 static int read_exact(int fd, void* buf, int len) {
     int total = 0;
@@ -57,40 +57,41 @@ int main(int argc, char** argv) {
     char* p_hex = recv_str(sock);
     char* g_hex = recv_str(sock);
     
-    mpz_t p, g;
-    mpz_inits(p, g, NULL);
-    mpz_set_str(p, p_hex, 16);
-    mpz_set_str(g, g_hex, 16);
+    BigInt p, g;
+    
+    bigra9m_inits(&p, &g, NULL);
+    bigra9m_assign_str(&p, p_hex);
+    bigra9m_assign_str(&g, g_hex);
     free(p_hex);
     free(g_hex);
 
     //  Generate keypair using SERVER's p and g 
     DHParty client_dh;
-    mpz_inits(client_dh.p, client_dh.private_key, client_dh.public_key, NULL);
-    mpz_set(client_dh.p, p);
-    dh_generate_keypair(&client_dh, p, g);
+    bigra9m_inits(&client_dh.p, &client_dh.private_key, &client_dh.public_key, NULL);
+    bigra9m_assign(&client_dh.p, p);
+    dh_generate_keypair(&client_dh, &p, &g);
 
     //  Send public key 
-    char* client_hex = mpz_get_str(NULL, 16, client_dh.public_key);
+    char* client_hex = bigra9m_get_str( &client_dh.public_key);
     send_str(sock, client_hex);
     free(client_hex);
 
     //  Receive server's public key 
     char* server_hex = recv_str(sock);
-    mpz_t server_pub;
-    mpz_init(server_pub);
-    mpz_set_str(server_pub, server_hex, 16);
+    BigInt server_pub;
+    bigra9m_init(&server_pub);
+    bigra9m_assign_str(&server_pub, server_hex);
     free(server_hex);
 
     //  Compute shared secret 
-    mpz_t shared;
-    mpz_init(shared);
-    dh_compute_shared(shared, &client_dh, server_pub);
+    BigInt shared;
+    bigra9m_init(&shared);
+    dh_compute_shared(&shared, &client_dh, &server_pub);
 
     //  Derive AES key 
     unsigned char shared_bytes[1024];
     size_t count;
-    mpz_export(shared_bytes, &count, 1, 1, 0, 0, shared);
+    bigra9m_export(shared_bytes, &count, 1 ,  &shared);
     unsigned char aes_key[16];
     sha256_hash(shared_bytes, count, aes_key);
     printf("Shared key established.\n");
@@ -98,13 +99,15 @@ int main(int argc, char** argv) {
     for (int i = 0; i < 16; i++) printf("%02x", aes_key[i]);
     printf("\n\n");
 
-    //  AES setup 
-    AesKey aes;
-    aes.key_len = 16;
-    aes.key_bytes = malloc(16);
-    memcpy(aes.key_bytes, aes_key, 16);
-    uchar_t iv[16] = {0};
-    AES_init_ctx_iv(&aes.ctx, aes.key_bytes, iv);
+    //  AES setup
+    AesKey *aes = malloc(sizeof(AesKey));
+    if (aes == NULL) {
+        fprintf(stderr , "ERROR: malloc failed to allocate %ld bytes\n" ,sizeof(AesKey) ) ;
+        exit(EXIT_FAILURE) ; 
+    }
+    
+    int res =  aes_set_key((void *) aes ,  aes_key , 16 );
+    printf("key set with code %d \n" , res ) ; 
 
     //  Chat loop 
     char input[BUFFER_SIZE];
@@ -124,7 +127,7 @@ int main(int argc, char** argv) {
         memcpy(plaintext + orig_len, hash, 32);
 
         unsigned char encrypted[BUFFER_SIZE];
-        aes_encrypt(plaintext, encrypted, total_len, &aes);
+        aes_encrypt(plaintext, encrypted, total_len,(void *) aes);
         int padded_len = ((total_len + 15) / 16) * 16;
 
         uint32_t net = htonl(orig_len);
@@ -134,10 +137,9 @@ int main(int argc, char** argv) {
         if (strcmp(input, "bye") == 0) break;
     }
 
-    free(aes.key_bytes);
     close(sock);
     dh_clear_party(&client_dh);
-    mpz_clears(p, g, server_pub, shared, NULL);
+    bigra9m_clears(&p, &g, &client_pub, &shared, NULL);
     printf("Disconnected.\n");
     return 0;
 }

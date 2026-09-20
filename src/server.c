@@ -8,7 +8,7 @@
 #include "ciphers/hashing/hash.h"
 
 #define PORT 8080
-#define BUFFER_SIZE 65536
+#define BUFFER_SIZE 1024
 
 static int read_exact(int fd, void* buf, int len) {
     int total = 0;
@@ -39,60 +39,65 @@ static char* recv_str(int fd) {
 
 int main() {
     printf("=== Secure Chat Server ===\n");
-    
+
     int server_fd = socket(AF_INET, SOCK_STREAM, 0);
     int opt = 1;
     setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
-    
+
     struct sockaddr_in address = {AF_INET, htons(PORT), {INADDR_ANY}};
     bind(server_fd, (struct sockaddr*)&address, sizeof(address));
     listen(server_fd, 1);
     printf("Listening on port %d...\n", PORT);
-    
+
     int addrlen = sizeof(address);
     int client_fd = accept(server_fd, (struct sockaddr*)&address, (socklen_t*)&addrlen);
     printf("Client connected!\n");
 
-    //  Generate DH params ONCE on server 
-    mpz_t p, g;
-    mpz_inits(p, g, NULL);
-    dh_generate_params(p, g, 512);
+    //  Generate DH params ONCE on server
+    BigInt p, g;
+    bigra9m_inits(&p, &g, NULL);
+    dh_generate_params(&p, &g, 512);
 
-    //  Send p and g to client 
-    char* p_hex = mpz_get_str(NULL, 16, p);
-    char* g_hex = mpz_get_str(NULL, 16, g);
-    send_str(client_fd, p_hex);
-    send_str(client_fd, g_hex);
-    free(p_hex);
-    free(g_hex);
+    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    //  Send p and g to client
+    char* p_str = bigra9m_get_str(&p);
+    char* g_str = bigra9m_get_str(&g);
+    send_str(client_fd, p_str);
+    send_str(client_fd, g_str);
+    free(p_str);
+    free(g_str);
 
-    //  Server generates keypair 
+
+    //  Server generates keypair
     DHParty server_dh;
-    mpz_inits(server_dh.p, server_dh.private_key, server_dh.public_key, NULL);
-    mpz_set(server_dh.p, p);
-    dh_generate_keypair(&server_dh, p, g);
+    bigra9m_inits(&server_dh.p, &server_dh.private_key, &server_dh.public_key, NULL);
+    bigra9m_assign(&server_dh.p, p);
 
-    //  Receive client's public key 
+    dh_generate_keypair(&server_dh, &p, &g);
+
+    //  Receive client's public key
     char* client_hex = recv_str(client_fd);
-    mpz_t client_pub;
-    mpz_init(client_pub);
-    mpz_set_str(client_pub, client_hex, 16);
+    BigRa9m client_pub;
+    bigra9m_init(&client_pub);
+
+    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    bigra9m_assign_str(&client_pub, client_hex);
     free(client_hex);
 
-    //  Send server's public key 
-    char* server_hex = mpz_get_str(NULL, 16, server_dh.public_key);
+    //  Send server's public key
+    char* server_hex = bigra9m_get_str(&server_dh.public_key);
     send_str(client_fd, server_hex);
     free(server_hex);
 
-    //  Compute shared secret 
-    mpz_t shared;
-    mpz_init(shared);
-    dh_compute_shared(shared, &server_dh, client_pub);
+    //  Compute shared secret
+    BigRa9m shared;
+    bigra9m_init(&shared);
+    dh_compute_shared(&shared, &server_dh, &client_pub);
 
-    //  Derive AES key 
+    //  Derive AES key
     unsigned char shared_bytes[1024];
     size_t count;
-    mpz_export(shared_bytes, &count, 1, 1, 0, 0, shared);
+    bigra9m_export( shared_bytes, &count , 1, &shared);
     unsigned char aes_key[16];
     sha256_hash(shared_bytes, count, aes_key);
     printf("Shared key established.\n");
@@ -100,15 +105,17 @@ int main() {
     for (int i = 0; i < 16; i++) printf("%02x", aes_key[i]);
     printf("\n\n");
 
-    //  AES setup 
-    AesKey aes;
-    aes.key_len = 16;
-    aes.key_bytes = malloc(16);
-    memcpy(aes.key_bytes, aes_key, 16);
-    uchar_t iv[16] = {0};
-    AES_init_ctx_iv(&aes.ctx, aes.key_bytes, iv);
+    //  AES setup
+    AesKey *aes = malloc(sizeof(AesKey));
+    if (aes == NULL) {
+        fprintf(stderr , "ERROR: malloc failed to allocate %ld bytes\n" ,sizeof(AesKey) ) ;
+        exit(EXIT_FAILURE) ; 
+    }
 
-    //  Chat loop 
+    int res =  aes_set_key((void *) aes ,  aes_key , 16 );
+
+
+    //  Chat loop
     while (1) {
         uint32_t orig_len_net;
         if (read_exact(client_fd, &orig_len_net, 4) < 0) break;
@@ -119,7 +126,7 @@ int main() {
         if (read_exact(client_fd, encrypted, padded_len) < 0) break;
 
         unsigned char decrypted[BUFFER_SIZE];
-        aes_decrypt(encrypted, decrypted, padded_len, &aes);
+        aes_decrypt(encrypted, decrypted, padded_len, (void *) aes);
 
         unsigned char received_hash[32];
         memcpy(received_hash, decrypted + orig_len, 32);
@@ -137,11 +144,10 @@ int main() {
         if (orig_len == 3 && memcmp(decrypted, "bye", 3) == 0) break;
     }
 
-    free(aes.key_bytes);
     close(client_fd);
     close(server_fd);
     dh_clear_party(&server_dh);
-    mpz_clears(p, g, client_pub, shared, NULL);
+    bigra9m_clears(&p, &g, &client_pub, &shared, NULL);
     printf("Connection closed.\n");
     return 0;
 }
