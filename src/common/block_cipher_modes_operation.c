@@ -84,6 +84,8 @@ void blockcipher_decrypt_modeop(uchar_t *input , uchar_t *output ,uchar_t *iv , 
     }
 } */
 
+#define DEBUG_BLOCK_OP 0
+
 int ecb_encrypt(uchar_t *input , uchar_t *output , size_t length , size_t block_size  ,const void* key ,int (*encrypt_block)(const uchar_t* , uchar_t*  , const void* ) ) {
 
     // simple dimple check
@@ -94,10 +96,13 @@ int ecb_encrypt(uchar_t *input , uchar_t *output , size_t length , size_t block_
         fprintf(stderr , "ERROR: make sure the input is padded or smth cuz length/block_size = %ld/%ld = %f \n" , length , block_size , (float) (length/block_size) ) ;
         return 1;
     }
+    #if DEBUG_BLOCK_OP 
+
     printf("INFO: contnuing tho the size is incompatile ...\n") ; 
     
     printf("INFO : looping from 0 to %ld\n", t);
-    
+    #endif
+
     for (size_t i = 0; i < t ; i++)
     {
         encrypt_block(input + i*block_size , output + i*block_size , key) ;
@@ -116,9 +121,12 @@ int ecb_decrypt(uchar_t *input , uchar_t *output , size_t length , size_t block_
         fprintf(stderr , "ERROR: make sure the input is padded or smth cuz length/block_size = %ld/%ld = %f \n" , length , block_size , (float) (length/block_size) ) ;
         return 1;
     }
+    #if DEBUG_BLOCK_OP 
+
     printf("INFO: contnuing tho the size is incompatile ...\n") ; 
     
     printf("INFO : looping from 0 to %ld\n", t);
+    #endif
 
     for (size_t i = 0; i < t ; i++)
     {

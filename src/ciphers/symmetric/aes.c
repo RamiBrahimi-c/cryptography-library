@@ -447,6 +447,7 @@ int aes_decrypt_ctr(const uchar_t* input, uchar_t* output , uchar_t *iv, int len
 
 
 #include <assert.h>
+#define DEBUG_INFO_SETKEY 0
 
 int aes_set_key(void* key_struct, const uchar_t* key_str , size_t key_len)
 {
@@ -463,14 +464,18 @@ int aes_set_key(void* key_struct, const uchar_t* key_str , size_t key_len)
         int temp_len = key_len ; 
         if (temp_len == 16)
         {
+            #if DEBUG_INFO_SETKEY
             printf("INFO: AES128 chosen !\n");
+            #endif
             aes_key->mode = AES128 ; 
             memcpy(aes_key->key ,key_str , key_len );
             aes_key->key_length = 16 ;  
         }
         else if (temp_len == 24)
         {
+            #if DEBUG_INFO_SETKEY
             printf("INFO: AES196 chosen !\n");
+            #endif
             
             aes_key->mode = AES192 ; 
             memcpy(aes_key->key ,key_str , key_len );
@@ -479,21 +484,18 @@ int aes_set_key(void* key_struct, const uchar_t* key_str , size_t key_len)
         }
         else if (temp_len == 32)
         {
+            #if DEBUG_INFO_SETKEY
             printf("INFO: AES256 chosen !\n");
+            #endif
             aes_key->mode = AES256 ; 
             memcpy(aes_key->key ,key_str , key_len );
             aes_key->key_length = 32 ;  
             
         } else {
+
             fprintf(stderr , "ERROR: key length is not compatible with AES standard {16,24,32} bytes\n") ; 
             return 2 ;
 
-            // TODO : assigning random key here is much wiser :)
-            printf("INFO: AES128 is assigned with custom standard key  !\n");
-            aes_key->mode = AES128 ;
-            uchar_t temp_standard_key[16] = {0x2b  ,0x7e, 0x15, 0x16, 0x28, 0xae, 0xd2, 0xa6, 0xab, 0xf7, 0x15, 0x88, 0x09, 0xcf, 0x4f, 0x3c } ; 
-            memcpy(aes_key->key ,temp_standard_key , 16 );
-            aes_key->key_length = 16 ;  
 
         }
         
@@ -511,12 +513,19 @@ int aes_set_key(void* key_struct, const uchar_t* key_str , size_t key_len)
         
     
     setup_parameteres_aes(aes_key->mode , &aes_key->Nr , &aes_key->Nk ) ;
+    #if DEBUG_INFO_SETKEY 
     printf("INFO: mode : %d %d %d\n" , aes_key->mode , aes_key->Nr , aes_key->Nk);
+    #endif
     aes_key->expanded_key_length = 4 * (aes_key->Nr+1) * 4 ; 
+    #if DEBUG_INFO_SETKEY 
     printf("INFO: len : %ld \n" , aes_key->expanded_key_length);
+    #endif
     
     aes_key->expanded_key = malloc(sizeof(uchar_t)*aes_key->expanded_key_length) ; 
-    
+    if (aes_key->expanded_key == NULL) {
+        fprintf(stderr , "ERROR: aes_key->expanded_key is NULL\n") ; 
+        return 3 ; 
+    }
     assert(aes_key->expanded_key != NULL && "aes key expanded is null");
     
 
