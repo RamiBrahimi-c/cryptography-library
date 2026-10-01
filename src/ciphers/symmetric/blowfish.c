@@ -68,6 +68,7 @@ static uint32_t blowfish_ffunc(uint32_t input ,BlowfishKey blowfish_key   ) {
 
 #define ROUNDS_NUM_BLOWFISH 16
 #define BLOCK_SIZE_BLOWFISH 8
+#define BLOWFISH_BLOCK_SIZE 8
 
 
 #include "../../../include/common/utils.h" ;
@@ -613,6 +614,11 @@ int blowfish_free_key(void* key_struct) {
     free(key_struct) ; 
     return 0 ; 
 }
+
+size_t blowfish_get_output_len(size_t input_len) {
+    return (size_t) (input_len + (BLOWFISH_BLOCK_SIZE - (input_len % BLOWFISH_BLOCK_SIZE)));
+}
+
 
 Cipher* get_blowfish_cipher(void);
 
