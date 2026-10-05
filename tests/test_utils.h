@@ -171,34 +171,54 @@ typedef unsigned char uchar_t ;
 } while(0)
 
 
-#define TEST_ON_TEXT_ENCRYPTION_CBC(name , _original_text , _encrypted_text , _iv, _length, _key , _key_len , _key_type ) do { \
-    printf( "INFO :%sTesting %s encryption in CBC mode %s\n" , COLOR_GREEN , #name , COLOR_RESET); \
+#define DEMO_ON_TEXT_HASHING(name , _original_text ,  _length ) do { \
+    printf("================ %s ================ \n" , #name);\
     int length = _length;\
-    void *key_##name = calloc(1 , sizeof(_key_type)) ;\
+    void *digest = calloc(1 , ) ;\
     ASSERT_NOT_NULL(key_##name);\
-    printf("INFO: setting key... \n");\
-    name##_set_key(key_##name , _key , _key_len);\
-    printf("INFO: key set with success\n");\
-    name##_encrypt_cbc(_original_text ,_encrypted_text , _iv ,length , key_##name );\
-    \
-    printf("INFO: encrypted with success\n");\
-    \
-    \
+    printf("plaintext : ") ;\
+    PRINT_ARRAY_NOSPCLEN(_original_text , length , "%.2x") ; \
+    printf("hash : ") ;\
+    PRINT_ARRAY_NOSPCLEN(_encrypted_text , length , "%.2x");\
+    free(key_##name);\
+    printf("=================================== \n");\
 } while(0)
 
-#define TEST_ON_TEXT_DECRYPTION_CBC(name , _original_text , _decrypted_text , _iv , _length, _key , _key_len , _key_type ) do { \
-    printf( "INFO :%sTesting %s decryption in CBC mode %s\n" , COLOR_GREEN , #name , COLOR_RESET); \
+
+#define DEMO_ON_TEXT_ENCRYPTION(name , _original_text , _encrypted_text , _length, _key , _key_len , _key_type ) do { \
+    printf("================ %s ================ \n" , #name);\
     int length = _length;\
     void *key_##name = calloc(1 , sizeof(_key_type)) ;\
     ASSERT_NOT_NULL(key_##name);\
-    printf("INFO: setting key... \n");\
     name##_set_key(key_##name , _key , _key_len);\
-    printf("INFO: key set with success\n");\
-    name##_decrypt_cbc(_original_text ,_decrypted_text , _iv ,length , key_##name );\
+    name##_encrypt(_original_text ,_encrypted_text  ,length , key_##name );\
+    printf("plaintext : ") ;\
+    PRINT_ARRAY_NOSPCLEN(_original_text , length , "%.2x") ; \
+    printf("key : ") ;\
+    PRINT_ARRAY_NOSPCLEN(_key , _key_len , "%.2x");\
+    printf("encrypted : ") ;\
+    PRINT_ARRAY_NOSPCLEN(_encrypted_text , length , "%.2x");\
+    free(key_##name);\
+    printf("=================================== \n");\
+} while(0)
+
+#define DEMO_ON_TEXT_DECRYPTION(name , _original_text , _decrypted_text  , _length, _key , _key_len , _key_type ) do { \
+    printf("================ %s ================ \n" , #name);\
+    int length = _length;\
+    void *key_##name = calloc(1 , sizeof(_key_type)) ;\
+    ASSERT_NOT_NULL(key_##name);\
+    name##_set_key(key_##name , _key , _key_len);\
+    name##_decrypt(_original_text ,_decrypted_text  ,length , key_##name );\
+    printf("encrypted : ") ;\
+    PRINT_ARRAY_NOSPCLEN(_original_text , length , "%.2x") ; \
+    printf("key : ") ;\
+    PRINT_ARRAY_NOSPCLEN(_key , _key_len , "%.2x");\
+    printf("decrypted (original) : ") ;\
+    PRINT_ARRAY_NOSPCLEN(_decrypted_text , length , "%.2x");\
     \
-    printf("INFO: decrypted with success\n");\
     \
     free(key_##name);\
+    printf("=================================== \n");\
 } while(0)
 
 
@@ -236,98 +256,98 @@ typedef unsigned char uchar_t ;
 
 
 
-#define TEST_ON_IMAGE_ENCRYPTION(name , _filename , _key , _key_len , _key_type) do { \
-    printf( "INFO :%sTesting %s... %s\n" , COLOR_GREEN , #name , COLOR_RESET); \
-    printf( "INFO : Image \n"  ); \
-    \
-    int width, height, channels;\
-    char *filename = _filename ; \
-    char *directory_input_images =  "results-images/original" ; \
-    char *directory_output_images = "results-images/encrypted" ;\ 
-    char *algo_name = #name ; \
-    char *enc_type_algo = "enc" ; \
-    char *dec_type_algo = "dec" ; \
-    char full_path_image_file[FULL_PATH_LENGTH]  ; \
-    char full_path_result_image_file[FULL_PATH_LENGTH]  ;\
-    system("pwd") ; \
-    setupFullFilePath(directory_input_images, filename ,full_path_image_file  , FULL_PATH_LENGTH ) ; \
-    printf("full_path_image_file : %s \n" , full_path_image_file) ; \
-    setupFullResultFilePath(directory_output_images , enc_type_algo , filename , algo_name ,full_path_result_image_file  , FULL_PATH_LENGTH , ".png") ;\
-    void *key_##name = calloc(1 , sizeof(_key_type)) ;\
-    ASSERT_NOT_NULL(key_##name);\
-    printf("INFO: setting key... \n");\
-    name##_set_key(key_##name , _key , _key_len);\
-    printf("INFO: key set with success\n");\
-    uchar_t *original_text = stbi_load(full_path_image_file, &width, &height, &channels, 0);\
-    ASSERT_NOT_NULL(original_text);\
-    int length = width * height * channels ; \
-    if (length % 8 != 0   )\
-    {\
-        printf("INFO : doing a random padding *-*\n");\
-        int rest = length % 8 ;\
-        length += (8-rest);\
-    }\
-    uchar_t *encrypted_text = malloc(sizeof(uchar_t) * length );\
-    ASSERT_NOT_NULL(encrypted_text);\
-    name##_encrypt(original_text ,encrypted_text  ,length , key_##name );\
-    printf("INFO: encrypted with success\n");\
-    \
-    int __res_funv_ = stbi_write_png(full_path_result_image_file, width, height, channels, encrypted_text, width * channels);\
-    printf("INFO: saved to %s (code %d ) \n" , full_path_result_image_file , __res_funv_);\
-    \
-    free(key_##name);\
-    free(encrypted_text);\
-    \
-    stbi_image_free(original_text);\
-    \
-} while(0)
+// #define TEST_ON_IMAGE_ENCRYPTION(name , _filename , _key , _key_len , _key_type) do { \
+//     printf( "INFO :%sTesting %s... %s\n" , COLOR_GREEN , #name , COLOR_RESET); \
+//     printf( "INFO : Image \n"  ); \
+//     \
+//     int width, height, channels;\
+//     char *filename = _filename ; \
+//     char *directory_input_images =  "results-images/original" ; \
+//     char *directory_output_images = "results-images/encrypted" ;\ 
+//     char *algo_name = #name ; \
+//     char *enc_type_algo = "enc" ; \
+//     char *dec_type_algo = "dec" ; \
+//     char full_path_image_file[FULL_PATH_LENGTH]  ; \
+//     char full_path_result_image_file[FULL_PATH_LENGTH]  ;\
+//     system("pwd") ; \
+//     setupFullFilePath(directory_input_images, filename ,full_path_image_file  , FULL_PATH_LENGTH ) ; \
+//     printf("full_path_image_file : %s \n" , full_path_image_file) ; \
+//     setupFullResultFilePath(directory_output_images , enc_type_algo , filename , algo_name ,full_path_result_image_file  , FULL_PATH_LENGTH , ".png") ;\
+//     void *key_##name = calloc(1 , sizeof(_key_type)) ;\
+//     ASSERT_NOT_NULL(key_##name);\
+//     printf("INFO: setting key... \n");\
+//     name##_set_key(key_##name , _key , _key_len);\
+//     printf("INFO: key set with success\n");\
+//     uchar_t *original_text = stbi_load(full_path_image_file, &width, &height, &channels, 0);\
+//     ASSERT_NOT_NULL(original_text);\
+//     int length = width * height * channels ; \
+//     if (length % 8 != 0   )\
+//     {\
+//         printf("INFO : doing a random padding *-*\n");\
+//         int rest = length % 8 ;\
+//         length += (8-rest);\
+//     }\
+//     uchar_t *encrypted_text = malloc(sizeof(uchar_t) * length );\
+//     ASSERT_NOT_NULL(encrypted_text);\
+//     name##_encrypt(original_text ,encrypted_text  ,length , key_##name );\
+//     printf("INFO: encrypted with success\n");\
+//     \
+//     int __res_funv_ = stbi_write_png(full_path_result_image_file, width, height, channels, encrypted_text, width * channels);\
+//     printf("INFO: saved to %s (code %d ) \n" , full_path_result_image_file , __res_funv_);\
+//     \
+//     free(key_##name);\
+//     free(encrypted_text);\
+//     \
+//     stbi_image_free(original_text);\
+//     \
+// } while(0)
 
 
-// this shit does not work 
-#define TEST_ON_IMAGE_DECRYPTION(name , _filename , _key , _key_len , _key_type) do { \
-    printf( "INFO :%sTesting %s... %s\n" , COLOR_GREEN , #name , COLOR_RESET); \
-    printf( "INFO : Image \n"  ); \
-    \
-    int width, height, channels;\
-    char *filename = _filename ; \
-    char *directory_input_images = "tests/results_img"  ; \
-    char *directory_output_images = "tests/results_img" ;\ 
-    char *algo_name = #name ; \
-    char *enc_type_algo = "enc" ; \
-    char *dec_type_algo = "dec" ; \
-    char full_path_image_file[FULL_PATH_LENGTH]  ; \
-    char full_path_result_image_file[FULL_PATH_LENGTH]  ;\
-    setupFullFilePath(directory_input_images, filename ,full_path_image_file  , FULL_PATH_LENGTH ) ; \
-    printf("INFO: full path : %s\n" ,full_path_image_file );\
-    setupFullResultFilePath(directory_output_images , dec_type_algo , filename , algo_name ,full_path_result_image_file  , FULL_PATH_LENGTH , ".png") ;\
-    void *key_##name = calloc(1 , sizeof(_key_type)) ;\
-    ASSERT_NOT_NULL(key_##name);\
-    printf("INFO: setting key... \n");\
-    name##_set_key(key_##name , _key , _key_len);\
-    printf("INFO: key set with success\n");\
-    uchar_t *encrypted_text = stbi_load(full_path_image_file, &width, &height, &channels, 0);\
-    ASSERT_NOT_NULL(encrypted_text);\
-    int length = width * height * channels ; \
-    if (length % 8 != 0 && ((_key_type*) key_##name)->type == BLOCK_CIPHER  )\
-    {\
-        printf("INFO : doing a random padding *-*\n");\
-        int rest = length % 8 ;\
-        length += (8-rest);\
-    }\
-    uchar_t *decrypted_text = malloc(sizeof(uchar_t) * length );\
-    ASSERT_NOT_NULL(decrypted_text);\
-    name##_decrypt(encrypted_text ,decrypted_text  ,length , key_##name );\
-    printf("INFO: decrypted with success\n");\
-    \
-    stbi_write_png(full_path_result_image_file, width, height, channels, decrypted_text, width * channels);\
-    printf("INFO: saved to %s \n" , full_path_result_image_file);\
-    \
-    free(key_##name);\
-    free(decrypted_text);\
-    \
-    stbi_image_free(encrypted_text);\
-    \
-} while(0)
+// // this shit does not work 
+// #define TEST_ON_IMAGE_DECRYPTION(name , _filename , _key , _key_len , _key_type) do { \
+//     printf( "INFO :%sTesting %s... %s\n" , COLOR_GREEN , #name , COLOR_RESET); \
+//     printf( "INFO : Image \n"  ); \
+//     \
+//     int width, height, channels;\
+//     char *filename = _filename ; \
+//     char *directory_input_images = "tests/results_img"  ; \
+//     char *directory_output_images = "tests/results_img" ;\ 
+//     char *algo_name = #name ; \
+//     char *enc_type_algo = "enc" ; \
+//     char *dec_type_algo = "dec" ; \
+//     char full_path_image_file[FULL_PATH_LENGTH]  ; \
+//     char full_path_result_image_file[FULL_PATH_LENGTH]  ;\
+//     setupFullFilePath(directory_input_images, filename ,full_path_image_file  , FULL_PATH_LENGTH ) ; \
+//     printf("INFO: full path : %s\n" ,full_path_image_file );\
+//     setupFullResultFilePath(directory_output_images , dec_type_algo , filename , algo_name ,full_path_result_image_file  , FULL_PATH_LENGTH , ".png") ;\
+//     void *key_##name = calloc(1 , sizeof(_key_type)) ;\
+//     ASSERT_NOT_NULL(key_##name);\
+//     printf("INFO: setting key... \n");\
+//     name##_set_key(key_##name , _key , _key_len);\
+//     printf("INFO: key set with success\n");\
+//     uchar_t *encrypted_text = stbi_load(full_path_image_file, &width, &height, &channels, 0);\
+//     ASSERT_NOT_NULL(encrypted_text);\
+//     int length = width * height * channels ; \
+//     if (length % 8 != 0 && ((_key_type*) key_##name)->type == BLOCK_CIPHER  )\
+//     {\
+//         printf("INFO : doing a random padding *-*\n");\
+//         int rest = length % 8 ;\
+//         length += (8-rest);\
+//     }\
+//     uchar_t *decrypted_text = malloc(sizeof(uchar_t) * length );\
+//     ASSERT_NOT_NULL(decrypted_text);\
+//     name##_decrypt(encrypted_text ,decrypted_text  ,length , key_##name );\
+//     printf("INFO: decrypted with success\n");\
+//     \
+//     stbi_write_png(full_path_result_image_file, width, height, channels, decrypted_text, width * channels);\
+//     printf("INFO: saved to %s \n" , full_path_result_image_file);\
+//     \
+//     free(key_##name);\
+//     free(decrypted_text);\
+//     \
+//     stbi_image_free(encrypted_text);\
+//     \
+// } while(0)
 
 
 
