@@ -4,7 +4,7 @@
 
 #include "../../cipher_interface.h"
 #include "../../common/constants.h"
-#include <cstddef>
+
 #include <stdint.h>
 // #include "../../third-party/big-ar9am/include/bigra9m.h"
 #include "../../../third-party/big-ar9am/include/bigra9m.h"
