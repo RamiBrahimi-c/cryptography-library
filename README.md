@@ -206,6 +206,9 @@ These require GMP installed and link against it. Everything else doesn't.
 ```
 
 ## References
+*   *Stb*   :
+    *   https://github.com/nothings/stb
+
 *   *BLOCK CIPHERS : MODES OF OPERATION*  :
     *   Understanding Cryptography **Christof Paar , Jan Pelzl** -- page 123 -- 
 
