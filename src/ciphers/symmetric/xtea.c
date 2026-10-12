@@ -3,6 +3,7 @@
 #include <assert.h>
 #include <string.h>
 
+#include "../../block_cipher_modes_operation.h"
 
 // TODO : maybe we need some refacturing here ?? idk
 // who is even gonna notice *-* ????
@@ -13,7 +14,7 @@
     uchar_t *vv : gotta be size of 8 bytes
     uchar_t *kk : gotta be size of 16 bytes
 */
-static int xtea_decrypt_block(uchar_t *vv ,uchar_t *output, void *key) {
+static int xtea_decrypt_block(const uchar_t *vv ,uchar_t *output,const void *key) {
     assert(key != NULL && "key is null");
     XTeaKey *xtea_key = (XTeaKey *) (key) ;
     uchar_t *kk = xtea_key->key ;
@@ -100,7 +101,7 @@ static int xtea_decrypt_block(uchar_t *vv ,uchar_t *output, void *key) {
     uchar_t *vv : gotta be size of 8 bytes
     uchar_t *kk : gotta be size of 16 bytes
 */
-static int xtea_encrypt_block(uchar_t *vv  , uchar_t *output, void *key) {
+static int xtea_encrypt_block(const uchar_t *vv  , uchar_t *output,const void *key) {
     assert(key != NULL && "key is null");
     XTeaKey *xtea_key = (XTeaKey *) (key) ;
     uchar_t *kk = xtea_key->key ;
@@ -339,11 +340,4 @@ int xtea_free_key(void* key_struct) {
 }
 
 Cipher* get_xtea_cipher(void);
-
-
-
-
-
-
-
 

@@ -705,7 +705,7 @@ static void mergeLeftRight(uchar_t *output , int output_size, uchar_t *left , in
 }
 
 
-static int des_encrypt_wrapper(uchar_t *input  , uchar_t *output , const void *key ) {
+static int des_encrypt_wrapper(const uchar_t *input  , uchar_t *output , const void *key ) {
     assert(key != NULL && "key is null");
     DesKey *des_key = (DesKey *) (key) ;
     int rounds = 16 ; 
@@ -778,7 +778,7 @@ static int des_encrypt_wrapper(uchar_t *input  , uchar_t *output , const void *k
     
 }
 
-static int des_decrypt_block(uchar_t *input, uchar_t *output, void *key) {
+static int des_decrypt_block(const uchar_t *input, uchar_t *output,const void *key) {
     assert(key != NULL && "key is null");
     DesKey *des_key = (DesKey *) (key) ;
 

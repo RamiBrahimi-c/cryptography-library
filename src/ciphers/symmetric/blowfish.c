@@ -4,6 +4,8 @@
 #include <assert.h>
 #include <string.h>
 
+#include "../../block_cipher_modes_operation.h"
+
 #if 0 
     #define DEBUG
 #endif

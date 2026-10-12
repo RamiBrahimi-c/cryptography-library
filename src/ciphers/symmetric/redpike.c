@@ -15,7 +15,7 @@ typedef uint32_t word;
 
 // all https://web.archive.org/web/20150602092816/http://permalink.gmane.org/gmane.comp.security.cypherpunks/3680
 
-static int redpike_encrypt_block(uchar_t * x1 , uchar_t *output, const void * key)
+static int redpike_encrypt_block(const uchar_t * x1 , uchar_t *output, const void * key)
 {
     assert(key != NULL && "key is null");
     RedpikeKey *redpike_key = (RedpikeKey *) (key) ;
@@ -74,7 +74,7 @@ static int redpike_encrypt_block(uchar_t * x1 , uchar_t *output, const void * ke
     return 0 ; 
 }
 
-static int redpike_decrypt_block(uchar_t * x1 , uchar_t *output, const void * key)
+static int redpike_decrypt_block(const uchar_t * x1 , uchar_t *output, const void * key)
 {
     assert(key != NULL && "key is null");
     RedpikeKey *redpike_key = (RedpikeKey *) (key) ;

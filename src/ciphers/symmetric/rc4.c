@@ -13,7 +13,7 @@
 
 
 
-int rc4_encrypt(const uchar_t* input, uchar_t* output , int length, const void* key) {
+int rc4_encrypt(const uchar_t* input, uchar_t* output , size_t length, const void* key) {
     Rc4Key *rc4_key = (Rc4Key *) (key) ;
 
     if (rc4_key == NULL) {
@@ -53,7 +53,7 @@ int rc4_encrypt(const uchar_t* input, uchar_t* output , int length, const void* 
 }
 
 
-int rc4_decrypt(const uchar_t* input, uchar_t* output , int length, const void* key) {
+int rc4_decrypt(const uchar_t* input, uchar_t* output , size_t length, const void* key) {
     // assert(key != NULL && "key is null");
     Rc4Key *rc4_key = (Rc4Key *) (key) ;
 

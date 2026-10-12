@@ -842,7 +842,7 @@ static int des_decrypt_block(uchar_t *input, uchar_t *output, void *key) {
 }
 
 
-int tdes_encrypt_wrapper(uchar_t *input  , uchar_t *output , const void *key ) {
+int tdes_encrypt_wrapper(const uchar_t *input  , uchar_t *output , const void *key ) {
     TDesKey *tdes_key = (TDesKey *) key ;
     if (tdes_key == NULL) {
         fprintf(stderr , "ERROR: tdes_key is NULL \n") ; 
@@ -861,7 +861,7 @@ int tdes_encrypt_wrapper(uchar_t *input  , uchar_t *output , const void *key ) {
 
 }
 
-int tdes_decrypt_block(uchar_t *input, uchar_t *output, void *key) {
+int tdes_decrypt_block(const uchar_t *input, uchar_t *output,const void *key) {
     TDesKey *tdes_key = (TDesKey *) key ;
     if (tdes_key == NULL) {
         fprintf(stderr , "ERROR: tdes_key is NULL \n") ; 

@@ -208,7 +208,7 @@ static void fill_state_inv(uchar_t *key  , int k, uchar_t state[4][4]) {
 
 
 
-static void aes_cipher_block(uchar_t *input   , uchar_t *output , void *key ) {
+static int aes_cipher_block(const uchar_t *input   , uchar_t *output ,const void *key ) {
     
     AesKey *aes_key = (AesKey *) (key) ;
     if (aes_key == NULL) {
@@ -254,7 +254,7 @@ static void aes_cipher_block(uchar_t *input   , uchar_t *output , void *key ) {
 
 
 
-static void aes_cipher_inverse_block(uchar_t *input   , uchar_t *output , void *key ) {
+static int aes_cipher_inverse_block(const uchar_t *input   , uchar_t *output ,const void *key ) {
     AesKey *aes_key = (AesKey *) (key) ;
     if (aes_key == NULL) {
         fprintf(stderr , "ERROR : aes_key is NULL \n") ;

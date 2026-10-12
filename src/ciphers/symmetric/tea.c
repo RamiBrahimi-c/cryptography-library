@@ -2,6 +2,9 @@
 #include <stdio.h>
 #include <assert.h>
 #include <string.h>
+#include "../../block_cipher_modes_operation.h"
+
+
 
 /*
     thanks to : https://link.springer.com/chapter/10.1007/3-540-60590-8_29
@@ -15,7 +18,7 @@
     uchar_t *output : gotta be size of 8 bytes
 */
 
-static void tea_encrypt_block(uchar_t *vv , uchar_t *output, void *key) {
+static int tea_encrypt_block(const uchar_t *vv , uchar_t *output,const void *key) {
     assert(key != NULL && "key is null");
     TeaKey *tea_key = (TeaKey *) (key) ;
     uchar_t *kk = tea_key->key ;
@@ -75,7 +78,7 @@ static void tea_encrypt_block(uchar_t *vv , uchar_t *output, void *key) {
     uchar_t *vv : gotta be size of 8 bytes
     uchar_t *kk : gotta be size of 16 bytes
 */
-static void tea_decrypt_block(uchar_t *vv , uchar_t *output, void *key) {
+static int tea_decrypt_block(const uchar_t *vv , uchar_t *output,const void *key) {
     assert(key != NULL && "key is null");
     TeaKey *tea_key = (TeaKey *) (key) ;
     uchar_t *kk = tea_key->key ;
