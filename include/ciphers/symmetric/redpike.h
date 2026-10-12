@@ -4,7 +4,7 @@
 
 #include "../../cipher_interface.h"
 #include "../../common/constants.h"
-#include <cstddef>
+
 #include <stdint.h>
 
 #define REDPIKE_KEY_MAX_SIZE 8
