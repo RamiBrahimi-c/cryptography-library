@@ -324,7 +324,7 @@ static void permutation(uchar_t *input , int input_size , uchar_t *output , int 
         2 , 8 , 24 , 14 , 32 , 27 , 3 , 9 ,
         19 , 13 , 30 , 6 , 22 , 11 , 4 , 25 
     } ;
-    int length = sizeof(arr) / sizeof(int) ; 
+    size_t length = sizeof(arr) / sizeof(int) ; 
 
     for (size_t i = 0; i < length; i++)
     {
@@ -339,7 +339,7 @@ static void setFinalPermutation(uchar_t *input , int input_size , uchar_t *outpu
     int arr[] = {
         40 , 8 , 48 , 16 , 56 , 24 , 64 , 32
     };
-    int length = sizeof(arr) / sizeof(int) ; 
+    size_t length = sizeof(arr) / sizeof(int) ; 
 
     int index = 1 ;
     for (size_t i = 0; i < 8; i++)
@@ -372,7 +372,7 @@ static void setFirstPermutation(uchar_t *input , int input_size , uchar_t *right
         {57 , 49 , 41 , 33 , 25 , 17 , 9 , 1 , 59 , 51 , 43 , 35 , 27 , 19 , 11 , 3 },
         {61 , 53 , 45 , 37 , 29 , 21 , 13 , 5 , 63 , 55 , 47 , 39 , 31 , 23 , 15 , 7 }
     };
-    int length = sizeof(arr) / sizeof(int) ; 
+    size_t length = sizeof(arr) / sizeof(int) ; 
     int rows = 4 ; 
     int cols = 16 ; 
     // printf("length %d \n" , length) ; 
@@ -455,7 +455,7 @@ static void reducingKey64to56Bits(uchar_t *input , int input_size , uchar_t *out
 static void leftRound(uchar_t *input , int input_size ) {
     
     uchar_t reminder = getBitInBuffer(input , input_size , 1 ) ; 
-    int length = input_size * 8 ; 
+    size_t length = input_size * 8 ; 
     // printf("length %d \n" , length) ; 
     int k = 1 ; 
     for (size_t i = 0; i < length - 1; i++)
@@ -832,7 +832,7 @@ static int des_decrypt_block(const uchar_t *input, uchar_t *output,const void *k
 
 
 
-int des_encrypt(const uchar_t* input, uchar_t* output , int length , const void* key) {
+int des_encrypt(const uchar_t* input, uchar_t* output , size_t length , const void* key) {
 
 
     int result =  ecb_encrypt( input , output ,  length , DES_BLOCK_SIZE  , key , des_encrypt_wrapper  ) ; 
@@ -845,7 +845,7 @@ int des_encrypt(const uchar_t* input, uchar_t* output , int length , const void*
 }
 
 
-int des_decrypt(const uchar_t* input, uchar_t* output , int length , const void* key ){
+int des_decrypt(const uchar_t* input, uchar_t* output , size_t length , const void* key ){
 
     int result =  ecb_decrypt( input , output ,  length , DES_BLOCK_SIZE  , key , des_decrypt_block  ) ; 
     if (result != 0) {
@@ -857,7 +857,7 @@ int des_decrypt(const uchar_t* input, uchar_t* output , int length , const void*
 }
 
 
-int des_encrypt_cbc(const uchar_t* input, uchar_t* output , uchar_t *iv , int length, const void* key)
+int des_encrypt_cbc(const uchar_t* input, uchar_t* output , uchar_t *iv , size_t length, const void* key)
 {
 
     int result =  cbc_encrypt( input , output , iv , length , DES_BLOCK_SIZE  , key ,des_encrypt_wrapper ) ; ; 
@@ -869,7 +869,7 @@ int des_encrypt_cbc(const uchar_t* input, uchar_t* output , uchar_t *iv , int le
     return 0 ; 
 }
 
-int des_decrypt_cbc(const uchar_t* input, uchar_t* output , uchar_t *iv, int length, const void* key)
+int des_decrypt_cbc(const uchar_t* input, uchar_t* output , uchar_t *iv, size_t length, const void* key)
 {
     int result =  cbc_decrypt( input , output , iv , length , DES_BLOCK_SIZE  , key ,des_decrypt_block ) ; ; 
     if (result != 0) {
@@ -880,7 +880,7 @@ int des_decrypt_cbc(const uchar_t* input, uchar_t* output , uchar_t *iv, int len
     return 0 ; 
 }
 
-int des_encrypt_cfb(const uchar_t* input, uchar_t* output , uchar_t *iv , int length, const void* key)
+int des_encrypt_cfb(const uchar_t* input, uchar_t* output , uchar_t *iv , size_t length, const void* key)
 {
 
     int result =  cfb_encrypt( input , output , iv , length , DES_BLOCK_SIZE  , key ,des_encrypt_wrapper ) ; ; 
@@ -892,7 +892,7 @@ int des_encrypt_cfb(const uchar_t* input, uchar_t* output , uchar_t *iv , int le
     return 0 ; 
 }
 
-int des_decrypt_cfb(const uchar_t* input, uchar_t* output , uchar_t *iv, int length, const void* key)
+int des_decrypt_cfb(const uchar_t* input, uchar_t* output , uchar_t *iv, size_t length, const void* key)
 {
     int result =  cfb_decrypt( input , output , iv , length , DES_BLOCK_SIZE  , key ,des_encrypt_wrapper ) ; ; 
     if (result != 0) {
@@ -904,7 +904,7 @@ int des_decrypt_cfb(const uchar_t* input, uchar_t* output , uchar_t *iv, int len
 }
 
 
-int des_encrypt_ofb(const uchar_t* input, uchar_t* output , uchar_t *iv , int length, const void* key)
+int des_encrypt_ofb(const uchar_t* input, uchar_t* output , uchar_t *iv , size_t length, const void* key)
 {
 
     int result =  ofb_encrypt( input , output , iv , length , DES_BLOCK_SIZE  , key ,des_encrypt_wrapper ) ; ; 
@@ -916,7 +916,7 @@ int des_encrypt_ofb(const uchar_t* input, uchar_t* output , uchar_t *iv , int le
     return 0 ; 
 }
 
-int des_decrypt_ofb(const uchar_t* input, uchar_t* output , uchar_t *iv, int length, const void* key)
+int des_decrypt_ofb(const uchar_t* input, uchar_t* output , uchar_t *iv, size_t length, const void* key)
 {
     int result =  ofb_decrypt( input , output , iv , length , DES_BLOCK_SIZE  , key ,des_encrypt_wrapper ) ; ; 
     if (result != 0) {
@@ -927,7 +927,7 @@ int des_decrypt_ofb(const uchar_t* input, uchar_t* output , uchar_t *iv, int len
     return 0 ; 
 }
 
-int des_encrypt_ctr(const uchar_t* input, uchar_t* output , uchar_t *iv , int length, const void* key)
+int des_encrypt_ctr(const uchar_t* input, uchar_t* output , uchar_t *iv , size_t length, const void* key)
 {
 
     int result =  ctr_encrypt( input , output , iv , length , DES_BLOCK_SIZE  , key ,des_encrypt_wrapper ) ; ; 
@@ -939,7 +939,7 @@ int des_encrypt_ctr(const uchar_t* input, uchar_t* output , uchar_t *iv , int le
     return 0 ; 
 }
 
-int des_decrypt_ctr(const uchar_t* input, uchar_t* output , uchar_t *iv, int length, const void* key)
+int des_decrypt_ctr(const uchar_t* input, uchar_t* output , uchar_t *iv, size_t length, const void* key)
 {
     int result =  ctr_decrypt( input , output , iv , length , DES_BLOCK_SIZE  , key ,des_encrypt_wrapper ) ; ; 
     if (result != 0) {

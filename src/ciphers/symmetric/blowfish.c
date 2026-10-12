@@ -174,7 +174,7 @@ int blowfish_decrypt_block(const uchar_t* input, uchar_t* output , const void* k
 }
 
 
-int blowfish_encrypt(const uchar_t* input, uchar_t* output , int length , const void* key) {
+int blowfish_encrypt(const uchar_t* input, uchar_t* output , size_t length , const void* key) {
 
     // uchar_t *iv = malloc(sizeof(uchar_t)*BLOCK_SIZE_BLOWFISH) ;
     // blockcipher_encrypt_modeop(input , output , iv , length , BLOCK_SIZE_BLOWFISH , key , blowfish_encrypt_block) ;
@@ -190,7 +190,7 @@ int blowfish_encrypt(const uchar_t* input, uchar_t* output , int length , const 
 
 
 
-int blowfish_decrypt(const uchar_t* input, uchar_t* output , int length , const void* key) {
+int blowfish_decrypt(const uchar_t* input, uchar_t* output , size_t length , const void* key) {
 
     // uchar_t *iv = malloc(sizeof(uchar_t)*BLOCK_SIZE_BLOWFISH) ;
     // blockcipher_decrypt_modeop(input , output , iv , length , BLOCK_SIZE_BLOWFISH , key , blowfish_decrypt_block) ;
@@ -206,7 +206,7 @@ int blowfish_decrypt(const uchar_t* input, uchar_t* output , int length , const 
 
 
 
-int blowfish_encrypt_cbc(const uchar_t* input, uchar_t* output , uchar_t *iv , int length, const void* key)
+int blowfish_encrypt_cbc(const uchar_t* input, uchar_t* output , uchar_t *iv , size_t length, const void* key)
 {
 
     int result =  cbc_encrypt( input , output , iv , length , BLOCK_SIZE_BLOWFISH  , key ,blowfish_encrypt_block ) ; ; 
@@ -218,7 +218,7 @@ int blowfish_encrypt_cbc(const uchar_t* input, uchar_t* output , uchar_t *iv , i
     return 0 ; 
 }
 
-int blowfish_decrypt_cbc(const uchar_t* input, uchar_t* output , uchar_t *iv, int length, const void* key)
+int blowfish_decrypt_cbc(const uchar_t* input, uchar_t* output , uchar_t *iv, size_t length, const void* key)
 {
     int result =  cbc_decrypt( input , output , iv , length , BLOCK_SIZE_BLOWFISH  , key ,blowfish_decrypt_block ) ; ; 
     if (result != 0) {
@@ -229,7 +229,7 @@ int blowfish_decrypt_cbc(const uchar_t* input, uchar_t* output , uchar_t *iv, in
     return 0 ; 
 }
 
-int blowfish_encrypt_cfb(const uchar_t* input, uchar_t* output , uchar_t *iv , int length, const void* key)
+int blowfish_encrypt_cfb(const uchar_t* input, uchar_t* output , uchar_t *iv , size_t length, const void* key)
 {
 
     int result =  cfb_encrypt( input , output , iv , length , BLOCK_SIZE_BLOWFISH  , key ,blowfish_encrypt_block ) ; ; 
@@ -241,7 +241,7 @@ int blowfish_encrypt_cfb(const uchar_t* input, uchar_t* output , uchar_t *iv , i
     return 0 ; 
 }
 
-int blowfish_decrypt_cfb(const uchar_t* input, uchar_t* output , uchar_t *iv, int length, const void* key)
+int blowfish_decrypt_cfb(const uchar_t* input, uchar_t* output , uchar_t *iv, size_t length, const void* key)
 {
     int result =  cfb_decrypt( input , output , iv , length , BLOCK_SIZE_BLOWFISH  , key ,blowfish_encrypt_block ) ; ; 
     if (result != 0) {
@@ -253,7 +253,7 @@ int blowfish_decrypt_cfb(const uchar_t* input, uchar_t* output , uchar_t *iv, in
 }
 
 
-int blowfish_encrypt_ofb(const uchar_t* input, uchar_t* output , uchar_t *iv , int length, const void* key)
+int blowfish_encrypt_ofb(const uchar_t* input, uchar_t* output , uchar_t *iv , size_t length, const void* key)
 {
 
     int result =  ofb_encrypt( input , output , iv , length , BLOCK_SIZE_BLOWFISH  , key ,blowfish_encrypt_block ) ; ; 
@@ -265,7 +265,7 @@ int blowfish_encrypt_ofb(const uchar_t* input, uchar_t* output , uchar_t *iv , i
     return 0 ; 
 }
 
-int blowfish_decrypt_ofb(const uchar_t* input, uchar_t* output , uchar_t *iv, int length, const void* key)
+int blowfish_decrypt_ofb(const uchar_t* input, uchar_t* output , uchar_t *iv, size_t length, const void* key)
 {
     int result =  ofb_decrypt( input , output , iv , length , BLOCK_SIZE_BLOWFISH  , key ,blowfish_encrypt_block ) ; ; 
     if (result != 0) {
@@ -276,7 +276,7 @@ int blowfish_decrypt_ofb(const uchar_t* input, uchar_t* output , uchar_t *iv, in
     return 0 ; 
 }
 
-int blowfish_encrypt_ctr(const uchar_t* input, uchar_t* output , uchar_t *iv , int length, const void* key)
+int blowfish_encrypt_ctr(const uchar_t* input, uchar_t* output , uchar_t *iv , size_t length, const void* key)
 {
 
     int result =  ctr_encrypt( input , output , iv , length , BLOCK_SIZE_BLOWFISH  , key ,blowfish_encrypt_block ) ; ; 
@@ -288,7 +288,7 @@ int blowfish_encrypt_ctr(const uchar_t* input, uchar_t* output , uchar_t *iv , i
     return 0 ; 
 }
 
-int blowfish_decrypt_ctr(const uchar_t* input, uchar_t* output , uchar_t *iv, int length, const void* key)
+int blowfish_decrypt_ctr(const uchar_t* input, uchar_t* output , uchar_t *iv, size_t length, const void* key)
 {
     int result =  ctr_decrypt( input , output , iv , length , BLOCK_SIZE_BLOWFISH  , key ,blowfish_encrypt_block ) ; ; 
     if (result != 0) {

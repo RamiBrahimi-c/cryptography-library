@@ -3,6 +3,7 @@
 
 #include "../../cipher_interface.h"
 #include "../../common/constants.h"
+#include <cstddef>
 #include <stdint.h>
 
 
@@ -34,22 +35,22 @@ typedef struct AesKey {
 }AesKey;
 
 
-int aes_encrypt(const uchar_t* input, uchar_t* output, int length, const void* key);
-int aes_decrypt(const uchar_t* input, uchar_t* output, int length, const void* key);
+int aes_encrypt(const uchar_t* input, uchar_t* output, size_t length, const void* key);
+int aes_decrypt(const uchar_t* input, uchar_t* output, size_t length, const void* key);
 int aes_set_key(void* key_struct, const uchar_t* key_str , size_t key_len);
 int aes_free_key(void* key_struct);
 
-int aes_encrypt_cbc(const uchar_t* input, uchar_t* output , uchar_t *iv , int length, const void* key) ;
-int aes_decrypt_cbc(const uchar_t* input, uchar_t* output , uchar_t *iv , int length, const void* key) ;
+int aes_encrypt_cbc(const uchar_t* input, uchar_t* output , uchar_t *iv , size_t length, const void* key) ;
+int aes_decrypt_cbc(const uchar_t* input, uchar_t* output , uchar_t *iv , size_t length, const void* key) ;
 
-int aes_encrypt_cfb(const uchar_t* input, uchar_t* output , uchar_t *iv , int length, const void* key) ;
-int aes_decrypt_cfb(const uchar_t* input, uchar_t* output , uchar_t *iv , int length, const void* key) ;
+int aes_encrypt_cfb(const uchar_t* input, uchar_t* output , uchar_t *iv , size_t length, const void* key) ;
+int aes_decrypt_cfb(const uchar_t* input, uchar_t* output , uchar_t *iv , size_t length, const void* key) ;
 
-int aes_encrypt_ofb(const uchar_t* input, uchar_t* output , uchar_t *iv , int length, const void* key) ;
-int aes_decrypt_ofb(const uchar_t* input, uchar_t* output , uchar_t *iv , int length, const void* key) ;
+int aes_encrypt_ofb(const uchar_t* input, uchar_t* output , uchar_t *iv , size_t length, const void* key) ;
+int aes_decrypt_ofb(const uchar_t* input, uchar_t* output , uchar_t *iv , size_t length, const void* key) ;
 
-int aes_encrypt_ctr(const uchar_t* input, uchar_t* output , uchar_t *iv , int length, const void* key) ;
-int aes_decrypt_ctr(const uchar_t* input, uchar_t* output , uchar_t *iv , int length, const void* key) ;
+int aes_encrypt_ctr(const uchar_t* input, uchar_t* output , uchar_t *iv , size_t length, const void* key) ;
+int aes_decrypt_ctr(const uchar_t* input, uchar_t* output , uchar_t *iv , size_t length, const void* key) ;
 
 size_t aes_get_output_len(size_t input_len) ;
 

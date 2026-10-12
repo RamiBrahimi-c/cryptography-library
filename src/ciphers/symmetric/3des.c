@@ -882,7 +882,7 @@ int tdes_decrypt_block(const uchar_t *input, uchar_t *output,const void *key) {
 
 
 
-int tdes_encrypt(const uchar_t* input, uchar_t* output , int length , const void* key) {
+int tdes_encrypt(const uchar_t* input, uchar_t* output , size_t length , const void* key) {
 
 
     int result =  ecb_encrypt( input , output ,  length , TDES_BLOCK_SIZE  , key , tdes_encrypt_wrapper  ) ; 
@@ -895,7 +895,7 @@ int tdes_encrypt(const uchar_t* input, uchar_t* output , int length , const void
 }
 
 
-int tdes_decrypt(const uchar_t* input, uchar_t* output , int length , const void* key ){
+int tdes_decrypt(const uchar_t* input, uchar_t* output , size_t length , const void* key ){
 
     int result =  ecb_decrypt( input , output ,  length , TDES_BLOCK_SIZE  , key , tdes_decrypt_block  ) ; 
     if (result != 0) {
@@ -907,7 +907,7 @@ int tdes_decrypt(const uchar_t* input, uchar_t* output , int length , const void
 }
 
 
-int tdes_encrypt_cbc(const uchar_t* input, uchar_t* output , uchar_t *iv , int length, const void* key)
+int tdes_encrypt_cbc(const uchar_t* input, uchar_t* output , uchar_t *iv , size_t length, const void* key)
 {
 
     int result =  cbc_encrypt( input , output , iv , length , TDES_BLOCK_SIZE  , key ,tdes_encrypt_wrapper ) ; ; 
@@ -919,7 +919,7 @@ int tdes_encrypt_cbc(const uchar_t* input, uchar_t* output , uchar_t *iv , int l
     return 0 ; 
 }
 
-int tdes_decrypt_cbc(const uchar_t* input, uchar_t* output , uchar_t *iv, int length, const void* key)
+int tdes_decrypt_cbc(const uchar_t* input, uchar_t* output , uchar_t *iv, size_t length, const void* key)
 {
     int result =  cbc_decrypt( input , output , iv , length , TDES_BLOCK_SIZE  , key ,tdes_decrypt_block ) ; ; 
     if (result != 0) {
@@ -930,7 +930,7 @@ int tdes_decrypt_cbc(const uchar_t* input, uchar_t* output , uchar_t *iv, int le
     return 0 ; 
 }
 
-int tdes_encrypt_cfb(const uchar_t* input, uchar_t* output , uchar_t *iv , int length, const void* key)
+int tdes_encrypt_cfb(const uchar_t* input, uchar_t* output , uchar_t *iv , size_t length, const void* key)
 {
 
     int result =  cfb_encrypt( input , output , iv , length , TDES_BLOCK_SIZE  , key ,tdes_encrypt_wrapper ) ; ; 
@@ -942,7 +942,7 @@ int tdes_encrypt_cfb(const uchar_t* input, uchar_t* output , uchar_t *iv , int l
     return 0 ; 
 }
 
-int tdes_decrypt_cfb(const uchar_t* input, uchar_t* output , uchar_t *iv, int length, const void* key)
+int tdes_decrypt_cfb(const uchar_t* input, uchar_t* output , uchar_t *iv, size_t length, const void* key)
 {
     int result =  cfb_decrypt( input , output , iv , length , TDES_BLOCK_SIZE  , key ,tdes_encrypt_wrapper ) ; ; 
     if (result != 0) {
@@ -954,7 +954,7 @@ int tdes_decrypt_cfb(const uchar_t* input, uchar_t* output , uchar_t *iv, int le
 }
 
 
-int tdes_encrypt_ofb(const uchar_t* input, uchar_t* output , uchar_t *iv , int length, const void* key)
+int tdes_encrypt_ofb(const uchar_t* input, uchar_t* output , uchar_t *iv , size_t length, const void* key)
 {
 
     int result =  ofb_encrypt( input , output , iv , length , TDES_BLOCK_SIZE  , key ,tdes_encrypt_wrapper ) ; ; 
@@ -966,7 +966,7 @@ int tdes_encrypt_ofb(const uchar_t* input, uchar_t* output , uchar_t *iv , int l
     return 0 ; 
 }
 
-int tdes_decrypt_ofb(const uchar_t* input, uchar_t* output , uchar_t *iv, int length, const void* key)
+int tdes_decrypt_ofb(const uchar_t* input, uchar_t* output , uchar_t *iv, size_t length, const void* key)
 {
     int result =  ofb_decrypt( input , output , iv , length , TDES_BLOCK_SIZE  , key ,tdes_encrypt_wrapper ) ; ; 
     if (result != 0) {
@@ -977,7 +977,7 @@ int tdes_decrypt_ofb(const uchar_t* input, uchar_t* output , uchar_t *iv, int le
     return 0 ; 
 }
 
-int tdes_encrypt_ctr(const uchar_t* input, uchar_t* output , uchar_t *iv , int length, const void* key)
+int tdes_encrypt_ctr(const uchar_t* input, uchar_t* output , uchar_t *iv , size_t length, const void* key)
 {
 
     int result =  ctr_encrypt( input , output , iv , length , TDES_BLOCK_SIZE  , key ,tdes_encrypt_wrapper ) ; ; 
@@ -989,7 +989,7 @@ int tdes_encrypt_ctr(const uchar_t* input, uchar_t* output , uchar_t *iv , int l
     return 0 ; 
 }
 
-int tdes_decrypt_ctr(const uchar_t* input, uchar_t* output , uchar_t *iv, int length, const void* key)
+int tdes_decrypt_ctr(const uchar_t* input, uchar_t* output , uchar_t *iv, size_t length, const void* key)
 {
     int result =  ctr_decrypt( input , output , iv , length , TDES_BLOCK_SIZE  , key ,tdes_encrypt_wrapper ) ; ; 
     if (result != 0) {

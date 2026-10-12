@@ -4,6 +4,7 @@
 
 #include "../../cipher_interface.h"
 #include "../../common/constants.h"
+#include <cstddef>
 #include <stdint.h>
 // #include "../../third-party/big-ar9am/include/bigra9m.h"
 #include "../../../third-party/big-ar9am/include/bigra9m.h"
@@ -17,8 +18,8 @@ typedef struct {
 } RsaKey;
 
 
-void rsa_encrypt(const uchar_t* input, uchar_t* output , int length , const void* key);
-void rsa_decrypt(const uchar_t* input, uchar_t* output , int length , const void* key);
+void rsa_encrypt(const uchar_t* input, uchar_t* output , size_t length , const void* key);
+void rsa_decrypt(const uchar_t* input, uchar_t* output , size_t length , const void* key);
 void rsa_set_key(void* key_struct, const char* key_str , size_t key_len);
 void rsa_free_key(void* key_struct);
 

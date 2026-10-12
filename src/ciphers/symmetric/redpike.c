@@ -120,7 +120,7 @@ static int redpike_decrypt_block(const uchar_t * x1 , uchar_t *output, const voi
 
 
 
-int redpike_encrypt(const uchar_t* input, uchar_t* output , int length , const void* key) {
+int redpike_encrypt(const uchar_t* input, uchar_t* output , size_t length , const void* key) {
 
     int result =  ecb_encrypt( input , output ,  length , REDPIKE_BLOCK_SIZE  , key , redpike_encrypt_block  ) ; 
     if (result != 0) {
@@ -131,7 +131,7 @@ int redpike_encrypt(const uchar_t* input, uchar_t* output , int length , const v
     return 0 ;    
 }
 
-int redpike_decrypt(const uchar_t* input, uchar_t* output , int length , const void* key) {
+int redpike_decrypt(const uchar_t* input, uchar_t* output , size_t length , const void* key) {
 
     int result =  ecb_decrypt( input , output ,  length , REDPIKE_BLOCK_SIZE  , key , redpike_decrypt_block  ) ; 
     if (result != 0) {
@@ -144,7 +144,7 @@ int redpike_decrypt(const uchar_t* input, uchar_t* output , int length , const v
 
 
 
-int redpike_encrypt_cbc(const uchar_t* input, uchar_t* output , uchar_t *iv , int length, const void* key)
+int redpike_encrypt_cbc(const uchar_t* input, uchar_t* output , uchar_t *iv , size_t length, const void* key)
 {
 
     int result =  cbc_encrypt( input , output , iv , length , REDPIKE_BLOCK_SIZE  , key ,redpike_encrypt_block ) ; ; 
@@ -156,7 +156,7 @@ int redpike_encrypt_cbc(const uchar_t* input, uchar_t* output , uchar_t *iv , in
     return 0 ; 
 }
 
-int redpike_decrypt_cbc(const uchar_t* input, uchar_t* output , uchar_t *iv, int length, const void* key)
+int redpike_decrypt_cbc(const uchar_t* input, uchar_t* output , uchar_t *iv, size_t length, const void* key)
 {
     int result =  cbc_decrypt( input , output , iv , length , REDPIKE_BLOCK_SIZE  , key ,redpike_decrypt_block ) ; ; 
     if (result != 0) {
@@ -167,7 +167,7 @@ int redpike_decrypt_cbc(const uchar_t* input, uchar_t* output , uchar_t *iv, int
     return 0 ; 
 }
 
-int redpike_encrypt_cfb(const uchar_t* input, uchar_t* output , uchar_t *iv , int length, const void* key)
+int redpike_encrypt_cfb(const uchar_t* input, uchar_t* output , uchar_t *iv , size_t length, const void* key)
 {
 
     int result =  cfb_encrypt( input , output , iv , length , REDPIKE_BLOCK_SIZE  , key ,redpike_encrypt_block ) ; ; 
@@ -179,7 +179,7 @@ int redpike_encrypt_cfb(const uchar_t* input, uchar_t* output , uchar_t *iv , in
     return 0 ; 
 }
 
-int redpike_decrypt_cfb(const uchar_t* input, uchar_t* output , uchar_t *iv, int length, const void* key)
+int redpike_decrypt_cfb(const uchar_t* input, uchar_t* output , uchar_t *iv, size_t length, const void* key)
 {
     int result =  cfb_decrypt( input , output , iv , length , REDPIKE_BLOCK_SIZE  , key ,redpike_encrypt_block ) ; ; 
     if (result != 0) {
@@ -191,7 +191,7 @@ int redpike_decrypt_cfb(const uchar_t* input, uchar_t* output , uchar_t *iv, int
 }
 
 
-int redpike_encrypt_ofb(const uchar_t* input, uchar_t* output , uchar_t *iv , int length, const void* key)
+int redpike_encrypt_ofb(const uchar_t* input, uchar_t* output , uchar_t *iv , size_t length, const void* key)
 {
 
     int result =  ofb_encrypt( input , output , iv , length , REDPIKE_BLOCK_SIZE  , key ,redpike_encrypt_block ) ; ; 
@@ -203,7 +203,7 @@ int redpike_encrypt_ofb(const uchar_t* input, uchar_t* output , uchar_t *iv , in
     return 0 ; 
 }
 
-int redpike_decrypt_ofb(const uchar_t* input, uchar_t* output , uchar_t *iv, int length, const void* key)
+int redpike_decrypt_ofb(const uchar_t* input, uchar_t* output , uchar_t *iv, size_t length, const void* key)
 {
     int result =  ofb_decrypt( input , output , iv , length , REDPIKE_BLOCK_SIZE  , key ,redpike_encrypt_block ) ; ; 
     if (result != 0) {
@@ -214,7 +214,7 @@ int redpike_decrypt_ofb(const uchar_t* input, uchar_t* output , uchar_t *iv, int
     return 0 ; 
 }
 
-int redpike_encrypt_ctr(const uchar_t* input, uchar_t* output , uchar_t *iv , int length, const void* key)
+int redpike_encrypt_ctr(const uchar_t* input, uchar_t* output , uchar_t *iv , size_t length, const void* key)
 {
 
     int result =  ctr_encrypt( input , output , iv , length , REDPIKE_BLOCK_SIZE  , key ,redpike_encrypt_block ) ; ; 
@@ -226,7 +226,7 @@ int redpike_encrypt_ctr(const uchar_t* input, uchar_t* output , uchar_t *iv , in
     return 0 ; 
 }
 
-int redpike_decrypt_ctr(const uchar_t* input, uchar_t* output , uchar_t *iv, int length, const void* key)
+int redpike_decrypt_ctr(const uchar_t* input, uchar_t* output , uchar_t *iv, size_t length, const void* key)
 {
     int result =  ctr_decrypt( input , output , iv , length , REDPIKE_BLOCK_SIZE  , key ,redpike_encrypt_block ) ; ; 
     if (result != 0) {

@@ -90,7 +90,7 @@ void rsa_generate_keypair(RsaKey* key, int bits, unsigned long e_value)
 }
 
 
-void rsa_encrypt(const uchar_t* input, uchar_t* output, int length, const void* key)
+void rsa_encrypt(const uchar_t* input, uchar_t* output, size_t length, const void* key)
 {
     const RsaKey* rsa = (const RsaKey*)key;
     size_t out_bytes = (rsa->bits + 7) / 8;
@@ -130,7 +130,7 @@ void rsa_encrypt(const uchar_t* input, uchar_t* output, int length, const void* 
     bigra9m_clears(&m , &c , NULL) ; 
 }
 
-void rsa_decrypt(const uchar_t* input, uchar_t* output, int length, const void* key)
+void rsa_decrypt(const uchar_t* input, uchar_t* output, size_t length, const void* key)
 {
     const RsaKey* rsa = (const RsaKey*)key;
     if (!rsa || !rsa->is_private || length <= 0) return;

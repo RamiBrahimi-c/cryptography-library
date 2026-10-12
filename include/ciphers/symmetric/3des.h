@@ -8,6 +8,7 @@
 */
 #include "../../cipher_interface.h"
 #include "../../common/constants.h"
+#include <cstddef>
 #include <stdint.h>
 
 typedef struct {
@@ -18,8 +19,8 @@ typedef struct {
 
 
 
-int tdes_encrypt(const uchar_t* input, uchar_t* output , int length , const void* key);
-int tdes_decrypt(const uchar_t* input, uchar_t* output , int length , const void* key);
+int tdes_encrypt(const uchar_t* input, uchar_t* output , size_t length , const void* key);
+int tdes_decrypt(const uchar_t* input, uchar_t* output , size_t length , const void* key);
 int tdes_set_key(void* key_struct, const uchar_t* key_str , size_t key_len);
 int tdes_free_key(void* key_struct);
 
@@ -27,17 +28,17 @@ Cipher* get_tdes_cipher(void);
 
 
 
-int tdes_encrypt_cbc(const uchar_t* input, uchar_t* output , uchar_t *iv , int length, const void* key) ;
-int tdes_encrypt_cbc(const uchar_t* input, uchar_t* output , uchar_t *iv , int length, const void* key) ;
+int tdes_encrypt_cbc(const uchar_t* input, uchar_t* output , uchar_t *iv , size_t length, const void* key) ;
+int tdes_encrypt_cbc(const uchar_t* input, uchar_t* output , uchar_t *iv , size_t length, const void* key) ;
 
-int tdes_encrypt_cfb(const uchar_t* input, uchar_t* output , uchar_t *iv , int length, const void* key) ;
-int tdes_decrypt_cfb(const uchar_t* input, uchar_t* output , uchar_t *iv , int length, const void* key) ;
+int tdes_encrypt_cfb(const uchar_t* input, uchar_t* output , uchar_t *iv , size_t length, const void* key) ;
+int tdes_decrypt_cfb(const uchar_t* input, uchar_t* output , uchar_t *iv , size_t length, const void* key) ;
 
-int tdes_encrypt_ofb(const uchar_t* input, uchar_t* output , uchar_t *iv , int length, const void* key) ;
-int tdes_decrypt_ofb(const uchar_t* input, uchar_t* output , uchar_t *iv , int length, const void* key) ;
+int tdes_encrypt_ofb(const uchar_t* input, uchar_t* output , uchar_t *iv , size_t length, const void* key) ;
+int tdes_decrypt_ofb(const uchar_t* input, uchar_t* output , uchar_t *iv , size_t length, const void* key) ;
 
-int tdes_encrypt_ctr(const uchar_t* input, uchar_t* output , uchar_t *iv , int length, const void* key) ;
-int tdes_decrypt_ctr(const uchar_t* input, uchar_t* output , uchar_t *iv , int length, const void* key) ;
+int tdes_encrypt_ctr(const uchar_t* input, uchar_t* output , uchar_t *iv , size_t length, const void* key) ;
+int tdes_decrypt_ctr(const uchar_t* input, uchar_t* output , uchar_t *iv , size_t length, const void* key) ;
 
 
 #endif

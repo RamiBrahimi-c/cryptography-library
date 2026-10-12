@@ -324,7 +324,7 @@ static void setup_parameteres_aes(AES_TYPE type , int *Nr , int *Nk) {
 /*
     for now only input with length of 16*k bytes is supported
 */
-int aes_encrypt(const uchar_t* input, uchar_t* output, int length, const void* key)
+int aes_encrypt(const uchar_t* input, uchar_t* output, size_t length, const void* key)
 {
 
     int result =  ecb_encrypt( input , output ,  length , AES_BLOCK_SIZE  , key , aes_cipher_block  ) ; 
@@ -338,7 +338,7 @@ int aes_encrypt(const uchar_t* input, uchar_t* output, int length, const void* k
 
 
 
-int aes_decrypt(const uchar_t* input, uchar_t* output, int length, const void* key)
+int aes_decrypt(const uchar_t* input, uchar_t* output, size_t length, const void* key)
 {
     int result =  ecb_decrypt( input , output ,  length , AES_BLOCK_SIZE  , key , aes_cipher_inverse_block  ) ; 
     if (result != 0) {
@@ -350,7 +350,7 @@ int aes_decrypt(const uchar_t* input, uchar_t* output, int length, const void* k
 }
 
 
-int aes_encrypt_cbc(const uchar_t* input, uchar_t* output , uchar_t *iv , int length, const void* key)
+int aes_encrypt_cbc(const uchar_t* input, uchar_t* output , uchar_t *iv , size_t length, const void* key)
 {
 
     int result =  cbc_encrypt( input , output , iv , length , AES_BLOCK_SIZE  , key ,aes_cipher_block ) ; ; 
@@ -362,7 +362,7 @@ int aes_encrypt_cbc(const uchar_t* input, uchar_t* output , uchar_t *iv , int le
     return 0 ; 
 }
 
-int aes_decrypt_cbc(const uchar_t* input, uchar_t* output , uchar_t *iv, int length, const void* key)
+int aes_decrypt_cbc(const uchar_t* input, uchar_t* output , uchar_t *iv, size_t length, const void* key)
 {
     int result =  cbc_decrypt( input , output , iv , length , AES_BLOCK_SIZE  , key ,aes_cipher_inverse_block ) ; ; 
     if (result != 0) {
@@ -373,7 +373,7 @@ int aes_decrypt_cbc(const uchar_t* input, uchar_t* output , uchar_t *iv, int len
     return 0 ; 
 }
 
-int aes_encrypt_cfb(const uchar_t* input, uchar_t* output , uchar_t *iv , int length, const void* key)
+int aes_encrypt_cfb(const uchar_t* input, uchar_t* output , uchar_t *iv , size_t length, const void* key)
 {
 
     int result =  cfb_encrypt( input , output , iv , length , AES_BLOCK_SIZE  , key ,aes_cipher_block ) ; ; 
@@ -385,7 +385,7 @@ int aes_encrypt_cfb(const uchar_t* input, uchar_t* output , uchar_t *iv , int le
     return 0 ; 
 }
 
-int aes_decrypt_cfb(const uchar_t* input, uchar_t* output , uchar_t *iv, int length, const void* key)
+int aes_decrypt_cfb(const uchar_t* input, uchar_t* output , uchar_t *iv, size_t length, const void* key)
 {
     int result =  cfb_decrypt( input , output , iv , length , AES_BLOCK_SIZE  , key ,aes_cipher_block ) ; ; 
     if (result != 0) {
@@ -397,7 +397,7 @@ int aes_decrypt_cfb(const uchar_t* input, uchar_t* output , uchar_t *iv, int len
 }
 
 
-int aes_encrypt_ofb(const uchar_t* input, uchar_t* output , uchar_t *iv , int length, const void* key)
+int aes_encrypt_ofb(const uchar_t* input, uchar_t* output , uchar_t *iv , size_t length, const void* key)
 {
 
     int result =  ofb_encrypt( input , output , iv , length , AES_BLOCK_SIZE  , key ,aes_cipher_block ) ; ; 
@@ -409,7 +409,7 @@ int aes_encrypt_ofb(const uchar_t* input, uchar_t* output , uchar_t *iv , int le
     return 0 ; 
 }
 
-int aes_decrypt_ofb(const uchar_t* input, uchar_t* output , uchar_t *iv, int length, const void* key)
+int aes_decrypt_ofb(const uchar_t* input, uchar_t* output , uchar_t *iv, size_t length, const void* key)
 {
     int result =  ofb_decrypt( input , output , iv , length , AES_BLOCK_SIZE  , key ,aes_cipher_block ) ; ; 
     if (result != 0) {
@@ -420,7 +420,7 @@ int aes_decrypt_ofb(const uchar_t* input, uchar_t* output , uchar_t *iv, int len
     return 0 ; 
 }
 
-int aes_encrypt_ctr(const uchar_t* input, uchar_t* output , uchar_t *iv , int length, const void* key)
+int aes_encrypt_ctr(const uchar_t* input, uchar_t* output , uchar_t *iv , size_t length, const void* key)
 {
 
     int result =  ctr_encrypt( input , output , iv , length , AES_BLOCK_SIZE  , key ,aes_cipher_block ) ; ; 
@@ -432,7 +432,7 @@ int aes_encrypt_ctr(const uchar_t* input, uchar_t* output , uchar_t *iv , int le
     return 0 ; 
 }
 
-int aes_decrypt_ctr(const uchar_t* input, uchar_t* output , uchar_t *iv, int length, const void* key)
+int aes_decrypt_ctr(const uchar_t* input, uchar_t* output , uchar_t *iv, size_t length, const void* key)
 {
     int result =  ctr_decrypt( input , output , iv , length , AES_BLOCK_SIZE  , key ,aes_cipher_block ) ; ; 
     if (result != 0) {

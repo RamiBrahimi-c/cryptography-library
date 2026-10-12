@@ -135,7 +135,7 @@ static int tea_decrypt_block(const uchar_t *vv , uchar_t *output,const void *key
 
 
 
-int tea_encrypt(const uchar_t* input, uchar_t* output , int length , const void* key) {
+int tea_encrypt(const uchar_t* input, uchar_t* output , size_t length , const void* key) {
     
 
     int result =  ecb_encrypt( input , output ,  length , TEA_BLOCK_SIZE  , key , tea_encrypt_block  ) ; 
@@ -150,7 +150,7 @@ int tea_encrypt(const uchar_t* input, uchar_t* output , int length , const void*
 }
 
 
-int tea_decrypt(const uchar_t* input, uchar_t* output , int length , const void* key) {
+int tea_decrypt(const uchar_t* input, uchar_t* output , size_t length , const void* key) {
 
     int result =  ecb_decrypt( input , output ,  length , TEA_BLOCK_SIZE  , key , tea_decrypt_block  ) ; 
     if (result != 0) {
@@ -165,7 +165,7 @@ int tea_decrypt(const uchar_t* input, uchar_t* output , int length , const void*
 
 
 
-int tea_encrypt_cbc(const uchar_t* input, uchar_t* output , uchar_t *iv , int length, const void* key)
+int tea_encrypt_cbc(const uchar_t* input, uchar_t* output , uchar_t *iv , size_t length, const void* key)
 {
 
     int result =  cbc_encrypt( input , output , iv , length , TEA_BLOCK_SIZE  , key ,tea_encrypt_block ) ; ; 
@@ -177,7 +177,7 @@ int tea_encrypt_cbc(const uchar_t* input, uchar_t* output , uchar_t *iv , int le
     return 0 ; 
 }
 
-int tea_decrypt_cbc(const uchar_t* input, uchar_t* output , uchar_t *iv, int length, const void* key)
+int tea_decrypt_cbc(const uchar_t* input, uchar_t* output , uchar_t *iv, size_t length, const void* key)
 {
     int result =  cbc_decrypt( input , output , iv , length , TEA_BLOCK_SIZE  , key ,tea_decrypt_block ) ; ; 
     if (result != 0) {
@@ -188,7 +188,7 @@ int tea_decrypt_cbc(const uchar_t* input, uchar_t* output , uchar_t *iv, int len
     return 0 ; 
 }
 
-int tea_encrypt_cfb(const uchar_t* input, uchar_t* output , uchar_t *iv , int length, const void* key)
+int tea_encrypt_cfb(const uchar_t* input, uchar_t* output , uchar_t *iv , size_t length, const void* key)
 {
 
     int result =  cfb_encrypt( input , output , iv , length , TEA_BLOCK_SIZE  , key ,tea_encrypt_block ) ; ; 
@@ -200,7 +200,7 @@ int tea_encrypt_cfb(const uchar_t* input, uchar_t* output , uchar_t *iv , int le
     return 0 ; 
 }
 
-int tea_decrypt_cfb(const uchar_t* input, uchar_t* output , uchar_t *iv, int length, const void* key)
+int tea_decrypt_cfb(const uchar_t* input, uchar_t* output , uchar_t *iv, size_t length, const void* key)
 {
     int result =  cfb_decrypt( input , output , iv , length , TEA_BLOCK_SIZE  , key ,tea_encrypt_block ) ; ; 
     if (result != 0) {
@@ -212,7 +212,7 @@ int tea_decrypt_cfb(const uchar_t* input, uchar_t* output , uchar_t *iv, int len
 }
 
 
-int tea_encrypt_ofb(const uchar_t* input, uchar_t* output , uchar_t *iv , int length, const void* key)
+int tea_encrypt_ofb(const uchar_t* input, uchar_t* output , uchar_t *iv , size_t length, const void* key)
 {
 
     int result =  ofb_encrypt( input , output , iv , length , TEA_BLOCK_SIZE  , key ,tea_encrypt_block ) ; ; 
@@ -224,7 +224,7 @@ int tea_encrypt_ofb(const uchar_t* input, uchar_t* output , uchar_t *iv , int le
     return 0 ; 
 }
 
-int tea_decrypt_ofb(const uchar_t* input, uchar_t* output , uchar_t *iv, int length, const void* key)
+int tea_decrypt_ofb(const uchar_t* input, uchar_t* output , uchar_t *iv, size_t length, const void* key)
 {
     int result =  ofb_decrypt( input , output , iv , length , TEA_BLOCK_SIZE  , key ,tea_encrypt_block ) ; ; 
     if (result != 0) {
@@ -235,7 +235,7 @@ int tea_decrypt_ofb(const uchar_t* input, uchar_t* output , uchar_t *iv, int len
     return 0 ; 
 }
 
-int tea_encrypt_ctr(const uchar_t* input, uchar_t* output , uchar_t *iv , int length, const void* key)
+int tea_encrypt_ctr(const uchar_t* input, uchar_t* output , uchar_t *iv , size_t length, const void* key)
 {
 
     int result =  ctr_encrypt( input , output , iv , length , TEA_BLOCK_SIZE  , key ,tea_encrypt_block ) ; ; 
@@ -247,7 +247,7 @@ int tea_encrypt_ctr(const uchar_t* input, uchar_t* output , uchar_t *iv , int le
     return 0 ; 
 }
 
-int tea_decrypt_ctr(const uchar_t* input, uchar_t* output , uchar_t *iv, int length, const void* key)
+int tea_decrypt_ctr(const uchar_t* input, uchar_t* output , uchar_t *iv, size_t length, const void* key)
 {
     int result =  ctr_decrypt( input , output , iv , length , TEA_BLOCK_SIZE  , key ,tea_encrypt_block ) ; ; 
     if (result != 0) {

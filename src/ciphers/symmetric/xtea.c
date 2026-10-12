@@ -186,7 +186,7 @@ static int xtea_encrypt_block(const uchar_t *vv  , uchar_t *output,const void *k
 
 
 
-int xtea_encrypt(const uchar_t* input, uchar_t* output , int length , const void* key) {
+int xtea_encrypt(const uchar_t* input, uchar_t* output , size_t length , const void* key) {
     
 
     int result =  ecb_encrypt( input , output ,  length , XTEA_BLOCK_SIZE  , key , xtea_encrypt_block  ) ; 
@@ -201,7 +201,7 @@ int xtea_encrypt(const uchar_t* input, uchar_t* output , int length , const void
 }
 
 
-int xtea_decrypt(const uchar_t* input, uchar_t* output , int length , const void* key) {
+int xtea_decrypt(const uchar_t* input, uchar_t* output , size_t length , const void* key) {
 
     int result =  ecb_decrypt( input , output ,  length , XTEA_BLOCK_SIZE  , key , xtea_decrypt_block  ) ; 
     if (result != 0) {
@@ -216,7 +216,7 @@ int xtea_decrypt(const uchar_t* input, uchar_t* output , int length , const void
 
 
 
-int xtea_encrypt_cbc(const uchar_t* input, uchar_t* output , uchar_t *iv , int length, const void* key)
+int xtea_encrypt_cbc(const uchar_t* input, uchar_t* output , uchar_t *iv , size_t length, const void* key)
 {
 
     int result =  cbc_encrypt( input , output , iv , length , XTEA_BLOCK_SIZE  , key ,xtea_encrypt_block ) ; ; 
@@ -228,7 +228,7 @@ int xtea_encrypt_cbc(const uchar_t* input, uchar_t* output , uchar_t *iv , int l
     return 0 ; 
 }
 
-int xtea_decrypt_cbc(const uchar_t* input, uchar_t* output , uchar_t *iv, int length, const void* key)
+int xtea_decrypt_cbc(const uchar_t* input, uchar_t* output , uchar_t *iv, size_t length, const void* key)
 {
     int result =  cbc_decrypt( input , output , iv , length , XTEA_BLOCK_SIZE  , key ,xtea_decrypt_block ) ; ; 
     if (result != 0) {
@@ -239,7 +239,7 @@ int xtea_decrypt_cbc(const uchar_t* input, uchar_t* output , uchar_t *iv, int le
     return 0 ; 
 }
 
-int xtea_encrypt_cfb(const uchar_t* input, uchar_t* output , uchar_t *iv , int length, const void* key)
+int xtea_encrypt_cfb(const uchar_t* input, uchar_t* output , uchar_t *iv , size_t length, const void* key)
 {
 
     int result =  cfb_encrypt( input , output , iv , length , XTEA_BLOCK_SIZE  , key ,xtea_encrypt_block ) ; ; 
@@ -251,7 +251,7 @@ int xtea_encrypt_cfb(const uchar_t* input, uchar_t* output , uchar_t *iv , int l
     return 0 ; 
 }
 
-int xtea_decrypt_cfb(const uchar_t* input, uchar_t* output , uchar_t *iv, int length, const void* key)
+int xtea_decrypt_cfb(const uchar_t* input, uchar_t* output , uchar_t *iv, size_t length, const void* key)
 {
     int result =  cfb_decrypt( input , output , iv , length , XTEA_BLOCK_SIZE  , key ,xtea_encrypt_block ) ; ; 
     if (result != 0) {
@@ -263,7 +263,7 @@ int xtea_decrypt_cfb(const uchar_t* input, uchar_t* output , uchar_t *iv, int le
 }
 
 
-int xtea_encrypt_ofb(const uchar_t* input, uchar_t* output , uchar_t *iv , int length, const void* key)
+int xtea_encrypt_ofb(const uchar_t* input, uchar_t* output , uchar_t *iv , size_t length, const void* key)
 {
 
     int result =  ofb_encrypt( input , output , iv , length , XTEA_BLOCK_SIZE  , key ,xtea_encrypt_block ) ; ; 
@@ -275,7 +275,7 @@ int xtea_encrypt_ofb(const uchar_t* input, uchar_t* output , uchar_t *iv , int l
     return 0 ; 
 }
 
-int xtea_decrypt_ofb(const uchar_t* input, uchar_t* output , uchar_t *iv, int length, const void* key)
+int xtea_decrypt_ofb(const uchar_t* input, uchar_t* output , uchar_t *iv, size_t length, const void* key)
 {
     int result =  ofb_decrypt( input , output , iv , length , XTEA_BLOCK_SIZE  , key ,xtea_encrypt_block ) ; ; 
     if (result != 0) {
@@ -286,7 +286,7 @@ int xtea_decrypt_ofb(const uchar_t* input, uchar_t* output , uchar_t *iv, int le
     return 0 ; 
 }
 
-int xtea_encrypt_ctr(const uchar_t* input, uchar_t* output , uchar_t *iv , int length, const void* key)
+int xtea_encrypt_ctr(const uchar_t* input, uchar_t* output , uchar_t *iv , size_t length, const void* key)
 {
 
     int result =  ctr_encrypt( input , output , iv , length , XTEA_BLOCK_SIZE  , key ,xtea_encrypt_block ) ; ; 
@@ -298,7 +298,7 @@ int xtea_encrypt_ctr(const uchar_t* input, uchar_t* output , uchar_t *iv , int l
     return 0 ; 
 }
 
-int xtea_decrypt_ctr(const uchar_t* input, uchar_t* output , uchar_t *iv, int length, const void* key)
+int xtea_decrypt_ctr(const uchar_t* input, uchar_t* output , uchar_t *iv, size_t length, const void* key)
 {
     int result =  ctr_decrypt( input , output , iv , length , XTEA_BLOCK_SIZE  , key ,xtea_encrypt_block ) ; ; 
     if (result != 0) {
