@@ -18,8 +18,9 @@ void print_digest(const char* label, const uchar_t* d, int len)
 
 int main()
 {
-    uchar_t input[] = "a" ;
+    uchar_t input[] = "abc" ;
     uint64_t length = strlen(input) ;
+     length = 3 ;
 
     printf("input : \n" );
     PRINT_ARRAY(input , length , "%c");
@@ -34,19 +35,23 @@ int main()
     // PRINT_ARRAY(output , new_length /8 , "%x");
     
 
-    uchar_t *hash = malloc(sizeof(uchar_t)*32) ; 
+    uchar_t *hash = malloc(sizeof(uchar_t)*64) ; 
     
     sha256_hash(input , length , hash) ;
-    printf("final result  : \n" );
+    printf("sha256 final result  : \n" );
     PRINT_ARRAY_NOSPC(hash , 32 , "%02x") ; 
+
+    sha512_hash(input , length , hash) ;
+    printf("sha512 final result  : \n" );
+    PRINT_ARRAY_NOSPC(hash , 64 , "%02x") ; 
     
     md4_hash(input , length , hash) ;
-    printf("final result  : \n" );
+    printf("md4 final result  : \n" );
     PRINT_ARRAY_NOSPC(hash , 16 , "%02x") ; 
     
     
     md5_hash(input , length , hash) ;
-    printf("final result  : \n" );
+    printf("md5 final result  : \n" );
     PRINT_ARRAY_NOSPC(hash , 16 , "%02x") ; 
 
 

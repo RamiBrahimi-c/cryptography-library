@@ -3,6 +3,7 @@
 #include "substitution.h"
 #include "rc4.h"
 #include "des.h"
+#include "3des.h"
 #include "aes.h"
 #include "rsa.h"
 #include "elgamal.h"
@@ -34,57 +35,53 @@
 
 
 
-#define TEST_HASH_FUNCTION(name , data , length , digest)\
-    printf("data : \n")\
-    PRINT_ARRAY_NAI(data , length)\
-    name##hash(data , length , digest);\
 
 
 
-int main() {
+int main(int argc , char *argv[]) {
 
     // :catwiggle:
 
+    // parse(argv) ; 
+    uchar_t plaintext[16] = {0}  ;
+    size_t plaintext_len = 16 ; 
+    uchar_t key_str[32] = {0}  ;
+    size_t key_str_len = 16 ; 
+    uchar_t iv[] = {0xfe , 0xe1 , 0xde , 0xad , 0xc0 , 0xff , 0xee , 0x67}  ;
+    size_t iv_len = 8 ; 
+    uchar_t *encrypted_text = malloc(sizeof(uchar_t)*plaintext_len) ; 
+    if (encrypted_text == NULL) {
+        abort() ; 
+    }
+    uchar_t *decrypted_text = malloc(sizeof(uchar_t)*plaintext_len) ; 
+    if (decrypted_text == NULL) {
+        abort() ; 
+    }
 
+    key_str_len = 16 ; 
+    DEMO_ON_TEXT_ENCRYPTION(aes , plaintext , encrypted_text , plaintext_len, key_str , key_str_len      , AesKey ) ;
+    DEMO_ON_TEXT_DECRYPTION(aes , encrypted_text , decrypted_text , plaintext_len, key_str , key_str_len , AesKey ) ;
+    
+    key_str_len = 8 ; 
+    key_str[0] = 0x89 ; 
+    key_str[16] = 0xaa ; 
+    plaintext[0] = 0xca ; 
 
-    // exit(0) ; 
+    DEMO_ON_TEXT_ENCRYPTION(des , plaintext , encrypted_text , plaintext_len, key_str , key_str_len , DesKey ) ;
+    key_str_len = 24 ; 
+    DEMO_ON_TEXT_ENCRYPTION(tdes , plaintext , encrypted_text , plaintext_len, key_str , key_str_len , TDesKey ) ;
+    
+    key_str[0] = 0x0 ; 
+    
+    key_str_len = 16 ; 
+    DEMO_ON_TEXT_ENCRYPTION(rc4 , plaintext , encrypted_text , plaintext_len, key_str , key_str_len , Rc4Key ) ;
+    
+    key_str_len = 16 ; 
+    DEMO_ON_TEXT_ENCRYPTION(blowfish , plaintext , encrypted_text , plaintext_len, key_str , key_str_len , BlowfishKey ) ;
+    
+    key_str_len = 16 ; 
+    DEMO_ON_TEXT_ENCRYPTION(tea , plaintext , encrypted_text , plaintext_len, key_str , key_str_len , TeaKey ) ;
 
-    // uchar_t *input = generate_garbage_string(0x0 , 64) ;
-    uchar_t input[] = {0x60, 0x1e, 0xc3, 0x13, 0x77, 0x57, 0x89, 0xa5, 0xb7, 0xa7, 0xf5, 0x04, 0xbb, 0xf3, 0xd2, 0x28, 
-                        0xf4, 0x43, 0xe3, 0xca, 0x4d, 0x62, 0xb5, 0x9a, 0xca, 0x84, 0xe9, 0x90, 0xca, 0xca, 0xf5, 0xc5, 
-                        0x2b, 0x09, 0x30, 0xda, 0xa2, 0x3d, 0xe9, 0x4c, 0xe8, 0x70, 0x17, 0xba, 0x2d, 0x84, 0x98, 0x8d, 
-                        0xdf, 0xc9, 0xc5, 0x8d, 0xb6, 0x7a, 0xad, 0xa6, 0x13, 0xc2, 0xdd, 0x08, 0x45, 0x79, 0x41, 0xa6  } ;
-    uchar_t key[] = { 0x60, 0x3d, 0xeb, 0x10, 0x15, 0xca, 0x71, 0xbe, 0x2b, 0x73, 0xae, 0xf0, 0x85, 0x7d, 0x77, 0x81,
-                        0x1f, 0x35, 0x2c, 0x07, 0x3b, 0x61, 0x08, 0xd7, 0x2d, 0x98, 0x10, 0xa3, 0x09, 0x14, 0xdf, 0xf4 }  ;
-    size_t key_len = 32 ; 
-    uchar_t output[64]  ;
-    uchar_t output2[64]  ;
-    // memset(output , 0 , 8) ;
-    
-    // void *key_ptr = malloc(sizeof(DesKey)) ;
-    // des_set_key(key_ptr , key);
-    // des_encrypt(input , output , 8 , key_ptr) ; 
-    printf("input:\n");
-    PRINT_ARRAY_NAI(input , 64 , "%.2x");
-    
-    TEST_ON_TEXT_ENCRYPTION(aes,input,output,64,key  , key_len, AesKey) ;
-    
-    printf("output:\n");
-    PRINT_ARRAY_NAI(output , 64 , "%.2x");
-    
-    
-    TEST_ON_TEXT_DECRYPTION(aes,output,output2,64,key  , key_len, AesKey) ;
-    
-    
-    printf("output decrypted:\n");
-    PRINT_ARRAY_NAI(output2 , 64 , "%.2x");
-    printf("fuck you \n") ; 
-    // TEST_RSA_ENCRYPT_IMAGE(rsa , "rami.png" , 1024) ; 
-        // TEST_ON_IMAGE_ENCRYPTION(aes , "rami.png" , key , key_len , AesKey) ; 
-    // des_decrypt(output , output2 , 8 , key_ptr) ; 
-    // printf("output2:\n");
-    // PRINT_ARRAY_NAI(output , 8 , "%.2x");
-    
     return 0 ; 
 }
 
